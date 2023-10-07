@@ -10,8 +10,9 @@ import { typeDefs } from './graphqlDB/typeDefs.js';
 import { resolvers } from './graphqlDB/resolvers.js';
 import './db/config.js'
 
-import dotenv from 'dotenv';
+import * as dotenv from 'dotenv';
 dotenv.config({ path: 'variables.env' })
+
 import jwt from 'jsonwebtoken'
 
 
@@ -50,6 +51,19 @@ app.use(
   bodyParser.json(),
   expressMiddleware(server),
 );
+
+
+
+/* app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`)
+}) */
+
+
+
 
 await new Promise((resolve) => httpServer.listen({ port: process.env.PORT || 4000 }, resolve));
 console.log(`🚀 Servidor listo en la URL http://localhost:${process.env.PORT || 4000}`);
