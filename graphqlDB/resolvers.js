@@ -42,6 +42,9 @@ Date: new GraphQLScalarType({
 }),
 Query: {
     obtenerUsuario: async (_, {}, ctx) => {
+        if(!ctx){
+            throw new Error('No se recibió Contex por lo que no se puede obtener Usuario');
+        }
         return ctx.usuario;
     }, 
     obtenerPacientes: async () => {
@@ -54,6 +57,9 @@ Query: {
     }, 
     obtenerPacientesUser: async (_, {}, ctx ) => {
         try {
+            if(!ctx){
+                throw new Error('No se recibió Contex por lo que no se puede obtener Usuario');
+            }
             const pacientes = await Paciente.find({ user: ctx.usuario.id.toString() });
             return pacientes;
         } catch (error) {
