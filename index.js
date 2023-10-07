@@ -21,13 +21,20 @@ const app = express();
 
 // Configura los encabezados CORS
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://inspira-iner-client-1gs70sw87-inti-rdzs-projects.vercel.app');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.append('Access-Control-Allow-Origin', ['*']);
+  res.append('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  //res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 })
 
+/* app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', ['*']);
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  //res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+})
 
+ */
 
 // Habilita CORS para permitir solicitudes desde 'http://localhost:3000'
 const httpServer = http.createServer(app);
