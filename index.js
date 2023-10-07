@@ -1,48 +1,20 @@
 import { ApolloServer } from '@apollo/server';
-import { expressMiddleware } from '@apollo/server/express4';
-import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
-import express from 'express';
-import http from 'http';
-import bodyParser from 'body-parser';
-import cors from 'cors';
+import { startStandaloneServer } from '@apollo/server/standalone';
 
 import { typeDefs } from './graphqlDB/typeDefs.js';
 import { resolvers } from './graphqlDB/resolvers.js';
 import './db/config.js'
 
-import * as dotenv from 'dotenv';
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv';
 dotenv.config({ path: 'variables.env' })
 
-import jwt from 'jsonwebtoken'
 
-
-// Crear una instancia de express
-const app = express();
-
-// Configura los encabezados CORS
-/* app.use((req, res, next) => {
-  res.append('Access-Control-Allow-Origin', ['*']);
-  res.append('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  //res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
-}) */
-
- app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', ['*']);
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
-})
-
-
-
-// Habilita CORS para permitir solicitudes desde 'http://localhost:3000'
-const httpServer = http.createServer(app);
-
+// The ApolloServer constructor requires two parameters: your schema
+// definition and your set of resolvers.
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   context: ({req}) => {
     const token = req.headers['authorization'] || '';
     if(token) {
@@ -60,27 +32,12 @@ const server = new ApolloServer({
 },
 });
 
-await server.start();
+// Passing an ApolloServer instance to the `startStandaloneServer` function:
+//  1. creates an Express app
+//  2. installs your ApolloServer instance as middleware
+//  3. prepares your app to handle incoming requests
+const { url } = await startStandaloneServer(server, {
+  listen: { port: 4000 },
+});
 
-app.use(
-  '/graphql',
-  cors({ origin: ['http://localhost:3000', 'https://vercel.com', '*'] }),
-  bodyParser.json(),
-  expressMiddleware(server),
-);
-
-
-
-/* app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
-
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-}) */
-
-
-
-
-await new Promise((resolve) => httpServer.listen({ port: process.env.PORT || 4000 }, resolve));
-console.log(`🚀 Servidor listo en la URL http://localhost:${process.env.PORT || 4000}`);
+console.log(`🚀  Server ready at: ${url}`);
