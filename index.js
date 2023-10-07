@@ -64,7 +64,7 @@ await server.start();
 
 app.use(
   '/graphql',
-  cors({ origin: ['http://localhost:3000', 'https://vercel.com/'] }),
+  cors({ origin: ['http://localhost:3000', 'https://vercel.com/', '*'] }),
   bodyParser.json(),
   expressMiddleware(server),
 );
