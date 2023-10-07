@@ -9,6 +9,8 @@ import Producto from '../models/Producto.js';
 import Cliente from '../models/Cliente.js';
 import Pedido from '../models/Pedido.js';
 
+import bcryptjs from 'bcryptjs';
+
 import { GraphQLScalarType, Kind } from 'graphql';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
