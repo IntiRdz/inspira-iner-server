@@ -11,7 +11,7 @@ import Pedido from '../models/Pedido.js';
 
 import bcryptjs from 'bcryptjs';
 
-import { GraphQLScalarType, Kind } from 'graphql';
+import { GraphQLScalarType, Kind, GraphQLError  } from 'graphql';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config({ path: 'variables.env' });
@@ -43,12 +43,22 @@ Date: new GraphQLScalarType({
     },
 }),
 Query: {
-    obtenerUsuario: async (_, {}, ctx) => {
-        if(!ctx){
-            throw new Error('No se recibió Contex por lo que no se puede obtener Usuario');
+    obtenerUsuario: async (_, {}, contextValue) => {
+        if(!contextValue){
+            throw new GraphQLError('No se recibió Contex por lo que no se puede obtener Usuario');
         }
-        return ctx.usuario;
+        return contextValue.usuario;
     }, 
+
+/*     adminExample: (parent, args, contextValue, info) => {
+        if (contextValue.authScope !== ADMIN) {
+          throw new GraphQLError('not admin!', {
+            extensions: { code: 'UNAUTHENTICATED' },
+          });
+        }
+      }, */
+
+    
     obtenerPacientes: async () => {
         try {
             const pacientes = await Paciente.find({});
@@ -57,12 +67,12 @@ Query: {
             console.log(error);
         }
     }, 
-    obtenerPacientesUser: async (_, {}, ctx ) => {
+    obtenerPacientesUser: async (_, {}, contextValue ) => {
         try {
-            if(!ctx){
+            if(!contextValue){
                 throw new Error('No se recibió Contex por lo que no se puede obtener Usuario');
             }
-            const pacientes = await Paciente.find({ user: ctx.usuario.id.toString() });
+            const pacientes = await Paciente.find({ user: contextValue.usuario.id.toString() });
             return pacientes;
         } catch (error) {
             console.log(error);
@@ -144,6 +154,37 @@ Query: {
 
         return producto;
     },
+    obtenerClientes: async () => {
+        try {
+            const clientes = await Cliente.find({});
+            return clientes;
+        } catch (error) {
+            console.log(error);
+        }
+    }, 
+    obtenerClientesVendedor: async (_, {}, contextValue ) => {
+        try {
+            const clientes = await Cliente.find({ vendedor: contextValue.usuario.id.toString() });
+            return clientes;
+        } catch (error) {
+            console.log(error);
+        }
+    }, 
+    obtenerCliente: async (_, { id }, contextValue) => {
+        // Revisar si el cliente existe o no
+        const cliente = await Cliente.findById(id);
+
+        if(!cliente) {
+            throw new Error('Cliente no encontrado');
+        }
+
+        // Quien lo creo puede verlo
+        if(cliente.vendedor.toString() !== contextValue.usuario.id ) {
+            throw new Error('No tienes las credenciales');
+        }
+
+        return cliente;
+    }, 
     obtenerProductos: async () => {
         try {
             const productos = await Producto.find({});
@@ -170,9 +211,9 @@ Query: {
             console.log(error);
         }
     }, 
-    obtenerPedidosUser: async (_, {}, ctx) => {
+    obtenerPedidosUser: async (_, {}, contextValue) => {
         try {
-            const pedidos = await Pedido.find({ user: ctx.usuario.id }).populate('paciente');
+            const pedidos = await Pedido.find({ user: contextValue.usuario.id }).populate('paciente');
 
             // console.log(pedidos);
             return pedidos;
@@ -180,7 +221,7 @@ Query: {
             console.log(error);
         }
     }, 
-    obtenerPedido: async(_, {id}, ctx) => {
+    obtenerPedido: async(_, {id}, contextValue) => {
         // Si el pedido existe o no
         const pedido = await Pedido.findById(id);
         if(!pedido) {
@@ -188,15 +229,15 @@ Query: {
         }
 
         // Solo quien lo creo puede verlo
-        if(pedido.user.toString() !== ctx.usuario.id) {
+        if(pedido.user.toString() !== contextValue.usuario.id) {
             throw new Error('No tienes las credenciales');
         }
 
         // retornar el resultado
         return pedido;
     }, 
-    obtenerPedidosEstado: async (_, { estado }, ctx) => {
-        const pedidos = await Pedido.find({ user: ctx.usuario.id, estado });
+    obtenerPedidosEstado: async (_, { estado }, contextValue) => {
+        const pedidos = await Pedido.find({ user: contextValue.usuario.id, estado });
 
         return pedidos;
     },
@@ -307,9 +348,9 @@ Mutation: {
         }
         
     },
-    nuevoPaciente: async (_, { input }, ctx) => {
+    nuevoPaciente: async (_, { input }, contextValue) => {
 
-        console.log(ctx);
+        console.log(contextValue);
 
         const { expediente } = input
         // Verificar si el paciente ya esta registrado
@@ -323,7 +364,7 @@ Mutation: {
         const nuevoPaciente = new Paciente(input);
 
         // asignar el user
-        nuevoPaciente.user = ctx.usuario.id;
+        nuevoPaciente.user = contextValue.usuario.id;
 
         // guardarlo en la base de datos
 
@@ -334,7 +375,7 @@ Mutation: {
             console.log(error);
         }
     },
-    actualizarPaciente: async (_, {id, input}, ctx) => {
+    actualizarPaciente: async (_, {id, input}, contextValue) => {
         // Verificar si existe o no
         let paciente = await Paciente.findById(id);
 
@@ -343,7 +384,7 @@ Mutation: {
         }
 
         // Verificar si el user es quien edita
-        if(paciente.user.toString() !== ctx.usuario.id ) {
+        if(paciente.user.toString() !== contextValue.usuario.id ) {
             throw new Error('No tienes las credenciales');
         }
 
@@ -351,7 +392,7 @@ Mutation: {
         paciente = await Paciente.findOneAndUpdate({_id : id}, input, {new: true} );
         return paciente;
     },
-    eliminarPaciente : async (_, {id}, ctx) => {
+    eliminarPaciente : async (_, {id}, contextValue) => {
         // Verificar si existe o no
         let paciente = await Paciente.findById(id);
 
@@ -360,7 +401,7 @@ Mutation: {
         }
 
         // Verificar si el user es quien edita
-        if(paciente.user.toString() !== ctx.usuario.id ) {
+        if(paciente.user.toString() !== contextValue.usuario.id ) {
             throw new Error('No tienes las credenciales');
         }
 
@@ -528,7 +569,7 @@ Mutation: {
 
         return "Producto Eliminado";
     },
-    nuevoPedido: async (_, {input}, ctx) => {
+    nuevoPedido: async (_, {input}, contextValue) => {
 
         const { paciente } = input
         
@@ -540,7 +581,7 @@ Mutation: {
         }
 
         // Verificar si el paciente es del user
-        if(pacienteExiste.user.toString() !== ctx.usuario.id ) {
+        if(pacienteExiste.user.toString() !== contextValue.usuario.id ) {
             throw new Error('No tienes las credenciales');
         }
 
@@ -564,7 +605,7 @@ Mutation: {
         const nuevoPedido = new Pedido(input);
 
         // asignarle un user
-        nuevoPedido.user = ctx.usuario.id;
+        nuevoPedido.user = contextValue.usuario.id;
 
     
         // Guardarlo en la base de datos
@@ -573,7 +614,7 @@ Mutation: {
 
         
     },
-    actualizarPedido: async(_, {id, input}, ctx) => {
+    actualizarPedido: async(_, {id, input}, contextValue) => {
 
         const { paciente } = input;
 
@@ -590,7 +631,7 @@ Mutation: {
         }
 
         // Si el paciente y pedido pertenece al user
-        if(existePaciente.user.toString() !== ctx.usuario.id ) {
+        if(existePaciente.user.toString() !== contextValue.usuario.id ) {
             throw new Error('No tienes las credenciales');
         }
 
@@ -619,7 +660,7 @@ Mutation: {
         return resultado;
 
     },
-    eliminarPedido: async (_, {id}, ctx) => {
+    eliminarPedido: async (_, {id}, contextValue) => {
         // Verificar si el pedido existe o no
         const pedido = await Pedido.findById(id);
         if(!pedido) {
@@ -627,7 +668,7 @@ Mutation: {
         }
 
         // verificar si el user es quien lo borra
-        if(pedido.user.toString() !== ctx.usuario.id ) {
+        if(pedido.user.toString() !== contextValue.usuario.id ) {
             throw new Error('No tienes las credenciales')
         }
 

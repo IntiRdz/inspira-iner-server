@@ -17,21 +17,6 @@ const PORT = process.env.PORT || 4000; // Puerto por defecto 4000 si no se defin
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({req}) => {
-    const token = req.headers['authorization'] || '';
-    if(token) {
-        try {
-            const usuario = jwt.verify(token.replace('Bearer ', ''), process.env.SECRETA );
-            // console.log(usuario);
-            return {
-                usuario
-            }
-        } catch (error) {
-            console.log('Hubo un error en la autenticación');
-            console.log(error);
-        }
-    }
-},
 });
 
 // Passing an ApolloServer instance to the `startStandaloneServer` function:
@@ -41,6 +26,21 @@ const server = new ApolloServer({
 
 (async () => {
   const { url } = await startStandaloneServer(server, {
+    context: async ({ req, res }) => {
+      const token = req.headers['authorization'] || '';
+      if (token) {
+        try {
+          const usuario = jwt.verify(token.replace('Bearer ', ''), process.env.SECRETA);
+          return {
+            usuario,
+          };
+        } catch (error) {
+          console.log('Hubo un error en la autenticación');
+          console.log(error);
+        }
+      }
+      return {}; 
+    },
     listen: { port: PORT },
   });
 

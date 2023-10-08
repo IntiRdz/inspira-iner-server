@@ -142,6 +142,16 @@ type Antibiotico {
     microorganismo_relacionado: Microorganismo
 }
 
+type Cliente {
+        id: ID
+        nombre: String
+        apellido: String
+        empresa: String
+        email: String
+        telefono: String
+        vendedor: ID
+    }
+
 type Producto {
     id: ID
     nombre: String
@@ -171,6 +181,11 @@ type PedidoGrupo{
 type TopPaciente {
     total: Float
     paciente: [Paciente]
+}
+
+type TopCliente {
+    total: Float
+    paciente: [Cliente]
 }
 
 type TopUser {
@@ -239,6 +254,14 @@ input AntibioticoInput {
     paciente_relacionado: ID!
 }
 
+input ClienteInput {
+    nombre: String!
+    apellido: String!
+    empresa: String!
+    email: String!
+    telefono: String
+}
+
 input ProductoInput {
     nombre: String!
     existencia: Int!
@@ -289,6 +312,11 @@ type Query {
     obtenerAntibioticos: [Antibiotico]
     obtenerAntibiotico(id: ID!) : Antibiotico
 
+    #Clientes
+    obtenerClientes: [Cliente]
+    obtenerClientesVendedor: [Cliente]
+    obtenerCliente(id: ID!): Cliente
+
     # Productos
     obtenerProductos: [Producto]
     obtenerProducto(id: ID!) : Producto
@@ -312,11 +340,6 @@ type Mutation {
     nuevoUsuario(input: UsuarioInput) : Usuario
     autenticarUsuario(input: AutenticarInput) : Token
 
-    # Pacientes
-    nuevoPaciente(input: PacienteInput) : Paciente
-    actualizarPaciente(id: ID!, input: PacienteInput): Paciente
-    eliminarPaciente(id: ID!) : String
-
     #Camas
     nuevaCama(input: CamaInput) : Cama
     actualizarCama( id: ID!, input : CamaInput ) : Cama
@@ -331,6 +354,11 @@ type Mutation {
     nuevoAntibiotico(input: AntibioticoInput) : Antibiotico
     actualizarAntibiotico( id: ID!, input : AntibioticoInput) : Antibiotico
     eliminarAntibiotico( id: ID! ) : String
+
+    # Pacientes
+    nuevoPaciente(input: PacienteInput) : Paciente
+    actualizarPaciente(id: ID!, input: PacienteInput): Paciente
+    eliminarPaciente(id: ID!) : String
 
     # Productos
     nuevoProducto(input: ProductoInput) : Producto
