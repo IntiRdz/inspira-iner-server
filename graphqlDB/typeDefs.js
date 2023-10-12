@@ -72,6 +72,7 @@ type Cama {
     cama_numero: Int
     cama_compartida: Boolean
     cama_disponible: Boolean
+    cama_ocupada:Boolean
     cama_genero: Genero
     cama_dispositivo_o2: DispositivoO2cama
     cama_hemodialisis: Boolean
@@ -226,6 +227,7 @@ input CamaInput {
     cama_numero: Int
     cama_compartida: Boolean
     cama_disponible: Boolean
+    cama_ocupada: Boolean
     cama_genero: Genero
     cama_dispositivo_o2: DispositivoO2cama
     cama_hemodialisis: Boolean
@@ -298,10 +300,13 @@ type Query {
     obtenerPacientes: [Paciente]
     obtenerPacientesUser: [Paciente]
     obtenerPaciente(id: ID!): Paciente
+    obtenerPacientesHospitalizados: [Paciente]
 
     # Camas
     obtenerCamas: [Cama]
     obtenerCama(id: ID!) : Cama
+    obtenerCamasOcupadas: [Cama!]!
+    obtenerCamasDisponibles: [Cama]
 
     # Microorganismos
     obtenerMicroorganismos: [Microorganismo]
@@ -344,6 +349,7 @@ type Mutation {
     nuevaCama(input: CamaInput) : Cama
     actualizarCama( id: ID!, input : CamaInput ) : Cama
     eliminarCama( id: ID! ) : String
+    desocuparCama(id: ID!): Cama
 
     #Microorganismos
     nuevoMicroorganismo(input: MicroorganismoInput) : Microorganismo
@@ -359,6 +365,8 @@ type Mutation {
     nuevoPaciente(input: PacienteInput) : Paciente
     actualizarPaciente(id: ID!, input: PacienteInput): Paciente
     eliminarPaciente(id: ID!) : String
+    modificarEstadoHospitalizado(id: ID!):String
+    
 
     # Productos
     nuevoProducto(input: ProductoInput) : Producto

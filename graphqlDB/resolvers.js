@@ -50,21 +50,13 @@ Query: {
         return contextValue.usuario;
     }, 
 
-/*     adminExample: (parent, args, contextValue, info) => {
-        if (contextValue.authScope !== ADMIN) {
-          throw new GraphQLError('not admin!', {
-            extensions: { code: 'UNAUTHENTICATED' },
-          });
-        }
-      }, */
-
-    
     obtenerPacientes: async () => {
+        //console.log("Llamando a la funcion obtener pacientes")
         try {
             const pacientes = await Paciente.find({});
             return pacientes;
         } catch (error) {
-            console.log(error);
+            console.log("Error al obtener pacientes",error);
         }
     }, 
     obtenerPacientesUser: async (_, {}, contextValue ) => {
@@ -86,7 +78,6 @@ Query: {
             return null; // Devolver null en lugar de lanzar un error
         }
     
-        // Quien lo creo puede verlo
         return paciente;
     },
     obtenerCamas: async () => {
@@ -107,6 +98,47 @@ Query: {
 
         return cama;
     },
+
+    obtenerPacientesHospitalizados: async () => {
+        try {
+            const pacientesHospitalizados = await Paciente.find({ 
+                hospitalizado: true 
+            });
+
+            return pacientesHospitalizados;
+        } catch (error) {
+            console.log(error);
+            throw error; 
+        }
+    },
+
+    obtenerCamasOcupadas: async () => {
+        try {
+          const camasOcupadas = await Cama.find({ 
+            cama_ocupada: true 
+        });
+  
+          // Retorna las camas encontradas
+          return camasOcupadas;
+        } catch (error) {
+          throw new Error("Error al obtener las camas ocupadas: " + error.message);
+        }
+      },
+
+    obtenerCamasDisponibles: async () => {
+    try {
+        const camasDisponibles = await Cama.find({ 
+            cama_ocupada: false, 
+            cama_disponible:true 
+        });
+
+        // Retorna las camas encontradas
+        return camasDisponibles;
+    } catch (error) {
+        throw new Error("Error al obtener las camas ocupadas: " + error.message);
+    }
+    },
+
     obtenerMicroorganismos: async () => {
         try {
             const microorganismos = await Microorganismo.find({});
@@ -115,6 +147,20 @@ Query: {
             console.log(error);
         }
     }, 
+
+    obtenerMicroorganismosPatient: async (_, { id }) => {
+        try {
+          console.log("ID de paciente recibido:", id);
+          const microorganismos = await Microorganismo.find({ paciente_relacionado: id });
+
+          return microorganismos;
+        } catch (error) {
+          console.error("Error al buscar microorganismos:", error);
+          throw error;
+        }
+      },
+/* 
+
     obtenerMicroorganismosPatient: async (_, { id }) => {
         try {
             console.log('Valor de input paciente_relacionado:', input.paciente_relacionado);
@@ -126,6 +172,8 @@ Query: {
           throw error; // Deberías lanzar el error para manejarlo adecuadamente en GraphQL
         }
       },
+ */
+
     obtenerMicroorganismo: async (_, { id }) => {
         // revisar si el microorganismo existe o no
         const microorganismo = await Microorganismo.findById(id);
@@ -350,11 +398,12 @@ Mutation: {
     },
     nuevoPaciente: async (_, { input }, contextValue) => {
 
-        console.log(contextValue);
+        //console.log(contextValue);
+        //console.log("Recibimos un input",input)
 
         const { expediente } = input
         // Verificar si el paciente ya esta registrado
-        console.log(input);
+        //console.log("Expediente",expediente);
 
         const paciente = await Paciente.findOne({ expediente });
         if(paciente) {
@@ -409,6 +458,7 @@ Mutation: {
         await Paciente.findOneAndDelete({_id : id});
         return "Paciente Eliminado"
     },
+    
     nuevaCama: async (_, {input}) => {
         try {
             const cama = new Cama(input);
@@ -434,7 +484,52 @@ Mutation: {
 
         return cama;
     }, 
+    
+    desocuparCama: async (_, { id }) => {
+        //console.log(`Resolver desocuparCama recibió el ID: ${id}`);
+        try {
+            // Busca la cama por su ID
+            const cama = await Cama.findById(id);
+
+            // Si la cama no existe, lanza un error
+            if (!cama) {
+            throw new Error(`No se encontró una cama con ID ${id}`);
+            }
+
+            // Cambia el valor de cama_ocupada a false
+            cama.cama_ocupada = false;
+
+            // Guarda la cama actualizada en la base de datos
+            await cama.save();
+
+            // Retorna la cama actualizada
+            return cama;
+
+        } catch (error) {
+            throw new Error("Error al desocupar la cama: " + error.message);
+        }
+    },
     eliminarCama: async(_, {id}) => {
+        //console.log(`Resolver modificarEstadoCama recibió el ID: ${id}`);
+        // Revisar si la cama existe o no
+        let cama = await Cama.findById(id);
+    
+        if (!cama) {
+            throw new Error('Cama no encontrada');
+        }
+    
+        // Cambiar el valor de "cama_ocupada" a false
+        //cama.cama_ocupada = false;
+        cama.cama_ocupada = !cama.cama_ocupada;
+    
+        // Guardar los cambios en la base de datos
+        await cama.save();
+    
+        return "Estado de cama modificado correctamente";
+    },
+/* 
+    eliminarCama: async(_, {id}) => {
+        console.log(`Resolver eliminarCama recibió el ID: ${id}`);
         // revisar si el cama existe o no
         let cama = await Cama.findById(id);
 
@@ -447,6 +542,8 @@ Mutation: {
 
         return "Cama Eliminado";
     },
+ */
+
     nuevoMicroorganismo: async (_, { input }) => {
     try {
         

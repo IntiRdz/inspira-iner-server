@@ -5,7 +5,8 @@ const schema  = new mongoose.Schema({
     cama_numero: {
         type: Number,
         required: true,
-        trim: true
+        trim: true,
+        unique: true
     },
     cama_compartida: {
         type: Boolean,
@@ -14,6 +15,12 @@ const schema  = new mongoose.Schema({
     cama_disponible: {
         type: Boolean,
         required: true,
+        default: true
+    },
+    cama_ocupada: {
+        type: Boolean,
+        required: true,
+        default: false
     },
     cama_genero: {
         type: String,
@@ -36,6 +43,7 @@ const schema  = new mongoose.Schema({
     cama_dan: {
         type: Boolean,
         required: true,
+        default: false
     },
     cama_codigo_uveh: {
         type: String,
