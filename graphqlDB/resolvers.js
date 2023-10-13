@@ -88,6 +88,34 @@ Query: {
             console.log(error);
         }
     }, 
+    
+    obtenerPacientesHospitalizados: async () => {
+        try {
+            const pacientesHospitalizados = await Paciente.find({ 
+                hospitalizado: true 
+            });
+            
+            return pacientesHospitalizados;
+        } catch (error) {
+            console.log(error);
+            throw error; 
+        }
+    },
+
+    obtenerPacientesHospitalizadosSinCama: async () => {
+        try {
+            const pacientesHospitalizadosSinCama = await Paciente.find({ 
+                hospitalizado: true,
+                cama_relacionada: null 
+            });
+            
+            return pacientesHospitalizadosSinCama;
+        } catch (error) {
+            console.log(error);
+            throw error; 
+        }
+    },
+    
     obtenerCama: async (_, { id }) => {
         // revisar si el cama existe o no
         const cama = await Cama.findById(id);
@@ -98,20 +126,6 @@ Query: {
 
         return cama;
     },
-
-    obtenerPacientesHospitalizados: async () => {
-        try {
-            const pacientesHospitalizados = await Paciente.find({ 
-                hospitalizado: true 
-            });
-
-            return pacientesHospitalizados;
-        } catch (error) {
-            console.log(error);
-            throw error; 
-        }
-    },
-
     obtenerCamasOcupadas: async () => {
         try {
           const camasOcupadas = await Cama.find({ 

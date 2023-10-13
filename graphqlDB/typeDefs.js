@@ -301,6 +301,7 @@ type Query {
     obtenerPacientesUser: [Paciente]
     obtenerPaciente(id: ID!): Paciente
     obtenerPacientesHospitalizados: [Paciente]
+    obtenerPacientesHospitalizadosSinCama: [Paciente]
 
     # Camas
     obtenerCamas: [Cama]
