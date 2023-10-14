@@ -25,7 +25,11 @@ const schema  = new mongoose.Schema({
     },
     pac_genero: {
         type: String,
-        enum: ['Hombre', 'Mujer', 'No_especificado'],
+        enum: [
+            'Hombre', 
+            'Mujer', 
+            'No_especificado'
+        ],
         required: true
     },
     pac_FN: {
@@ -34,7 +38,13 @@ const schema  = new mongoose.Schema({
     },
     pac_dispositivo_o2: {
         type: String,
-        enum: ['AA', 'PN', 'PNAF', 'VMNI', 'VM'],
+        enum: [
+            'AA', 
+            'PN', 
+            'PNAF', 
+            'VMNI', 
+            'VM'
+        ],
         required: true
     },
     pac_hemodialisis: {
@@ -42,14 +52,53 @@ const schema  = new mongoose.Schema({
         required: true,
         default: false
     },
-    diagnostico: {
+    diagnostico1: {
+        type: [String],
+        required: false,
+        trim: true,
+        enum: [
+            'CodigoHemoptisis',
+            'CodigoViaAerea',
+            'CodigoInfarto',
+            'COVID',
+            'Influenza',
+            'Parainfluenza',
+            'Adenovirus',
+            'VirusSincialRespiratorio',
+            'TuberculosisSensible',
+            'TuberculosisResistente',
+            'B24',
+            'SIRA',
+            'Neumonia Bacteriana',
+            'EPOC',
+            'Asma',
+            'TromboembiaPulmonar',
+            'DerramePleural',
+            'Neumotorax',
+            'NeumoniaIntersticialDifusa',
+            'InsuficienciaCaridiaca',
+            'CaPulmonarOSospecha'
+        ]
+    },
+    diagnostico2: {
         type: String,
         required: true,
         trim: true
     },
     pac_codigo_uveh: {
-        type: String,
-        enum: ['Sin_Aislamientos', 'Acinetobacter', 'Colonización_Acinetobacter', 'Contacto_Acinetobacter' , 'Hisopado_Rectal', 'Clostridium_Difficile', 'Enterobacterias_XDR_MDR', 'Pseudomonas_XDR_MDR', 'SAMR', 'Tuberculosisis_o_Sospecha', 'SAMS'],
+        type: [String],
+        enum: [
+            'Sin_Aislamientos', 
+            'Acinetobacter', 
+            'Colonización_Acinetobacter', 
+            'Contacto_Acinetobacter', 
+            'Hisopado_Rectal', 
+            'Clostridium_Difficile', 
+            'Enterobacterias_XDR_MDR', 
+            'Pseudomonas_XDR_MDR', 
+            'SAMR', 
+            'Tuberculosisis_o_Sospecha', 
+            'SAMS'],
         required: true
     },
     fecha_ingreso: {
@@ -78,19 +127,19 @@ const schema  = new mongoose.Schema({
     },
         // Agregar una referencia a la cama actual del paciente
     cama_relacionada: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: [mongoose.Schema.Types.ObjectId],
         ref: 'Cama',
         default: null
     },
     // Agregar una referencia al último microorganismo detectado
     microorganismo_relacionado: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: [mongoose.Schema.Types.ObjectId],
         ref: 'Microorganismo',
         default: null
     },
     // Agregar una referencia al último antibiótico administrado
     antibiotico_relacionado: {
-        type: mongoose.Schema.Types.ObjectId,
+        type:[mongoose.Schema.Types.ObjectId],
         ref: 'Antibiotico',
         default: null
     }

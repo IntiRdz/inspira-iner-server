@@ -8,37 +8,13 @@ type Token {
 }
 
 type Usuario {
-    id: ID
+    _id: ID
     nombre: String
     apellido: String
     email: String
     creado: Date
     activo:Boolean
 }
-
-type Paciente {
-    id: ID!
-    expediente: String
-    pac_apellido_paterno: String
-    pac_apellido_materno: String
-    pac_nombre: String
-    pac_genero: Genero
-    pac_FN: Date
-    pac_dispositivo_o2: DispositivoO2
-    pac_hemodialisis: Boolean
-    diagnostico: String
-    pac_codigo_uveh: CodigoPaciente
-    fecha_ingreso: Date
-    fecha_prealta: Date
-    fecha_egreso: Date
-    hospitalizado: Boolean
-    creado: String
-    user: ID
-    cama_relacionada: [Cama]
-    microorganismo_relacionado:[Microorganismo]
-    antibiotico_relacionado: [Antibiotico]
-}
-
 enum Genero {
     Hombre
     Mujer
@@ -52,6 +28,30 @@ enum DispositivoO2 {
     VMNI
     VM
 }
+
+enum DiagnosticoEnum {
+    CodigoHemoptisis
+    CodigoViaAerea
+    CodigoInfarto
+    COVID
+    Influenza
+    Parainfluenza
+    Adenovirus
+    VirusSincialRespiratorio
+    TuberculosisSensible
+    TuberculosisResistente
+    B24
+    SIRA
+    NeumoniaBacteriana
+    EPOC
+    Asma
+    TromboemboliaPulmonar
+    DerramePleural
+    Neumotorax
+    NeumoniaIntersticialDifusa
+    InsuficienciaCardiaca
+    CaPulmonarOSospecha
+  }
 
 enum CodigoPaciente {
     Sin_Aislamientos
@@ -67,8 +67,45 @@ enum CodigoPaciente {
     SAMS
 }
 
+type Paciente {
+    _id: ID!
+    expediente: String
+    pac_apellido_paterno: String
+    pac_apellido_materno: String
+    pac_nombre: String
+    pac_genero: Genero
+    pac_FN: Date
+    pac_dispositivo_o2: DispositivoO2
+    pac_hemodialisis: Boolean
+    diagnostico1:[DiagnosticoEnum]
+    diagnostico2: String
+    pac_codigo_uveh: [CodigoPaciente]
+    fecha_ingreso: Date
+    fecha_prealta: Date
+    fecha_egreso: Date
+    hospitalizado: Boolean
+    creado: Date
+    user: Usuario
+    cama_relacionada: [Cama]
+    microorganismo_relacionado:[Microorganismo]
+    antibiotico_relacionado: [Antibiotico]
+}
+
+enum DispositivoO2cama {
+    VM
+    NoVM
+}
+
+
+enum CodigoCama{
+    SinAislamientos
+    PreviamenteAcinetobacter
+    PreviamenteClostridium
+    PreviamenteEnterobacteriasXDR
+    PreviamentePseudomonasAeruginosaXDR
+}
 type Cama {
-    id: ID!
+    _id: ID!
     cama_numero: Int
     cama_compartida: Boolean
     cama_disponible: Boolean
@@ -85,34 +122,6 @@ type Cama {
     paciente_relacionado: [Paciente]
     microorganismo_relacionado: [Microorganismo]
 }
-
-
-enum DispositivoO2cama {
-    VM
-    No_VM
-}
-
-
-enum CodigoCama{
-    Sin_Aislamientos
-    Previamente_Acinetobacter
-    Previamente_Clostridium
-    Previamente_Enterobacterias_XDR
-    Previamente_Pseudomonas_Aeruginosa_XDR
-}
-
-type Microorganismo {
-    id: ID!
-    fecha_deteccion: Date
-    metodo_deteccion: MetodoDeteccion
-    microorganismo_tipo: MicroorganismoTipo
-    microorganismo_nombre: String
-    susceptibilidad: Susceptibilidad
-    comentario_uveh: String
-    paciente_relacionado: ID
-    cama_relacionada: ID
-}
-
 
 enum MetodoDeteccion {
     PCR
@@ -132,13 +141,28 @@ enum Susceptibilidad {
     MDR
     XDR
     Sensible
+    NoDeterminada
+}
+   
+
+type Microorganismo {
+    _id: ID!
+    fecha_deteccion: Date
+    metodo_deteccion: MetodoDeteccion
+    microorganismo_tipo: MicroorganismoTipo
+    microorganismo_nombre: String
+    susceptibilidad: Susceptibilidad
+    comentario_uveh: String
+    paciente_relacionado: Paciente
+    cama_relacionada: [Cama]
 }
 
 type Antibiotico {
-    id: ID!
+    _id: ID!
     antibiotico_nombre: String!
     antibiotico_comentario: String
-    antibiotico_inicio: String!
+    antibiotico_inicio: Date!
+    antbiotico_fin:Date
     paciente_relacionado: Paciente!
     microorganismo_relacionado: Microorganismo
 }
@@ -215,8 +239,9 @@ input PacienteInput {
     pac_FN: Date
     pac_dispositivo_o2: DispositivoO2
     pac_hemodialisis: Boolean
-    diagnostico: String
-    pac_codigo_uveh: CodigoPaciente
+    diagnostico1: [DiagnosticoEnum]
+    diagnostico12: String
+    pac_codigo_uveh: [CodigoPaciente]
     fecha_ingreso: Date
     fecha_prealta: Date
     fecha_egreso: Date
@@ -243,7 +268,7 @@ input MicroorganismoInput {
     metodo_deteccion: MetodoDeteccion!
     microorganismo_tipo: MicroorganismoTipo!
     microorganismo_nombre: String!
-    susceptibilidad: Susceptibilidad!
+    susceptibilidad: Susceptibilidad
     comentario_uveh: String
     paciente_relacionado: ID
     cama_relacionada: ID
@@ -252,8 +277,9 @@ input MicroorganismoInput {
 input AntibioticoInput {
     antibiotico_nombre: String!
     antibiotico_comentario: String
-    antibiotico_inicio: String!
-    paciente_relacionado: ID!
+    antibiotico_inicio: Date!
+    antibiotico_fin: Date
+    paciente_relacionado: ID
 }
 
 input ClienteInput {

@@ -87,35 +87,7 @@ Query: {
         } catch (error) {
             console.log(error);
         }
-    }, 
-    
-    obtenerPacientesHospitalizados: async () => {
-        try {
-            const pacientesHospitalizados = await Paciente.find({ 
-                hospitalizado: true 
-            });
-            
-            return pacientesHospitalizados;
-        } catch (error) {
-            console.log(error);
-            throw error; 
-        }
     },
-
-    obtenerPacientesHospitalizadosSinCama: async () => {
-        try {
-            const pacientesHospitalizadosSinCama = await Paciente.find({ 
-                hospitalizado: true,
-                cama_relacionada: null 
-            });
-            
-            return pacientesHospitalizadosSinCama;
-        } catch (error) {
-            console.log(error);
-            throw error; 
-        }
-    },
-    
     obtenerCama: async (_, { id }) => {
         // revisar si el cama existe o no
         const cama = await Cama.findById(id);
@@ -152,7 +124,34 @@ Query: {
         throw new Error("Error al obtener las camas ocupadas: " + error.message);
     }
     },
+        
+    obtenerPacientesHospitalizados: async () => {
+        try {
+            const pacientesHospitalizados = await Paciente.find({ 
+                hospitalizado: true 
+            });
+            
+            return pacientesHospitalizados;
+        } catch (error) {
+            console.log(error);
+            throw error; 
+        }
+    },
 
+    obtenerPacientesHospitalizadosSinCama: async () => {
+        try {
+            const pacientesHospitalizadosSinCama = await Paciente.find({ 
+                hospitalizado: true,
+                cama_relacionada: null 
+            });
+            
+            return pacientesHospitalizadosSinCama;
+        } catch (error) {
+            console.log(error);
+            throw error; 
+        }
+    },
+    
     obtenerMicroorganismos: async () => {
         try {
             const microorganismos = await Microorganismo.find({});

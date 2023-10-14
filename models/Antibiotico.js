@@ -14,7 +14,12 @@ const schema  = new mongoose.Schema({
     },
     antibiotico_inicio:{
         type: Date,
-        default: Date.now() 
+        default: Date.now(),
+    },
+    antibiotico_fin:{
+        type: Date,
+        required: false,
+
     },
     // Agregar una referencia al paciente al que se le administró el antibiótico
     paciente_relacionado: {

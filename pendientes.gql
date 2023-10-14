@@ -1,0 +1,27 @@
+type Diagnostico {
+  diagnostico1: String!
+}
+
+enum DiagnosticoEnum {
+  CodigoHemoptisis
+  CodigoViaAerea
+  CodigoInfarto
+  COVID
+  Influenza
+  Parainfluenza
+  Adenovirus
+  VirusSincialRespiratorio
+  TuberculosisSensible
+  TuberculosisResistente
+  B24
+  SIRA
+  Neumonia Bacteriana
+  EPOC
+  Asma
+  TromboembiaPulmonar
+  DerramePleural
+  Neumotorax
+  NeumoniaIntersticialDifusa
+  InsuficienciaCaridiaca
+  CaPulmonarOSospecha
+}

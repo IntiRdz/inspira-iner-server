@@ -24,7 +24,11 @@ const schema  = new mongoose.Schema({
     },
     cama_genero: {
         type: String,
-        enum: ['Mujer', 'Hombre', 'No_especificado'],
+        enum: [
+            'Mujer', 
+            'Hombre', 
+            'NoEspecificado'
+        ],
         required: true
     },
     cama_dispositivo_o2: {
@@ -47,8 +51,15 @@ const schema  = new mongoose.Schema({
     },
     cama_codigo_uveh: {
         type: String,
-        enum: ['Sin_Aislamientos', 'Previamente_Acinetobacter', 'Previamente_Clostridium', 'Previamente_Enterobacterias_XDR', 'Previamente_Pseudomonas_Aeruginosa_XDR'],
-        required: true,
+        enum: [
+            'SinAislamientos', 
+            'PreviamenteAcinetobacter', 
+            'PreviamenteClostridium', 
+            'PreviamenteEnterobacteriasXDR', 
+            'PreviamentePseudomonasAeruginosaXDR',
+            'PreviamenteXDR'
+            ],
+        required: false,
     },
     cama_fecha_inicio: {
         type: Date,
@@ -62,12 +73,12 @@ const schema  = new mongoose.Schema({
     },
     // Agregar una referencia al paciente actual que ocupa la cama (si está ocupada)
     paciente_relacionado: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: [mongoose.Schema.Types.ObjectId],
         ref: 'Paciente',
         default: null
     },
     microorganismo_relacionado: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: [mongoose.Schema.Types.ObjectId],
         ref: 'Microorganismo',
         default: null
     },
