@@ -87,44 +87,8 @@ Query: {
         } catch (error) {
             console.log(error);
         }
-    },
-    obtenerCama: async (_, { id }) => {
-        // revisar si el cama existe o no
-        const cama = await Cama.findById(id);
-
-        if(!cama) {
-            throw new Error('Cana no encontrada');
-        }
-
-        return cama;
-    },
-    obtenerCamasOcupadas: async () => {
-        try {
-          const camasOcupadas = await Cama.find({ 
-            cama_ocupada: true 
-        });
-  
-          // Retorna las camas encontradas
-          return camasOcupadas;
-        } catch (error) {
-          throw new Error("Error al obtener las camas ocupadas: " + error.message);
-        }
-      },
-
-    obtenerCamasDisponibles: async () => {
-    try {
-        const camasDisponibles = await Cama.find({ 
-            cama_ocupada: false, 
-            cama_disponible:true 
-        });
-
-        // Retorna las camas encontradas
-        return camasDisponibles;
-    } catch (error) {
-        throw new Error("Error al obtener las camas ocupadas: " + error.message);
-    }
-    },
-        
+    }, 
+    
     obtenerPacientesHospitalizados: async () => {
         try {
             const pacientesHospitalizados = await Paciente.find({ 
@@ -152,6 +116,45 @@ Query: {
         }
     },
     
+    obtenerCama: async (_, { id }) => {
+        // revisar si el cama existe o no
+        const cama = await Cama.findById(id);
+
+        if(!cama) {
+            throw new Error('Cana no encontrada');
+        }
+
+        return cama;
+    },
+    obtenerCamasOcupadas: async () => {
+        try {
+          const camasOcupadas = await Cama.find({ 
+            cama_ocupada: true 
+        });
+  
+          // Retorna las camas encontradas
+          return camasOcupadas;
+        } catch (error) {
+          throw new Error("Error al obtener las camas ocupadas: " + error.message);
+        }
+      },
+
+    obtenerCamasDisponibles: async () => {
+        console.log("Se llama al resolver 'obtenerCamasDisponibles")
+    try {
+        const camasDisponibles = await Cama.find({ 
+            cama_ocupada: false, 
+            cama_disponible:true 
+        });
+
+        // Retorna las camas encontradas
+        console.log("y retorna esto: ",camasDisponibles)
+        return camasDisponibles;
+    } catch (error) {
+        throw new Error("Error al obtener las camas ocupadas: " + error.message);
+    }
+    },
+
     obtenerMicroorganismos: async () => {
         try {
             const microorganismos = await Microorganismo.find({});
@@ -163,9 +166,10 @@ Query: {
 
     obtenerMicroorganismosPatient: async (_, { id }) => {
         try {
-          console.log("ID de paciente recibido:", id);
-          const microorganismos = await Microorganismo.find({ paciente_relacionado: id });
-
+            console.log("Se llama a la funcion 'obtenerMicroorganismosPatient")
+            console.log("ID de paciente recibido:", id);
+            const microorganismos = await Microorganismo.find({ paciente_relacionado: id });
+            console.log({microorganismos})
           return microorganismos;
         } catch (error) {
           console.error("Error al buscar microorganismos:", error);
@@ -437,7 +441,34 @@ Mutation: {
             console.log(error);
         }
     },
-    actualizarPaciente: async (_, {id, input}, contextValue) => {
+
+
+    actualizarPaciente: async (_, { id, input }) => {
+        console.log("Se llama a la funcion Actualizar Paciente")
+        console.log("se recibe el ID del paciente", id)
+        // Verificar si existe o no
+        let paciente = await Paciente.findById(id);
+    
+        if (!paciente) {
+            throw new Error('Ese paciente no existe');
+        }
+    
+        // Actualizar el campo cama_relacionada usando $push
+        paciente = await Paciente.findOneAndUpdate(
+            { _id: id },
+            { $push: { cama_relacionada: input.cama_relacionada } },
+            { new: true }
+        );
+    
+        console.log("Paciente actualizado", paciente)
+        return paciente;
+    },
+
+
+
+/*     actualizarPaciente: async (_, {id, input} ) => {
+        console.log("Se llama a la funcion Actualizar Paciente")
+        console.log("se recibe el ID del paciente",id)
         // Verificar si existe o no
         let paciente = await Paciente.findById(id);
 
@@ -445,15 +476,12 @@ Mutation: {
             throw new Error('Ese paciente no existe');
         }
 
-        // Verificar si el user es quien edita
-        if(paciente.user.toString() !== contextValue.usuario.id ) {
-            throw new Error('No tienes las credenciales');
-        }
-
         // guardar el paciente
         paciente = await Paciente.findOneAndUpdate({_id : id}, input, {new: true} );
+        console.log("Paciente actualizado",paciente)
         return paciente;
-    },
+    }, */
+    
     eliminarPaciente : async (_, {id}, contextValue) => {
         // Verificar si existe o no
         let paciente = await Paciente.findById(id);
@@ -561,6 +589,7 @@ Mutation: {
     try {
         
         // Agrega este registro para verificar el valor de input.paciente_relacionado
+        console.log("Se inicia resolver 'nuevoMicroorganismo")
         console.log('Valor de input paciente_relacionado:', input.paciente_relacionado);
         console.log('Valor de input  cama_relacionada:', input.cama_relacionada);
         // Crear una instancia de Microorganismo a partir del input

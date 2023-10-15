@@ -11,7 +11,8 @@ const schema  = new mongoose.Schema({
         enum: [
             'PCR', 
             'Panel', 
-            'Cultivo'],
+            'Cultivo'
+        ],
         required: true
     },
     microorganismo_tipo: {
@@ -20,8 +21,7 @@ const schema  = new mongoose.Schema({
             'Virus', 
             'Bacteria', 
             'Micobacteria', 
-            'Hongo'
-        ],
+            'Hongo'],
         required: true
     },
     microorganismo_nombre: {
@@ -29,15 +29,18 @@ const schema  = new mongoose.Schema({
         required: true,
         trim: true
     },
+
+/*     codigo_sistema:{
+
+    }, */
     susceptibilidad: {
         type: String,
         enum: [
-        'BLEE',
-        'MDR',
-        'XDR',
-        'Sensible',
-        'NoDeterminada'
-    ],
+            'BLEE', 
+            'MDR', 
+            'XDR', 
+            'Sensible'
+        ],
     },
     comentario_uveh: {
         type: String,
@@ -46,15 +49,14 @@ const schema  = new mongoose.Schema({
     },
     // Agregar una referencia al paciente en el que se detectó el microorganismo
     paciente_relacionado: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: [mongoose.Schema.Types.ObjectId],
         required: true,
         ref: 'Paciente'
     },        // Agregar una referencia a la cama  en el que se detectó el microorganismo
     cama_relacionada: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'Cama',
-        default: null,
-        required: false,
+        default: null
     },
     
 })

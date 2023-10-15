@@ -27,13 +27,16 @@ const schema  = new mongoose.Schema({
         enum: [
             'Mujer', 
             'Hombre', 
-            'NoEspecificado'
+            'No_especificado'
         ],
         required: true
     },
     cama_dispositivo_o2: {
         type: String,
-        enum: ['VM', 'No_VM'],
+        enum: [
+            'VM', 
+            'No_VM'
+        ],
         required: true,
     },
     cama_hemodialisis: {
@@ -52,14 +55,13 @@ const schema  = new mongoose.Schema({
     cama_codigo_uveh: {
         type: String,
         enum: [
-            'SinAislamientos', 
-            'PreviamenteAcinetobacter', 
-            'PreviamenteClostridium', 
-            'PreviamenteEnterobacteriasXDR', 
-            'PreviamentePseudomonasAeruginosaXDR',
-            'PreviamenteXDR'
-            ],
-        required: false,
+            'Sin_Aislamientos', 
+            'Previamente_Acinetobacter', 
+            'Previamente_Clostridium', 
+            'Previamente_Enterobacterias_XDR', 
+            'Previamente_Pseudomonas_Aeruginosa_XDR'
+        ],
+        required: true,
     },
     cama_fecha_inicio: {
         type: Date,

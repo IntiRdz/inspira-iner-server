@@ -28,8 +28,7 @@ const schema  = new mongoose.Schema({
         enum: [
             'Hombre', 
             'Mujer', 
-            'No_especificado'
-        ],
+            'No_especificado'],
         required: true
     },
     pac_FN: {
@@ -39,7 +38,7 @@ const schema  = new mongoose.Schema({
     pac_dispositivo_o2: {
         type: String,
         enum: [
-            'AA', 
+            'AA',
             'PN', 
             'PNAF', 
             'VMNI', 
@@ -52,53 +51,27 @@ const schema  = new mongoose.Schema({
         required: true,
         default: false
     },
-    diagnostico1: {
-        type: [String],
-        required: false,
-        trim: true,
-        enum: [
-            'CodigoHemoptisis',
-            'CodigoViaAerea',
-            'CodigoInfarto',
-            'COVID',
-            'Influenza',
-            'Parainfluenza',
-            'Adenovirus',
-            'VirusSincialRespiratorio',
-            'TuberculosisSensible',
-            'TuberculosisResistente',
-            'B24',
-            'SIRA',
-            'Neumonia Bacteriana',
-            'EPOC',
-            'Asma',
-            'TromboembiaPulmonar',
-            'DerramePleural',
-            'Neumotorax',
-            'NeumoniaIntersticialDifusa',
-            'InsuficienciaCaridiaca',
-            'CaPulmonarOSospecha'
-        ]
-    },
-    diagnostico2: {
+    diagnostico: {
         type: String,
         required: true,
         trim: true
     },
     pac_codigo_uveh: {
-        type: [String],
+        type: String,
         enum: [
+            'Sin_Definir',
             'Sin_Aislamientos', 
             'Acinetobacter', 
             'Colonización_Acinetobacter', 
-            'Contacto_Acinetobacter', 
+            'Contacto_Acinetobacter' , 
             'Hisopado_Rectal', 
             'Clostridium_Difficile', 
             'Enterobacterias_XDR_MDR', 
             'Pseudomonas_XDR_MDR', 
             'SAMR', 
             'Tuberculosisis_o_Sospecha', 
-            'SAMS'],
+            'SAMS'
+        ],
         required: true
     },
     fecha_ingreso: {
@@ -139,7 +112,7 @@ const schema  = new mongoose.Schema({
     },
     // Agregar una referencia al último antibiótico administrado
     antibiotico_relacionado: {
-        type:[mongoose.Schema.Types.ObjectId],
+        type: [mongoose.Schema.Types.ObjectId],
         ref: 'Antibiotico',
         default: null
     }

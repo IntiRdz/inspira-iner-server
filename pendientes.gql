@@ -15,7 +15,7 @@ enum DiagnosticoEnum {
   TuberculosisResistente
   B24
   SIRA
-  Neumonia Bacteriana
+  NeumoniaBacteriana
   EPOC
   Asma
   TromboembiaPulmonar
