@@ -27,6 +27,7 @@ type Paciente {
     pac_dispositivo_o2: DispositivoO2
     pac_hemodialisis: Boolean
     diagnostico: String
+    diagnostico1: [Diagnostico1]
     pac_codigo_uveh: CodigoPaciente
     fecha_ingreso: Date
     fecha_prealta: Date
@@ -51,6 +52,30 @@ enum DispositivoO2 {
     PNAF
     VMNI
     VM
+}
+
+enum Diagnostico1 {
+  CodigoHemoptisis
+  CodigoViaAerea
+  CodigoInfarto
+  COVID
+  Influenza
+  Parainfluenza
+  Adenovirus
+  VirusSincialRespiratorio
+  TuberculosisSensible
+  TuberculosisResistente
+  B24
+  SIRA
+  NeumoniaBacteriana
+  EPOC
+  Asma
+  TromboembiaPulmonar
+  DerramePleural
+  Neumotorax
+  NeumoniaIntersticialDifusa
+  InsuficienciaCaridiaca
+  CaPulmonarOSospecha
 }
 
 enum CodigoPaciente {
@@ -216,6 +241,7 @@ input PacienteInput {
     pac_FN: Date
     pac_dispositivo_o2: DispositivoO2
     pac_hemodialisis: Boolean
+    diagnostico1: [String]
     diagnostico: String
     pac_codigo_uveh: CodigoPaciente
     fecha_ingreso: Date

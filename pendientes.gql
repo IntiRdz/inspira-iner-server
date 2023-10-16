@@ -25,3 +25,47 @@ enum DiagnosticoEnum {
   InsuficienciaCaridiaca
   CaPulmonarOSospecha
 }
+
+
+<div className="mb-4">
+    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="diagnostico1">
+        Diagnósticos Generales
+    </label>
+
+    {   [
+            CodigoHemoptisis,
+            CodigoViaAerea,
+            CodigoInfarto,
+            COVID,
+            Influenza,
+            Parainfluenza,
+            Adenovirus,
+            VirusSincialRespiratorio,
+            TuberculosisSensible,
+            TuberculosisResistente,
+            B24,
+            SIRA,
+            NeumoniaBacteriana,
+            EPOC,
+            Asma,
+            TromboembiaPulmonar,
+            DerramePleural,
+            Neumotorax,
+            NeumoniaIntersticialDifusa,
+            InsuficienciaCaridiaca,
+            CaPulmonarOSospecha,
+        ].map((option) => (
+        <label key={option} className="block">
+        <input
+            type="checkbox"
+            name="diagnostico1"
+            value={option}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            checked={formik.values.diagnostico1.includes(option)}
+            className="mr-2"
+        />
+        {option}
+        </label>
+    ))}
+</div>

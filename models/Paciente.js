@@ -56,6 +56,34 @@ const schema  = new mongoose.Schema({
         required: true,
         trim: true
     },
+    diagnostico1: [
+        {
+          type: String,
+          enum: [
+            'CodigoHemoptisis',
+            'CodigoViaAerea',
+            'CodigoInfarto',
+            'COVID',
+            'Influenza',
+            'Parainfluenza',
+            'Adenovirus',
+            'VirusSincialRespiratorio',
+            'TuberculosisSensible',
+            'TuberculosisResistente',
+            'B24',
+            'SIRA',
+            'NeumoniaBacteriana',
+            'EPOC',
+            'Asma',
+            'TromboembiaPulmonar',
+            'DerramePleural',
+            'Neumotorax',
+            'NeumoniaIntersticialDifusa',
+            'InsuficienciaCaridiaca',
+            'CaPulmonarOSospecha'
+          ]
+        }
+      ],
     pac_codigo_uveh: {
         type: String,
         enum: [
