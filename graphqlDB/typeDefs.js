@@ -249,6 +249,7 @@ input PacienteInput {
     fecha_egreso: Date
     hospitalizado: Boolean
     cama_relacionada: String
+    microorganismo_relacionado: String
 }
 
 input CamaInput {
