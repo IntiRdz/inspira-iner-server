@@ -169,57 +169,6 @@ type Antibiotico {
     microorganismo_relacionado: Microorganismo
 }
 
-type Cliente {
-        id: ID
-        nombre: String
-        apellido: String
-        empresa: String
-        email: String
-        telefono: String
-        vendedor: ID
-    }
-
-type Producto {
-    id: ID
-    nombre: String
-    existencia: Int
-    precio: Float
-    creado: String
-}
-
-
-type Pedido {
-    id: ID
-    pedido: [PedidoGrupo]
-    total: Float
-    paciente: Paciente
-    user: ID
-    fecha: String
-    estado: EstadoPedido
-}
-
-type PedidoGrupo{
-    id: ID
-    cantidad: Int
-    nombre: String
-    precio: Float
-}
-
-type TopPaciente {
-    total: Float
-    paciente: [Paciente]
-}
-
-type TopCliente {
-    total: Float
-    paciente: [Cliente]
-}
-
-type TopUser {
-    total: Float
-    user: [Usuario]
-}
-
 input AutenticarInput{
     email: String!
     password: String!
@@ -284,42 +233,6 @@ input AntibioticoInput {
     antibiotico_inicio: String!
     paciente_relacionado: ID!
 }
-
-input ClienteInput {
-    nombre: String!
-    apellido: String!
-    empresa: String!
-    email: String!
-    telefono: String
-}
-
-input ProductoInput {
-    nombre: String!
-    existencia: Int!
-    precio: Float!
-}
-
-
-input PedidoProductoInput {
-    id: ID
-    cantidad: Int
-    nombre: String
-    precio: Float
-}
-
-input PedidoInput {
-    pedido: [PedidoProductoInput]
-    total: Float
-    paciente: ID
-    estado: EstadoPedido
-}
-
-enum EstadoPedido {
-    PENDIENTE
-    COMPLETADO
-    CANCELADO
-}
-
 type Query {
     #Usuarios
     # obtenerUsuario(token: String!): Usuario
@@ -347,26 +260,7 @@ type Query {
     obtenerAntibioticos: [Antibiotico]
     obtenerAntibiotico(id: ID!) : Antibiotico
 
-    #Clientes
-    obtenerClientes: [Cliente]
-    obtenerClientesVendedor: [Cliente]
-    obtenerCliente(id: ID!): Cliente
-
-    # Productos
-    obtenerProductos: [Producto]
-    obtenerProducto(id: ID!) : Producto
-
-    # Pedidos
-    obtenerPedidos: [Pedido]
-    obtenerPedidosUser: [Pedido]
-    obtenerPedido(id: ID!) : Pedido
-    obtenerPedidosEstado(estado: String!): [Pedido]
-
-
     # Busquedas Avanzadas
-    mejoresPacientes: [TopPaciente]
-    mejoresUseres: [TopUser]
-    buscarProducto(texto: String!) : [Producto]
     buscarCama(texto: String!) : [Cama]
 }
 
@@ -397,15 +291,5 @@ type Mutation {
     eliminarPaciente(id: ID!) : String
     modificarEstadoHospitalizado(id: ID!):String
     
-
-    # Productos
-    nuevoProducto(input: ProductoInput) : Producto
-    actualizarProducto( id: ID!, input : ProductoInput ) : Producto
-    eliminarProducto( id: ID! ) : String
-
-    # Pedidos
-    nuevoPedido(input: PedidoInput): Pedido
-    actualizarPedido(id: ID!, input: PedidoInput ) : Pedido
-    eliminarPedido(id: ID!) : String
 }
 `;
