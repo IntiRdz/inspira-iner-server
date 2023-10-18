@@ -53,7 +53,6 @@ const schema  = new mongoose.Schema({
     },
     diagnostico: {
         type: String,
-        required: true,
         trim: true
     },
     diagnostico1: [
@@ -114,7 +113,6 @@ const schema  = new mongoose.Schema({
     },
     hospitalizado: {
         type: Boolean,
-        required: true,
         default: true
     },
     creado: {

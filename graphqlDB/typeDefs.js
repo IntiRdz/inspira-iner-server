@@ -8,7 +8,7 @@ type Token {
 }
 
 type Usuario {
-    id: ID
+    _id: ID
     nombre: String
     apellido: String
     email: String
@@ -17,7 +17,7 @@ type Usuario {
 }
 
 type Paciente {
-    id: ID!
+    _id: ID!
     expediente: String
     pac_apellido_paterno: String
     pac_apellido_materno: String
@@ -94,7 +94,7 @@ enum CodigoPaciente {
 }
 
 type Cama {
-    id: ID!
+    _id: ID!
     cama_numero: Int
     cama_compartida: Boolean
     cama_disponible: Boolean
