@@ -298,10 +298,14 @@ Mutation: {
 
 
     actualizarPaciente: async (_, { id, input }) => {
-        console.log("Se llama a la funcion Actualizar Paciente")
-        console.log("se recibe el ID del paciente", id)
-        // Verificar si existe o no
+        //console.log("Se llama a la funcion Actualizar Paciente")
+        //console.log("se recibe el ID del paciente", id)
+        //console.log("Se recibe el input", input)
+
+        // Verificar si existe o no el paciente
         let paciente = await Paciente.findById(id);
+        console.log("Paciente encontrado", paciente)
+
     
         if (!paciente) {
             throw new Error('Ese paciente no existe');
@@ -310,11 +314,11 @@ Mutation: {
         // Actualizar el campo cama_relacionada usando $push
         paciente = await Paciente.findOneAndUpdate(
             { _id: id },
+            input, 
             { $push: { cama_relacionada: input.cama_relacionada } },
             { new: true }
         );
     
-        console.log("Paciente actualizado", paciente)
         return paciente;
     },
 
@@ -367,6 +371,9 @@ Mutation: {
         }
     }, 
     actualizarCama: async (_, {id, input}) => {
+        console.log("Se llama a la funcion Cama")
+        console.log("se recibe el ID de la cama", id)
+
         // revisar si el cama existe o no
         let cama = await Cama.findById(id);
 
@@ -375,7 +382,11 @@ Mutation: {
         }
 
         // guardarlo en la base de datos
-        cama = await Cama.findOneAndUpdate({ _id : id }, input, { new: true } );
+        cama = await Cama.findOneAndUpdate(
+            { _id : id },
+            input, 
+            { new: true }
+        );
 
         return cama;
     }, 
