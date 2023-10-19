@@ -35,8 +35,8 @@ type Paciente {
     hospitalizado: Boolean
     creado: String
     user: ID
-    cama_relacionada: [ID]
-    microorganismo_relacionado:[ID]
+    cama_relacionada: [Cama]
+    microorganismo_relacionado:[Microorganismo]
     antibiotico_relacionado: [ID]
 }
 
@@ -108,8 +108,8 @@ type Cama {
     cama_fecha_inicio: Date
     cama_fecha_fin: Date
     creado: Date
-    paciente_relacionado: [ID]
-    microorganismo_relacionado: [ID]
+    paciente_relacionado: [Paciente]
+    microorganismo_relacionado: [Microorganismo]
 }
 
 
@@ -128,15 +128,15 @@ enum CodigoCama{
 }
 
 type Microorganismo {
-    id: ID!
+    _id: ID!
     fecha_deteccion: Date
     metodo_deteccion: MetodoDeteccion
     microorganismo_tipo: MicroorganismoTipo
     microorganismo_nombre: String
     susceptibilidad: Susceptibilidad
     comentario_uveh: String
-    paciente_relacionado: [ID]
-    cama_relacionada: [ID]
+    paciente_relacionado: [Paciente]
+    cama_relacionada: [Cama]
 }
 
 
@@ -161,13 +161,14 @@ enum Susceptibilidad {
 }
 
 type Antibiotico {
-    id: ID!
+    _id: ID!
     antibiotico_nombre: String!
     antibiotico_comentario: String
     antibiotico_inicio: String!
     paciente_relacionado: Paciente!
     microorganismo_relacionado: Microorganismo
 }
+
 
 input AutenticarInput{
     email: String!
@@ -197,8 +198,8 @@ input PacienteInput {
     fecha_prealta: Date
     fecha_egreso: Date
     hospitalizado: Boolean
-    cama_relacionada: String
-    microorganismo_relacionado: String
+    cama_relacionada: ID
+    microorganismo_relacionado: ID
 }
 
 input CamaInput {
@@ -233,6 +234,7 @@ input AntibioticoInput {
     antibiotico_inicio: String!
     paciente_relacionado: ID!
 }
+
 type Query {
     #Usuarios
     # obtenerUsuario(token: String!): Usuario
@@ -259,6 +261,7 @@ type Query {
     # Antibioticos
     obtenerAntibioticos: [Antibiotico]
     obtenerAntibiotico(id: ID!) : Antibiotico
+
 
     # Busquedas Avanzadas
     buscarCama(texto: String!) : [Cama]
