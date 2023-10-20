@@ -8,7 +8,7 @@ type Token {
 }
 
 type Usuario {
-    _id: ID
+    id: ID!
     nombre: String
     apellido: String
     email: String
@@ -17,7 +17,7 @@ type Usuario {
 }
 
 type Paciente {
-    _id: ID!
+    id: ID!
     expediente: String
     pac_apellido_paterno: String
     pac_apellido_materno: String
@@ -94,7 +94,7 @@ enum CodigoPaciente {
 }
 
 type Cama {
-    _id: ID!
+    id: ID!
     cama_numero: Int
     cama_compartida: Boolean
     cama_disponible: Boolean
@@ -128,7 +128,7 @@ enum CodigoCama{
 }
 
 type Microorganismo {
-    _id: ID!
+    id: ID!
     fecha_deteccion: Date
     metodo_deteccion: MetodoDeteccion
     microorganismo_tipo: MicroorganismoTipo
@@ -161,7 +161,7 @@ enum Susceptibilidad {
 }
 
 type Antibiotico {
-    _id: ID!
+    id: ID!
     antibiotico_nombre: String!
     antibiotico_comentario: String
     antibiotico_inicio: String!
@@ -215,6 +215,8 @@ input CamaInput {
     cama_codigo_uveh: CodigoCama
     cama_fecha_inicio: Date
     cama_fecha_fin: Date
+    paciente_relacionado: ID
+    microorganismo_relacionado: ID
 }
 
 input MicroorganismoInput {
@@ -248,7 +250,7 @@ type Query {
     obtenerPacientesHospitalizadosSinCama: [Paciente]
 
     # Camas
-    obtenerCamas: [Cama]
+    obtenerCamas: [Cama!]!
     obtenerCama(id: ID!) : Cama
     obtenerCamasOcupadas: [Cama!]!
     obtenerCamasDisponibles: [Cama]

@@ -38,6 +38,7 @@ Date: new GraphQLScalarType({
         return null;
     },
 }),
+
 Query: {
     obtenerUsuario: async (_, {}, contextValue) => {
         if(!contextValue){
@@ -61,7 +62,7 @@ Query: {
           }
     },
 
-     obtenerPacientes: async () => {
+    obtenerPacientes: async () => {
         try {
             const pacientes = await Paciente.find({});
             return pacientes;
@@ -229,49 +230,50 @@ Query: {
 
         return camas;
     }
-}, 
+},
 
 Paciente: {
-    cama_relacionada: async ({ cama_relacionada }) => {
-        try {
-          // Aquí obtienes todas las camas relacionadas para el paciente
-          const camas = await Cama.find({ _id: { $in: cama_relacionada } });
-          return camas;
-        } catch (error) {
-          throw error;
-        }
+
+    cama_relacionada: async (paciente) => {
+        const camas = await Cama.find({ paciente_relacionado: paciente.id });
+        return camas;
       },
-    microorganismo_relacionado: async ({microorganismo_relacionado}) => {
-        try {
-            // Aquí obtienes todas las camas relacionadas para el paciente
-            const microorganismos = await Cama.find({ _id: { $in: microorganismo_relacionado } });
-            return microorganismos;
-          } catch (error) {
-            throw error;
-          }
-        },
+    microorganismo_relacionado: async (paciente) => {
+        const microorganismos = await Microorganismo.find({ paciente_relacionado: paciente.id });
+        return microorganismos;
+    },   
+},
+Cama: {
+    microorganismo_relacionado: async (cama) => {
+
+        const microorganismos = await Microorganismo.find({ cama_relacionada: cama.id });
+        return microorganismos;
+
+    },
+    paciente_relacionado: async (cama) => {
+
+        const pacientes = await Paciente.find({ cama_relacionada: cama.id });
+        return pacientes;
+
+    },
 },
 
 Microorganismo: {
-    cama_relacionada: async ({ cama_relacionada }) => {
-        try {
-          // Aquí obtienes todas las camas relacionadas para el paciente
-          const camas = await Cama.find({ _id: { $in: cama_relacionada } });
-          return camas;
-        } catch (error) {
-          throw error;
-        }
-      },
-    paciente_relacionado: async ({paciente_relacionado}) => {
-        try {
-            // Aquí obtienes todas las camas relacionadas para el paciente
-            const pacientes = await Cama.find({ _id: { $in: paciente_relacionado } });
-            return pacientes;
-          } catch (error) {
-            throw error;
-          }
-        },
+    cama_relacionada: async ({ microorganismo }) => {
+
+        const camas = await Cama.find({ microorganismo_relacionado: microorganismo.id });
+        return camas;
+
+    },
+    paciente_relacionado: async ({microorganismo}) => {
+
+        const pacientes = await Paciente.find({ microorganismo_relacionado: microorganismo.id });
+        return pacientes;
+
+    },
 },
+
+
 Mutation: {
     nuevoUsuario: async (_, { input } ) => {
 

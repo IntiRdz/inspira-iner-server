@@ -126,21 +126,19 @@ const schema  = new mongoose.Schema({
     },
         // Agregar una referencia a la cama actual del paciente
     cama_relacionada: {
-        type: [mongoose.Schema.Types.ObjectId],
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Cama',
         default: null
     },
     // Agregar una referencia al último microorganismo detectado
     microorganismo_relacionado: {
-        type: [mongoose.Schema.Types.ObjectId],
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Microorganismo',
-        default: null
     },
     // Agregar una referencia al último antibiótico administrado
     antibiotico_relacionado: {
-        type: [mongoose.Schema.Types.ObjectId],
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Antibiotico',
-        default: null
     }
     
     
