@@ -29,10 +29,6 @@ const schema  = new mongoose.Schema({
         required: true,
         trim: true
     },
-
-/*     codigo_sistema:{
-
-    }, */
     susceptibilidad: {
         type: String,
         enum: [
@@ -48,15 +44,18 @@ const schema  = new mongoose.Schema({
         trim: true
     },
     // Agregar una referencia al paciente en el que se detectó el microorganismo
-    paciente_relacionado: {
+    paciente_relacionado: [
+        {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'Paciente'
-    },        // Agregar una referencia a la cama  en el que se detectó el microorganismo
-    cama_relacionada: {
+        ref: 'Paciente',
+        }
+    ],        // Agregar una referencia a la cama  en el que se detectó el microorganismo
+    cama_relacionada: [
+        {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Cama',
-    },
+        }
+    ],
     
 })
 

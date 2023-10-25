@@ -4,23 +4,19 @@ const schema  = new mongoose.Schema({
 
     expediente: {
         type: String,
-        required: true,
         trim: true,
         unique: true
     },
     pac_apellido_paterno: {
         type: String,
-        required: true,
         trim: true
     },
     pac_apellido_materno: {
         type: String,
-        required: true,
         trim: true
     },
     pac_nombre: {
         type: String,
-        required: true,
         trim: true
     },
     pac_genero: {
@@ -29,11 +25,9 @@ const schema  = new mongoose.Schema({
             'Hombre', 
             'Mujer', 
             'No_especificado'],
-        required: true
     },
     pac_FN: {
         type: Date,
-        required: true
     },
     pac_dispositivo_o2: {
         type: String,
@@ -44,11 +38,9 @@ const schema  = new mongoose.Schema({
             'VMNI', 
             'VM'
         ],
-        required: true
     },
     pac_hemodialisis: {
         type: Boolean,
-        required: true,
         default: false
     },
     diagnostico: {
@@ -99,11 +91,9 @@ const schema  = new mongoose.Schema({
             'Tuberculosisis_o_Sospecha', 
             'SAMS'
         ],
-        required: true
     },
     fecha_ingreso: {
         type: Date,
-        required: true
     },
     fecha_prealta: {
         type: Date,
@@ -121,27 +111,29 @@ const schema  = new mongoose.Schema({
     },
     user: {
         type: mongoose.Schema.Types.ObjectId, 
-        required: true,
         ref: 'Usuario'
     },
         // Agregar una referencia a la cama actual del paciente
-    cama_relacionada: {
+    cama_relacionada:[ 
+        {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Cama',
-        default: null
-    },
+        }
+    ],
     // Agregar una referencia al último microorganismo detectado
-    microorganismo_relacionado: {
+    microorganismo_relacionado:[ 
+        {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Microorganismo',
-    },
+        }
+    ],
     // Agregar una referencia al último antibiótico administrado
-    antibiotico_relacionado: {
+    antibiotico_relacionado: [
+        {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Antibiotico',
-    }
-    
-    
+        }
+    ]    
 })
 
 export default mongoose.model('Paciente', schema)

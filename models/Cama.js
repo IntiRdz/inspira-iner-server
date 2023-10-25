@@ -73,16 +73,18 @@ const schema  = new mongoose.Schema({
         type: Date,
         default: Date.now() 
     },
-    // Agregar una referencia al paciente actual que ocupa la cama (si está ocupada)
-    paciente_relacionado: {
+    paciente_relacionado: [
+        {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'Paciente'
-    }, 
-    microorganismo_relacionado: {
+        ref: 'Paciente',
+        }
+    ], 
+    microorganismo_relacionado: [
+        {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Microorganismo',
-    },
+        }
+    ],
     
 })
 
