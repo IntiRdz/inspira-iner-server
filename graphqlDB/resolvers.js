@@ -334,6 +334,25 @@ Mutation: {
             console.log(error);
         }
     },
+
+    actualizarCama: async (_, {id, input}) => {
+        // revisar si el cama existe o no
+        let cama = await Cama.findById(id);
+
+        if(!cama) {
+            throw new Error('Cama no encontrada');
+        }
+        console.log("input recibido",input)
+
+        // guardarlo en la base de datos
+        cama = await Cama.findOneAndUpdate(
+            { _id: id }, // Usar _id en lugar de id
+            { $set: input }, // Usar $set para actualizar campos individuales
+            { new: true } // Devolver el documento actualizado
+        );
+
+        return cama;
+    }, 
     actualizarPaciente: async (_, { id, input }) => {
         console.log("Se llama a la funcion Actualizar Paciente")
         console.log("se recibe el ID del paciente", id)
@@ -346,6 +365,15 @@ Mutation: {
             if (!paciente) {
                 throw new Error('Ese paciente no existe');
             }
+
+            paciente = await Paciente.findOneAndUpdate(
+                { _id: id }, // Usar _id en lugar de id
+                { $set: input }, // Usar $set para actualizar campos individuales
+                { new: true } // Devolver el documento actualizado
+            );
+
+            // Agregar al paciente, la cama relacionada
+            //paciente.cama_relacionada.push(cama.id);
     
             // Obtener el documento de la cama relacionada por su ID
             let cama = await Cama.findById(input.cama_relacionada);
@@ -355,15 +383,12 @@ Mutation: {
                 throw new Error('La cama relacionada no existe');
             }
     
-            // Agregar al paciente, la cama relacionada
-            paciente.cama_relacionada.push(cama.id);
 
             // Agregar al cama al paciente
             cama.paciente_relacionado.push(paciente.id);
     
             // Guardar los cambios en el paciente
             await paciente.save();
-
             // Guardar los cambios en la cama
             await cama.save()
     
