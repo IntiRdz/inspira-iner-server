@@ -90,6 +90,18 @@ Query: {
             throw error; 
         }
     },
+    obtenerPacientesNoHospitalizados: async () => {
+        try {
+            const pacientesNoHospitalizados = await Paciente.find({ 
+                hospitalizado: false 
+            });
+            
+            return pacientesNoHospitalizados;
+        } catch (error) {
+            console.log(error);
+            throw error; 
+        }
+    },
     obtenerPacientesHospitalizadosSinCama: async () => {
         try {
             const pacientesHospitalizadosSinCama = await Paciente.find({ 
@@ -126,6 +138,7 @@ Query: {
         }
     }, 
     obtenerCamasOcupadas: async () => {
+        //console.log("Se llama al resolver 'obtenerCamasOcupadas")
         try {
           const camasOcupadas = await Cama.find({ 
             cama_ocupada: true 
