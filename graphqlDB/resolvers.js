@@ -4,7 +4,6 @@ import Usuario from '../models/Usuario.js';
 import Paciente from '../models/Paciente.js';
 import Cama from '../models/Cama.js';
 import Microorganismo from '../models/Microorganismo.js';
-import mongoose from 'mongoose'
 
 import bcryptjs from 'bcryptjs';
 
@@ -42,24 +41,24 @@ Date: new GraphQLScalarType({
 
 Query: {
     obtenerUsuario: async (_, {}, contextValue) => {
-        console.log("Se llama al resolver obtenerUsuario")
+        //console.log("Se llama al resolver obtenerUsuario")
         if(!contextValue){
             throw new GraphQLError('No se recibió Contex por lo que no se puede obtener Usuario');
         }
         return contextValue.usuario;
     }, 
     obtenerPaciente: async (_, { id },) => {
-        console.log("Se llama al resolver obtenerPaciente")
+        //console.log("Se llama al resolver obtenerPaciente")
         // Revisar si el paciente existe o no
         const paciente = await Paciente.findById(id);
-        console.log("Paciente encontrado:",paciente)
+        //console.log("Paciente encontrado:",paciente)
         if(!paciente) {
             throw new Error('Paciente no encontrado');
         }
         return paciente;
     }, 
     obtenerPacientes: async () => {
-        console.log("Se llama al resolver obtenerPacientes")
+        //console.log("Se llama al resolver obtenerPacientes")
         try {
             const pacientes = await Paciente.find({});
     
@@ -105,8 +104,8 @@ Query: {
         }
     },
     obtenerCama: async (_, { id }) => {
-        console.log("Se llama al resolver obtenerCama")
-        console.log("Se obtiene el ID de la cama: ",id)
+        //console.log("Se llama al resolver obtenerCama")
+        //console.log("Se obtiene el ID de la cama: ",id)
         // revisar si el cama existe o no
         const cama = await Cama.findById(id);
 
@@ -114,11 +113,11 @@ Query: {
             throw new Error('Cana no encontrada');
         }
 
-        console.log("Cama encotrada",cama)
+        //console.log("Cama encotrada",cama)
         return cama;
     },
     obtenerCamas: async () => {
-        console.log("Se llama al resolver obtenerCamas")
+        //console.log("Se llama al resolver obtenerCamas")
         try {
             const camas = await Cama.find({});
             return camas;
@@ -139,7 +138,7 @@ Query: {
         }
       },
     obtenerCamasDisponibles: async () => {
-        console.log("Se llama al resolver 'obtenerCamasDisponibles")
+        //console.log("Se llama al resolver 'obtenerCamasDisponibles")
         try {
             const camasDisponibles = await Cama.find({ 
                 cama_ocupada: false, 
@@ -147,7 +146,7 @@ Query: {
             });
 
             // Retorna las camas encontradas
-            console.log("y retorna esto: ",camasDisponibles)
+            //console.log("y retorna esto: ",camasDisponibles)
             return camasDisponibles;
         } catch (error) {
             throw new Error("Error al obtener las camas ocupadas: " + error.message);
@@ -172,13 +171,13 @@ Query: {
         }
     }, 
     obtenerMicroorganismosPatient: async (_, { id }) => {
+        //console.log("Se llama a la funcion 'obtenerMicroorganismosPatient")
+        //console.log("ID de paciente recibido:", id);
         try {
-            console.log("Se llama a la funcion 'obtenerMicroorganismosPatient")
-            console.log("ID de paciente recibido:", id);
             const microorganismos = await Microorganismo.find({ 
                 paciente_relacionado: id 
             });
-            console.log({microorganismos})
+            //console.log({microorganismos})
           return microorganismos;
         } catch (error) {
           console.error("Error al buscar microorganismos:", error);
@@ -309,8 +308,8 @@ Mutation: {
         
     },
     nuevoPaciente: async (_, { input }, contextValue) => {
-        console.log("Se llama al resolver nuevoPaciente")
-        console.log("input recibido",input)
+        //console.log("Se llama al resolver nuevoPaciente")
+        //console.log("input recibido",input)
         const { expediente } = input
         // Verificar si el paciente ya esta registrado
         const paciente = await Paciente.findOne({ expediente });
@@ -324,10 +323,24 @@ Mutation: {
 
             // asignar el user
             nuevoPaciente.user = contextValue.usuario.id;
+            //console.log("Paciente creado",nuevoPaciente)
+
+            let cama = await Cama.findById(input.cama_relacionada);
+            //console.log("cama",cama)
+    
+            if (!cama) {
+                throw new Error('La cama relacionada no existe');
+            }
+    
+
+            // Agregar al cama al paciente
+            cama.paciente_relacionado.push(nuevoPaciente.id);
+            await cama.save()
+
 
             // guardarlo en la base de datos
             const resultado = await nuevoPaciente.save();
-            console.log("Paciente creado",resultado)
+            //console.log("Paciente creado",resultado)
             return resultado;
 
         } catch (error) {
@@ -342,7 +355,7 @@ Mutation: {
         if(!cama) {
             throw new Error('Cama no encontrada');
         }
-        console.log("input recibido",input)
+        //console.log("input recibido",input)
 
         // guardarlo en la base de datos
         cama = await Cama.findOneAndUpdate(
@@ -354,9 +367,9 @@ Mutation: {
         return cama;
     }, 
     actualizarPaciente: async (_, { id, input }) => {
-        console.log("Se llama a la funcion Actualizar Paciente")
-        console.log("se recibe el ID del paciente", id)
-        console.log("Input recibido", input)
+        //console.log("Se llama a la funcion Actualizar Paciente")
+        //console.log("se recibe el ID del paciente", id)
+        //console.log("Input recibido", input)
         
         try {
             // Verificar si el paciente existe
@@ -377,7 +390,7 @@ Mutation: {
     
             // Obtener el documento de la cama relacionada por su ID
             let cama = await Cama.findById(input.cama_relacionada);
-            console.log("cama",cama)
+            //console.log("cama",cama)
     
             if (!cama) {
                 throw new Error('La cama relacionada no existe');
@@ -392,8 +405,8 @@ Mutation: {
             // Guardar los cambios en la cama
             await cama.save()
     
-            console.log("Paciente actualizado", paciente);
-            console.log("Cama actualizada", cama);
+            //console.log("Paciente actualizado", paciente);
+            //console.log("Cama actualizada", cama);
             return paciente;
         } catch (error) {
             console.error("Error al actualizar paciente:", error);
@@ -418,16 +431,16 @@ Mutation: {
         return "Paciente Eliminado"
     },
     nuevaCama: async (_, { input }) => {
-        console.log("Se llama al resolver nuevaCama")
+        //console.log("Se llama al resolver nuevaCama")
         try {
 
           // Crear una nueva instancia de Cama sin valores
           const cama = new Cama();
-          console.log("Cama vacia creada",cama)
+          //console.log("Cama vacia creada",cama)
       
           // Asignar los valores del input a la instancia
           Object.assign(cama, input);
-          console.log("Cama llenada con input",cama)
+          //console.log("Cama llenada con input",cama)
       
           // Almacenar en la base de datos
           const resultado = await cama.save();
@@ -444,7 +457,7 @@ Mutation: {
         if(!cama) {
             throw new Error('Cama no encontrada');
         }
-        console.log("input recibido",input)
+        //console.log("input recibido",input)
 
         // guardarlo en la base de datos
         cama = await Cama.findOneAndUpdate(
@@ -498,30 +511,31 @@ Mutation: {
         return "Estado de cama modificado correctamente";
     },
     nuevoMicroorganismo: async (_, { input }) => {
-        console.log("Se inicia resolver 'nuevoMicroorganismo'");
-        console.log('Valor de input paciente_relacionado:', input.paciente_relacionado);
-        console.log('Valor de input cama_relacionada:', input.cama_relacionada);
+        //console.log("Se inicia resolver 'nuevoMicroorganismo'");
+        //console.log('Valor de input paciente_relacionado:', input.paciente_relacionado);
+        //console.log('Valor de input cama_relacionada:', input.cama_relacionada);
+        //console.log('Valor de input microorganismo:', input.microorganismo_nombre);
     
         try {
             // Crear una instancia de Microorganismo a partir del input
             const microorganismo = new Microorganismo(input);
-            console.log("Microorganismo creado:", microorganismo);
+            //console.log("Microorganismo creado:", microorganismo);
     
             // Obtener el documento del paciente relacionado por su ID
             let paciente = await Paciente.findById(input.paciente_relacionado);
             
             // Agregar al paciente, el ID del microorganismo creado
-            console.log("Paciente relacionado a modificar", paciente);
+            //console.log("Paciente relacionado a modificar", paciente);
             paciente.microorganismo_relacionado.push(microorganismo.id);
-            console.log("Paciente relacionado modificado", paciente);
+            //console.log("Paciente relacionado modificado", paciente);
 
             // Obtener el documento de la cama relacionada por su ID
             let cama = await Cama.findById(input.cama_relacionada);
             
             // Agregar a la cama, el ID del microorganismo creado
-            console.log("cama relacionada a modificar", cama);
+            //console.log("cama relacionada a modificar", cama);
             cama.microorganismo_relacionado.push(microorganismo.id);
-            console.log("Cama Relacionada Modificada", cama);
+            //console.log("Cama Relacionada Modificada", cama);
     
             // Guardar los documentos de Paciente y Cama
             await paciente.save();
@@ -591,7 +605,6 @@ Mutation: {
 
         return antibiotico;
     }, 
-
  
   },
 
