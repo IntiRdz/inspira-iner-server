@@ -55,19 +55,13 @@ const schema  = new mongoose.Schema({
     cama_codigo_uveh: {
         type: String,
         enum: [
+            'Sin_Definir',
             'Sin_Aislamientos', 
             'Previamente_Acinetobacter', 
             'Previamente_Clostridium', 
             'Previamente_Enterobacterias_XDR', 
             'Previamente_Pseudomonas_Aeruginosa_XDR'
         ],
-        required: true,
-    },
-    cama_fecha_inicio: {
-        type: Date,
-    },
-    cama_fecha_fin: {
-        type: Date,
     },
     creado: {
         type: Date,

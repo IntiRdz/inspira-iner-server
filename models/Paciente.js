@@ -72,26 +72,28 @@ const schema  = new mongoose.Schema({
             'NeumoniaIntersticialDifusa',
             'InsuficienciaCaridiaca',
             'CaPulmonarOSospecha'
-          ]
+            ]
         }
       ],
-    pac_codigo_uveh: {
+    pac_codigo_uveh: [
+        {
         type: String,
         enum: [
-            'Sin_Definir',
-            'Sin_Aislamientos', 
-            'Acinetobacter', 
-            'Colonización_Acinetobacter', 
-            'Contacto_Acinetobacter' , 
-            'Hisopado_Rectal', 
-            'Clostridium_Difficile', 
-            'Enterobacterias_XDR_MDR', 
-            'Pseudomonas_XDR_MDR', 
-            'SAMR', 
-            'Tuberculosisis_o_Sospecha', 
+            'SinDefinir',
+            'SinAislamientos',
+            'Acinetobacter',
+            'ColonizaciónAcinetobacter',
+            'ContactoAcinetobacter',
+            'HisopadoRectal',
+            'ClostridiumDifficile',
+            'Enterobacterias_XDR_MDR',
+            'Pseudomonas_XDR_MDR',
+            'SAMR',
+            'TuberculosisisOSospecha',
             'SAMS'
+            ]
+        }
         ],
-    },
     fecha_ingreso: {
         type: Date,
     },

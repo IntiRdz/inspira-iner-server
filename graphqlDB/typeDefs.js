@@ -50,17 +50,17 @@ enum Diagnostico1 {
   CaPulmonarOSospecha
 }
 enum CodigoPaciente {
-    Sin_Definir
-    Sin_Aislamientos
+    SinDefinir
+    SinAislamientos
     Acinetobacter
-    Colonizacion_Acinetobacter
-    Contacto_Acinetobacter
-    Hisopado_Rectal
-    Clostridium_Difficile
+    ColonizacionAcinetobacter
+    ContactoAcinetobacter
+    HisopadoRectal
+    ClostridiumDifficile
     Enterobacterias_XDR_MDR
     Pseudomonas_XDR_MDR
     SAMR
-    Tuberculosisis_o_Sospecha
+    TuberculosisisOSospecha
     SAMS
 }
 enum DispositivoO2cama {
@@ -68,6 +68,7 @@ enum DispositivoO2cama {
     No_VM
 }
 enum CodigoCama{
+    Sin_Definir
     Sin_Aislamientos
     Previamente_Acinetobacter
     Previamente_Clostridium
@@ -103,7 +104,7 @@ type Paciente {
     pac_hemodialisis: Boolean
     diagnostico: String
     diagnostico1: [Diagnostico1]
-    pac_codigo_uveh: CodigoPaciente
+    pac_codigo_uveh: [CodigoPaciente]
     fecha_ingreso: Date
     fecha_prealta: Date
     fecha_egreso: Date
@@ -126,8 +127,6 @@ type Cama {
     cama_aislamiento: Boolean
     cama_dan: Boolean
     cama_codigo_uveh: CodigoCama
-    cama_fecha_inicio: Date
-    cama_fecha_fin: Date
     creado: Date
     paciente_relacionado: [Paciente]
     microorganismo_relacionado: [Microorganismo]
@@ -148,7 +147,8 @@ type Antibiotico {
     id: ID!
     antibiotico_nombre: String
     antibiotico_comentario: String
-    antibiotico_inicio: String
+    antibiotico_inicio: Date
+    antibiotico_fin: Date
     paciente_relacionado: Paciente
     microorganismo_relacionado: Microorganismo
 }
@@ -175,9 +175,9 @@ input PacienteInput {
     pac_FN: Date
     pac_dispositivo_o2: DispositivoO2
     pac_hemodialisis: Boolean
-    diagnostico1: [String]
+    diagnostico1: [Diagnostico1]
     diagnostico: String
-    pac_codigo_uveh: CodigoPaciente
+    pac_codigo_uveh: [CodigoPaciente]
     fecha_ingreso: Date
     fecha_prealta: Date
     fecha_egreso: Date
@@ -198,8 +198,6 @@ input CamaInput {
     cama_aislamiento: Boolean
     cama_dan: Boolean
     cama_codigo_uveh: CodigoCama
-    cama_fecha_inicio: Date
-    cama_fecha_fin: Date
     paciente_relacionado: ID
     microorganismo_relacionado:ID
 }
@@ -219,7 +217,8 @@ input MicroorganismoInput {
 input AntibioticoInput {
     antibiotico_nombre: String
     antibiotico_comentario: String
-    antibiotico_inicio: String
+    antibiotico_inicio: Date
+    antibiotico_fin: Date
     paciente_relacionado: ID
     microorganismo_relacionado:ID
 }
