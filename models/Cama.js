@@ -27,7 +27,7 @@ const schema  = new mongoose.Schema({
         enum: [
             'Mujer', 
             'Hombre', 
-            'No_especificado'
+            'Indeterminado'
         ],
         required: true
     },

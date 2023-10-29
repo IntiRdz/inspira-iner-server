@@ -17,7 +17,7 @@ type Usuario {
 enum Genero {
     Hombre
     Mujer
-    No_especificado
+    Indeterminado
 }
 enum DispositivoO2 {
     AA

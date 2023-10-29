@@ -24,7 +24,7 @@ const schema  = new mongoose.Schema({
         enum: [
             'Hombre', 
             'Mujer', 
-            'No_especificado'],
+            'Indeterminado'],
     },
     pac_FN: {
         type: Date,
