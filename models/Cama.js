@@ -12,6 +12,16 @@ const schema  = new mongoose.Schema({
         type: Boolean,
         required: true
     },
+    cama_prioridad:{
+        type: String,
+        enum: [
+            'COVID',
+            'VirusRespiratorios', 
+            'B24', 
+            'TuberculosisSensible',
+            'TuberculosisResistente'
+        ],
+    },
     cama_disponible: {
         type: Boolean,
         required: true,

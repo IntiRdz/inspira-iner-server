@@ -49,6 +49,13 @@ enum Diagnostico1 {
   InsuficienciaCaridiaca
   CaPulmonarOSospecha
 }
+enum CaracteristicasEspeciales {
+    TrasladoDeHospital
+    InfeccionReciente
+    Embarazo
+    Inmunosupresion
+}
+
 enum CodigoPaciente {
     SinDefinir
     SinAislamientos
@@ -63,6 +70,15 @@ enum CodigoPaciente {
     TuberculosisisOSospecha
     SAMS
 }
+
+enum PrioridadCama{
+    COVID
+    VirusRespiratorios
+    B24
+    TuberculosisSensible
+    TuberculosisResistente
+}
+
 enum DispositivoO2cama {
     VM
     No_VM
@@ -104,6 +120,7 @@ type Paciente {
     pac_hemodialisis: Boolean
     diagnostico: String
     diagnostico1: [Diagnostico1]
+    caracteristicas_especiales: [CaracteristicasEspeciales]
     pac_codigo_uveh: [CodigoPaciente]
     fecha_ingreso: Date
     fecha_prealta: Date
@@ -119,6 +136,7 @@ type Cama {
     id: ID!
     cama_numero: Int
     cama_compartida: Boolean
+    cama_prioridad: PrioridadCama
     cama_disponible: Boolean
     cama_ocupada:Boolean
     cama_genero: Genero
@@ -177,6 +195,7 @@ input PacienteInput {
     pac_hemodialisis: Boolean
     diagnostico1: [Diagnostico1]
     diagnostico: String
+    caracteristicas_especiales: [CaracteristicasEspeciales]
     pac_codigo_uveh: [CodigoPaciente]
     fecha_ingreso: Date
     fecha_prealta: Date
@@ -190,6 +209,7 @@ input PacienteInput {
 input CamaInput {
     cama_numero: Int
     cama_compartida: Boolean
+    cama_prioridad: PrioridadCama
     cama_disponible: Boolean
     cama_ocupada: Boolean
     cama_genero: Genero

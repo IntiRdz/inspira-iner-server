@@ -75,6 +75,17 @@ const schema  = new mongoose.Schema({
             ]
         }
       ],
+      caracteristicas_especiales: [
+        {
+          type: String,
+          enum: [
+            'TrasladoDeHospital',
+            'InfeccionReciente',
+            'Embarazo',
+            'Inmunosupresion',
+            ]
+        }
+      ],
     pac_codigo_uveh: [
         {
         type: String,

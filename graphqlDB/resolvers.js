@@ -321,8 +321,8 @@ Mutation: {
         
     },
     nuevoPaciente: async (_, { input }, contextValue) => {
-        //console.log("Se llama al resolver nuevoPaciente")
-        //console.log("input recibido",input)
+        console.log("Se llama al resolver nuevoPaciente")
+        console.log("input recibido",input)
         const { expediente } = input
         // Verificar si el paciente ya esta registrado
         const paciente = await Paciente.findOne({ expediente });
