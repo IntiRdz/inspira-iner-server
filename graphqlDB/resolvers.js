@@ -445,14 +445,22 @@ Mutation: {
     },
     nuevaCama: async (_, { input }) => {
         //console.log("Se llama al resolver nuevaCama")
+        console.log("input recibido",input)
+
+        const { cama_numero } = input
+        // Verificar si el paciente ya esta registrado
+        const cama = await Cama.findOne({ cama_numero });
+        if(cama) {
+            throw new Error('Esta cama ya esta registrada');
+        }
         try {
 
           // Crear una nueva instancia de Cama sin valores
-          const cama = new Cama();
+          const cama = new Cama(input);
           //console.log("Cama vacia creada",cama)
       
           // Asignar los valores del input a la instancia
-          Object.assign(cama, input);
+          //Object.assign(cama, input);
           //console.log("Cama llenada con input",cama)
       
           // Almacenar en la base de datos
