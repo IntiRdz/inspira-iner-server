@@ -15,6 +15,7 @@ const schema  = new mongoose.Schema({
     cama_prioridad:{
         type: String,
         enum: [
+            'SinPrioridad',
             'COVID',
             'VirusRespiratorios', 
             'B24', 

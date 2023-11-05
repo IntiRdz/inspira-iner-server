@@ -72,6 +72,7 @@ enum CodigoPaciente {
 }
 
 enum PrioridadCama{
+    SinPrioridad
     COVID
     VirusRespiratorios
     B24
