@@ -348,6 +348,7 @@ Mutation: {
 
             // Agregar al cama al paciente
             cama.paciente_relacionado.push(nuevoPaciente.id);
+            cama.cama_ocupada = !cama.cama_ocupada;
             await cama.save()
 
 
@@ -412,6 +413,7 @@ Mutation: {
 
             // Agregar al cama al paciente
             cama.paciente_relacionado.push(paciente.id);
+            cama.cama_ocupada = !cama.cama_ocupada;
     
             // Guardar los cambios en el paciente
             await paciente.save();
