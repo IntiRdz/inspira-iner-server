@@ -165,6 +165,38 @@ Query: {
             throw new Error("Error al obtener las camas ocupadas: " + error.message);
         }
     },
+    obtenerCamasDisponiblesMujer: async () => {
+        //console.log("Se llama al resolver 'obtenerCamasDisponibles")
+        try {
+            const camasDisponiblesMujer = await Cama.find({ 
+                cama_ocupada: false, 
+                cama_disponible:true,
+                cama_genero:'Mujer'
+            });
+
+            // Retorna las camas encontradas
+            //console.log("y retorna esto: ",camasDisponibles)
+            return camasDisponiblesMujer;
+        } catch (error) {
+            throw new Error("Error al obtener las camas ocupadas: " + error.message);
+        }
+    },
+    obtenerCamasDisponiblesHombre: async () => {
+        //console.log("Se llama al resolver 'obtenerCamasDisponibles")
+        try {
+            const camasDisponiblesHombre = await Cama.find({ 
+                cama_ocupada: false, 
+                cama_disponible:true,
+                cama_genero:'Hombre'
+            });
+
+            // Retorna las camas encontradas
+            //console.log("y retorna esto: ",camasDisponibles)
+            return camasDisponiblesHombre;
+        } catch (error) {
+            throw new Error("Error al obtener las camas ocupadas: " + error.message);
+        }
+    },
     obtenerMicroorganismo: async (_, { id }) => {
         // revisar si el microorganismo existe o no
         const microorganismo = await Microorganismo.findById(id);

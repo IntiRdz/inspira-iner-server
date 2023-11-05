@@ -263,6 +263,8 @@ type Query {
     obtenerCamas: [Cama!]!
     obtenerCamasOcupadas: [Cama!]!
     obtenerCamasDisponibles: [Cama]
+    obtenerCamasDisponiblesMujer: [Cama]
+    obtenerCamasDisponiblesNombre: [Cama]
 
     # Microorganismos
     obtenerMicroorganismo(id: ID!) : Microorganismo
