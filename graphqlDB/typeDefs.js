@@ -260,8 +260,8 @@ type Query {
 
     # Camas
     obtenerCama(id: ID!) : Cama
-    obtenerCamas: [Cama!]!
-    obtenerCamasOcupadas: [Cama!]!
+    obtenerCamas: [Cama!]
+    obtenerCamasOcupadas: [Cama!]
     obtenerCamasDisponibles: [Cama]
     obtenerCamasDisponiblesMujer: [Cama]
     obtenerCamasDisponiblesHombre: [Cama]
