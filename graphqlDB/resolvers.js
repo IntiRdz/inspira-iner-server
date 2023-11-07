@@ -171,7 +171,7 @@ Query: {
             const camasDisponiblesMujer = await Cama.find({ 
                 cama_ocupada: false, 
                 cama_disponible:true,
-                cama_genero:'Mujer'
+                cama_genero: { $in: ['Mujer', 'Indeterminado'] }
             });
 
             // Retorna las camas encontradas
@@ -187,7 +187,7 @@ Query: {
             const camasDisponiblesHombre = await Cama.find({ 
                 cama_ocupada: false, 
                 cama_disponible:true,
-                cama_genero:'Hombre'
+                cama_genero: { $in: ['Hombre', 'Indeterminado'] }
             });
 
             // Retorna las camas encontradas

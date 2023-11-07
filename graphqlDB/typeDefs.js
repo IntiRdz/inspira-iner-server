@@ -259,12 +259,12 @@ type Query {
     obtenerPacientesHospitalizadosSinCama: [Paciente]
 
     # Camas
-    obtenerCama(id: ID!) : Cama
+    obtenerCama(id: ID!) : Cama!
     obtenerCamas: [Cama!]
     obtenerCamasOcupadas: [Cama!]
-    obtenerCamasDisponibles: [Cama]
-    obtenerCamasDisponiblesMujer: [Cama]
-    obtenerCamasDisponiblesHombre: [Cama]
+    obtenerCamasDisponibles: [Cama!]
+    obtenerCamasDisponiblesMujer: [Cama!]
+    obtenerCamasDisponiblesHombre: [Cama!]
 
     # Microorganismos
     obtenerMicroorganismo(id: ID!) : Microorganismo
