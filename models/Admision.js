@@ -1,68 +1,49 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose'
 
-const admissionSchema = new mongoose.Schema({
-  id_paciente: {
-    type: ID, //vinculo o llave foranea
-    required: true,
+const schema  = new mongoose.Schema({
+  procedencia_admision: {
+    type: String,
+    enum: [
+        'Urgencias',
+        'UCI', 
+        'UCPQ', 
+        'UTIM', 
+        'ServicioClinico',
+        'ConsultaExterna' 
+    ],
   },
-  id_admision_hospital: {
-    type: Number,
-    required: true,
+  motivo_egreso: {
+    type: String,
+    enum: [
+        'TrasladoInterno',
+        'TrasladoExterno', 
+        'Mejoria', 
+        'AltaVoluntaria', 
+        'Defuncion', 
+    ],
   },
-  fecha_admision: {
+  fecha_ingreso: {
     type: Date, //debe ser fecha y hora 
-    required: true,
   },
-  fecha_alta: {
+  fecha_egreso: {
     type: Date,
   },
-  fecha_defuncion: {
+  fecha_prealta: {
     type: Date,
   },
-  tipo_admision: {
-    type: String,
-    required: true,
-  },
+  paciente_relacionado: [
+    {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Paciente',
+    }
+  ], 
+  cama_relacionada:[ 
+    {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Cama',
+    }
+  ],
 
-/* enum {
-    ambulatorio,
-    urgenciasDirecto,
-    hospitalizacionDirecto,
-    ingresoObservacion,
-    ingresoQuirurgico,
-    electiva,
-    urgente
-} */
+})
 
-  ubicacion_admision: {
-    type: String,
-    required: true,
-  },
-/* domicilio,
-otroHospital,
-urgencias,
-servicioClinico, */
-
-  ubicacionAlta: {
-    type: String,
-  },
-
-/*  domicilio,
- otroHospital,
- defuncion  */
-
-  fechaRegistroUrgencias: {
-    type: Date,
-  },
-  fechaSalidaUrgencias: {
-    type: Date,
-  },
-  fallecidoHospital: {
-    type: Boolean,
-    required: true,
-  },
-});
-
-const Admission = mongoose.model('Admission', admissionSchema);
-
-module.exports = Admission;
+export default mongoose.model('Admision', schema)

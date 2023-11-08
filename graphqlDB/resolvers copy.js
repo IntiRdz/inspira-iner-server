@@ -4,6 +4,7 @@ import Usuario from '../models/Usuario.js';
 import Paciente from '../models/Paciente.js';
 import Cama from '../models/Cama.js';
 import Microorganismo from '../models/Microorganismo.js';
+import Admision from '../models/Admision.js';
 
 import bcryptjs from 'bcryptjs';
 
@@ -253,42 +254,52 @@ Query: {
         return camas;
     }
 },
+Admision: {
+    paciente_relacionado: async (admision) => {
+        const pacientes = await Paciente.find({ admision_relacionada: admision.id });
+        return pacientes;
+    },
+    cama_relacionada: async ( admision ) => {
+        const camas = await Cama.find({ admision_relacionada: admision.id });
+        return camas;
+    },
+},
 Paciente: {
-    cama_relacionada: async (paciente) => {
+    admision_relacionada: async (paciente) => {
+        const admisiones = await Admision.find({ paciente_relacionado: paciente.id });
+        return admisiones;
+    },  
+    cama_relacionada: async ( paciente ) => {
         const camas = await Cama.find({ paciente_relacionado: paciente.id });
         return camas;
-      },
+    },
     microorganismo_relacionado: async (paciente) => {
         const microorganismos = await Microorganismo.find({ paciente_relacionado: paciente.id });
         return microorganismos;
     },   
 },
 Cama: {
-    microorganismo_relacionado: async (cama) => {
-
-        const microorganismos = await Microorganismo.find({ cama_relacionada: cama.id });
-        return microorganismos;
-
-    },
+    admision_relacionada: async (cama) => {
+        const admisiones = await Admision.find({ cama_relacionada: cama.id });
+        return admisiones;
+    }, 
     paciente_relacionado: async (cama) => {
-
         const pacientes = await Paciente.find({ cama_relacionada: cama.id });
         return pacientes;
-
+    },
+    microorganismo_relacionado: async (cama) => {
+        const microorganismos = await Microorganismo.find({ cama_relacionada: cama.id });
+        return microorganismos;
     },
 },
 Microorganismo: {
     cama_relacionada: async ( microorganismo ) => {
-
         const camas = await Cama.find({ microorganismo_relacionado: microorganismo.id });
         return camas;
-
     },
     paciente_relacionado: async (microorganismo) => {
-
         const pacientes = await Paciente.find({ microorganismo_relacionado: microorganismo.id });
         return pacientes;
-
     },
 },
 Antibiotico: {
