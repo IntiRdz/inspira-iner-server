@@ -57,7 +57,10 @@ Query: {
         }
         return paciente;
     }, 
-    obtenerPacientes: async () => {
+
+
+
+/*     obtenerPacientes: async () => {
         //console.log("Se llama al resolver obtenerPacientes")
         try {
             const pacientes = await Paciente.find({});
@@ -67,6 +70,15 @@ Query: {
             console.log(error);
         }
     }, 
+ */
+    obtenerPacientes: async () => {
+        try {
+            return await Paciente.find().populate('cama_relacionada');
+        } catch (error) {
+            throw new Error(error);
+        }
+    },
+    
     obtenerPacientesUser: async (_, {}, contextValue ) => {
         try {
             if(!contextValue){
@@ -78,6 +90,57 @@ Query: {
             console.log(error);
         }
     }, 
+    obtenerPacientesUrgencias : async () => {
+        try {
+            // Obtener los IDs de las camas que están en el rango de 1 a 14
+            const camasEnRango = await Cama.find({
+                cama_numero: { $gte: 1, $lte: 14 }
+            }).select('_id');
+            
+            // Extraer solo los IDs de las camas
+            const camasIds = camasEnRango.map(cama => cama._id);
+    
+            // Obtener todos los pacientes hospitalizados
+            let pacientesHospitalizados = await Paciente.find({
+                hospitalizado: true
+            }).populate('cama_relacionada');
+    
+            // Filtrar aquellos cuya última cama relacionada esté en el rango deseado
+            let pacientesUrgencias = pacientesHospitalizados.filter(paciente => {
+                const ultimaCamaRelacionada = paciente.cama_relacionada[paciente.cama_relacionada.length - 1];
+                return camasIds.includes(ultimaCamaRelacionada?._id);
+            });
+    
+            return pacientesUrgencias;
+        } catch (error) {
+            console.log(error);
+            throw error; 
+        }
+    },
+    
+    
+/*     obtenerPacientesUrgencias: async () => {
+        try {
+            // Obtener los IDs de las camas que están en el rango de 1 a 14
+            const camasEnRango = await Cama.find({
+                cama_numero: { $gte: 1, $lte: 14 }
+            }).select('_id');
+    
+            // Extraer solo los IDs de las camas
+            const camasIds = camasEnRango.map(cama => cama._id);
+    
+            // Ahora, encontrar los pacientes hospitalizados que están relacionados con esas camas
+            const pacientesUrgencias = await Paciente.find({
+                hospitalizado: true,
+                cama_relacionada: { $in: camasIds }
+            });
+    
+            return pacientesUrgencias;
+        } catch (error) {
+            console.log(error);
+            throw error; 
+        }
+    },   */  
     obtenerPacientesHospitalizados: async () => {
         try {
             const pacientesHospitalizados = await Paciente.find({ 

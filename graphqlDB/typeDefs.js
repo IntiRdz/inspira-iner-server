@@ -254,6 +254,7 @@ type Query {
     obtenerPaciente(id: ID!): Paciente
     obtenerPacientes: [Paciente]
     obtenerPacientesUser: [Paciente]
+    obtenerPacientesUrgencias: [Paciente]
     obtenerPacientesHospitalizados: [Paciente]
     obtenerPacientesNoHospitalizados: [Paciente]
     obtenerPacientesHospitalizadosSinCama: [Paciente]
