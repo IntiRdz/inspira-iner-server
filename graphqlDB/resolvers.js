@@ -58,8 +58,6 @@ Query: {
         return paciente;
     }, 
 
-
-
 /*     obtenerPacientes: async () => {
         //console.log("Se llama al resolver obtenerPacientes")
         try {
@@ -318,9 +316,12 @@ Query: {
 },
 Paciente: {
     cama_relacionada: async (paciente) => {
-        const camas = await Cama.find({ paciente_relacionado: paciente.id });
-        return camas;
-      },
+        await paciente.populate({
+            path: 'cama_relacionada',
+            match: { paciente_relacionado: paciente._id }
+        });
+        return paciente.cama_relacionada;
+    },
     microorganismo_relacionado: async (paciente) => {
         const microorganismos = await Microorganismo.find({ paciente_relacionado: paciente.id });
         return microorganismos;
