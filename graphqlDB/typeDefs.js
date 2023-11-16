@@ -24,30 +24,32 @@ enum DispositivoO2 {
     PN
     PNAF
     VMNI
+    VMNI_Intermitente
     VM
 }
 enum Diagnostico1 {
-  CodigoHemoptisis
-  CodigoViaAerea
-  CodigoInfarto
-  COVID
-  Influenza
-  Parainfluenza
-  Adenovirus
-  VirusSincialRespiratorio
-  TuberculosisSensible
-  TuberculosisResistente
-  B24
-  SIRA
-  NeumoniaBacteriana
-  EPOC
-  Asma
-  TromboembiaPulmonar
-  DerramePleural
-  Neumotorax
-  NeumoniaIntersticialDifusa
-  InsuficienciaCaridiaca
-  CaPulmonarOSospecha
+    CodigoHemoptisis
+    CodigoViaAerea
+    CodigoInfarto
+    COVID
+    Influenza
+    Parainfluenza
+    Adenovirus
+    VirusSincialRespiratorio
+    Metaneumovirus
+    TuberculosisSensible
+    TuberculosisResistente
+    B24
+    SIRA
+    NeumoniaBacteriana
+    EPOC
+    Asma
+    TromboembiaPulmonar
+    DerramePleural
+    Neumotorax
+    NeumoniaIntersticialDifusa
+    InsuficienciaCaridiaca
+    CaPulmonarOSospecha
 }
 enum CaracteristicasEspeciales {
     TrasladoDeHospital
@@ -55,7 +57,6 @@ enum CaracteristicasEspeciales {
     Embarazo
     Inmunosupresion
 }
-
 enum CodigoPaciente {
     SinDefinir
     SinAislamientos
@@ -70,10 +71,16 @@ enum CodigoPaciente {
     TuberculosisisOSospecha
     SAMS
 }
-
+enum LadoCama{
+    Pasillo
+    Medio
+    Ventana
+    Ninguno
+}
 enum PrioridadCama{
     SinPrioridad
     COVID
+    Influenza
     VirusRespiratorios
     B24
     TuberculosisSensible
@@ -109,6 +116,27 @@ enum Susceptibilidad {
     XDR
     Sensible
 }
+
+
+enum ProcedenciaAdmision {
+    Urgencias
+    UCI
+    UCPQ
+    UTIM
+    ServicioClinico
+    ConsultaExterna
+}
+
+
+enum MotivoEgreso {
+    TrasladoInterno 
+    TrasladoExterno
+    Mejoria
+    AltaVoluntaria
+    Defuncion
+}
+
+
 type Paciente {
     id: ID!
     expediente: String
@@ -132,11 +160,13 @@ type Paciente {
     cama_relacionada: [Cama]
     microorganismo_relacionado:[Microorganismo]
     antibiotico_relacionado: [Antibiotico]
+    admision_relacionada: [Admision]
 }
 type Cama {
     id: ID!
     cama_numero: Int
     cama_compartida: Boolean
+    cama_lado: LadoCama
     cama_prioridad: PrioridadCama
     cama_disponible: Boolean
     cama_ocupada:Boolean
@@ -172,6 +202,17 @@ type Antibiotico {
     microorganismo_relacionado: Microorganismo
 }
 
+type Admision {
+    id: ID!
+    procedencia_admision: ProcedenciaAdmision
+    motivo_egreso: MotivoEgreso
+    fecha_ingreso: Date
+    fecha_prealta: Date
+    fecha_egreso: Date
+    paciente_relacionado: Paciente
+    cama_relacionada: [Cama]
+}
+
 
 input AutenticarInput{
     email: String!
@@ -205,11 +246,13 @@ input PacienteInput {
     cama_relacionada: ID
     microorganismo_relacionado:ID
     antibiotico_relacionado: ID
+    admision_relacionada: ID
 }
 
 input CamaInput {
     cama_numero: Int
     cama_compartida: Boolean
+    cama_lado: LadoCama
     cama_prioridad: PrioridadCama
     cama_disponible: Boolean
     cama_ocupada: Boolean
@@ -242,6 +285,16 @@ input AntibioticoInput {
     antibiotico_fin: Date
     paciente_relacionado: ID
     microorganismo_relacionado:ID
+}
+
+input AdmisionInput {
+    procedencia_admision: ProcedenciaAdmision
+    motivo_egreso: MotivoEgreso
+    fecha_ingreso: Date
+    fecha_prealta: Date
+    fecha_egreso: Date
+    paciente_relacionado: ID
+    cama_relacionada: ID
 }
 
 type Query {

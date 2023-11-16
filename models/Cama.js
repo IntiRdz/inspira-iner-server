@@ -12,11 +12,21 @@ const schema  = new mongoose.Schema({
         type: Boolean,
         required: true
     },
+    cama_lado:{
+        type: String,
+        enum: [
+            'Pasillo',
+            'Medio',
+            'Ventana',
+            'Ninguno'
+        ],
+    },
     cama_prioridad:{
         type: String,
         enum: [
             'SinPrioridad',
             'COVID',
+            'Influenza',
             'VirusRespiratorios', 
             'B24', 
             'TuberculosisSensible',

@@ -35,7 +35,8 @@ const schema  = new mongoose.Schema({
             'AA',
             'PN', 
             'PNAF', 
-            'VMNI', 
+            'VMNI',
+            'VMNI_Intermitente', 
             'VM'
         ],
     },
@@ -59,6 +60,7 @@ const schema  = new mongoose.Schema({
             'Parainfluenza',
             'Adenovirus',
             'VirusSincialRespiratorio',
+            'Metaneumovirus',
             'TuberculosisSensible',
             'TuberculosisResistente',
             'B24',
@@ -146,7 +148,13 @@ const schema  = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Antibiotico',
         }
-    ]    
+    ],
+    admision_relacionada:[ 
+        {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Admision',
+        }
+      ],  
 })
 
 export default mongoose.model('Paciente', schema)

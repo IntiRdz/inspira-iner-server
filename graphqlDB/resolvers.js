@@ -4,6 +4,7 @@ import Usuario from '../models/Usuario.js';
 import Paciente from '../models/Paciente.js';
 import Cama from '../models/Cama.js';
 import Microorganismo from '../models/Microorganismo.js';
+import Admision from '../models/Admision.js';
 
 import bcryptjs from 'bcryptjs';
 

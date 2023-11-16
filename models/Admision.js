@@ -23,27 +23,25 @@ const schema  = new mongoose.Schema({
     ],
   },
   fecha_ingreso: {
-    type: Date, //debe ser fecha y hora 
-  },
-  fecha_egreso: {
-    type: Date,
+    type: Date
   },
   fecha_prealta: {
     type: Date,
   },
-  paciente_relacionado: [
-    {
+  fecha_egreso: {
+    type: Date,
+  },
+  paciente_relacionado:
+  {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Paciente',
-    }
-  ], 
+  }, 
   cama_relacionada:[ 
     {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Cama',
     }
   ],
-
 })
 
 export default mongoose.model('Admision', schema)
