@@ -1,0 +1,24 @@
+{
+    "_id":{"$oid":"65655b9be9383c4c128527b0"},
+    "fecha_ingreso":{"$date":"2023-11-10T03:16:43.592Z"},
+    "servicio_tratante":"Neumologia",
+    "hospitalizado":true,
+    "paciente_relacionado":{"$oid":"65655cd7b3dad78bfcf700d7"},
+    "cama_relacionada":[{"$oid":"655578f6aa927d71576f5001"}],"__v":0
+}
+{
+    "_id":{"$oid":"65655cd7b3dad78bfcf700d9"},
+    "fecha_ingreso":{"$date":"2023-11-20T03:21:59.223Z"},
+    "servicio_tratante":"CTX",
+    "hospitalizado":true,
+    "paciente_relacionado":{"$oid":"6565534e3a69a23c2e51635d"},
+    "cama_relacionada":[{"$oid":"655578f6aa927d71576f5002"}],"__v":0
+}
+{
+    "_id":{"$oid":"65655cd7b3dad78bfcf700d3"},
+    "fecha_ingreso":{"$date":"2023-10-13T03:21:59.223Z"},
+    "servicio_tratante":"Areas_Criticas",
+    "hospitalizado":true,
+    "paciente_relacionado":{"$oid":"65655cd7b3dad78bfcf700d8"},
+    "cama_relacionada":[{"$oid":"655578f6aa927d71576f5003"}],"__v":0
+}

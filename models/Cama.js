@@ -8,6 +8,21 @@ const schema  = new mongoose.Schema({
         trim: true,
         unique: true
     },
+    cama_ubicacion:{
+        type: String,
+        enum: [
+            'Urgencias',
+            'Clinico1',
+            'Clinico2',
+            'Clinico3', 
+            'Clinico4', 
+            'UTIM',
+            'Neumopedia',
+            'ORL',
+            'UCI',
+            'UCPQ'
+        ],
+    },
     cama_compartida: {
         type: Boolean,
         required: true
@@ -15,9 +30,9 @@ const schema  = new mongoose.Schema({
     cama_lado:{
         type: String,
         enum: [
-            'Pasillo',
+            'Arriba',
             'Medio',
-            'Ventana',
+            'Bajo',
             'Ninguno'
         ],
     },
@@ -55,8 +70,8 @@ const schema  = new mongoose.Schema({
     cama_dispositivo_o2: {
         type: String,
         enum: [
-            'VM', 
-            'No_VM'
+            'PN',
+            'VM'
         ],
         required: true,
     },
@@ -88,19 +103,12 @@ const schema  = new mongoose.Schema({
         type: Date,
         default: Date.now() 
     },
-    paciente_relacionado: [
+    admision_relacionada: [
         {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Paciente',
+        ref: 'Admision',
         }
-    ], 
-    microorganismo_relacionado: [
-        {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Microorganismo',
-        }
-    ],
-    
+    ],    
 })
 
 export default mongoose.model('Cama', schema)

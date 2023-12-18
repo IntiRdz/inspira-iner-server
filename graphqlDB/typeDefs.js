@@ -22,9 +22,10 @@ enum Genero {
 enum DispositivoO2 {
     AA
     PN
+    Tienda_Traqueal
     PNAF
-    VMNI
     VMNI_Intermitente
+    VMNI
     VM
 }
 enum Diagnostico1 {
@@ -56,25 +57,46 @@ enum CaracteristicasEspeciales {
     InfeccionReciente
     Embarazo
     Inmunosupresion
+    ComunidadLG
 }
 enum CodigoPaciente {
-    SinDefinir
-    SinAislamientos
+    Sin_Definir
+    Sin_Aislamientos
     Acinetobacter
-    ColonizacionAcinetobacter
-    ContactoAcinetobacter
-    HisopadoRectal
-    ClostridiumDifficile
+    Colonizacion_Acinetobacter
+    Contacto_Acinetobacter
+    Hisopado_Rectal
+    Clostridium_Difficile
     Enterobacterias_XDR_MDR
     Pseudomonas_XDR_MDR
     SAMR
-    TuberculosisisOSospecha
+    Tuberculosisis_o_Sospecha
     SAMS
 }
+
+enum ServicioTratante{
+    Neumologia
+    CTX
+    ORL
+    Neumopedia
+    Areas_Criticas
+}
+enum CamaUbicacion{
+    Urgencias
+    Clinico1
+    Clinico2
+    Clinico3
+    Clinico4
+    UTIM
+    Neumopedia
+    ORL
+    UCI
+    UCPQ
+}
 enum LadoCama{
-    Pasillo
+    Arriba
     Medio
-    Ventana
+    Bajo
     Ninguno
 }
 enum PrioridadCama{
@@ -89,7 +111,7 @@ enum PrioridadCama{
 
 enum DispositivoO2cama {
     VM
-    No_VM
+    PN
 }
 enum CodigoCama{
     Sin_Definir
@@ -136,6 +158,17 @@ enum MotivoEgreso {
     Defuncion
 }
 
+type Admision {
+    id: ID!
+    fecha_ingreso: Date
+    fecha_prealta: Date
+    fecha_egreso: Date
+    hospitalizado: Boolean
+    servicio_tratante: ServicioTratante
+    paciente_relacionado: Paciente
+    cama_relacionada: [Cama]
+    microorganismo_relacionado: [Microorganismo]
+}
 
 type Paciente {
     id: ID!
@@ -151,15 +184,7 @@ type Paciente {
     diagnostico1: [Diagnostico1]
     caracteristicas_especiales: [CaracteristicasEspeciales]
     pac_codigo_uveh: [CodigoPaciente]
-    fecha_ingreso: Date
-    fecha_prealta: Date
-    fecha_egreso: Date
-    hospitalizado: Boolean
-    creado: String
-    user: ID
-    cama_relacionada: [Cama]
-    microorganismo_relacionado:[Microorganismo]
-    antibiotico_relacionado: [Antibiotico]
+    creado: Date
     admision_relacionada: [Admision]
 }
 type Cama {
@@ -167,6 +192,7 @@ type Cama {
     cama_numero: Int
     cama_compartida: Boolean
     cama_lado: LadoCama
+    cama_ubicacion: CamaUbicacion
     cama_prioridad: PrioridadCama
     cama_disponible: Boolean
     cama_ocupada:Boolean
@@ -177,8 +203,7 @@ type Cama {
     cama_dan: Boolean
     cama_codigo_uveh: CodigoCama
     creado: Date
-    paciente_relacionado: [Paciente]
-    microorganismo_relacionado: [Microorganismo]
+    admision_relacionada: [Admision]
 }
 type Microorganismo {
     id: ID!
@@ -188,8 +213,7 @@ type Microorganismo {
     microorganismo_nombre: String
     susceptibilidad: Susceptibilidad
     comentario_uveh: String
-    paciente_relacionado: [Paciente]
-    cama_relacionada: [Cama]
+    admision_relacionada: Admision
     antibiotico_relacionado:[Antibiotico]
 }
 type Antibiotico {
@@ -198,20 +222,9 @@ type Antibiotico {
     antibiotico_comentario: String
     antibiotico_inicio: Date
     antibiotico_fin: Date
-    paciente_relacionado: Paciente
     microorganismo_relacionado: Microorganismo
 }
 
-type Admision {
-    id: ID!
-    procedencia_admision: ProcedenciaAdmision
-    motivo_egreso: MotivoEgreso
-    fecha_ingreso: Date
-    fecha_prealta: Date
-    fecha_egreso: Date
-    paciente_relacionado: Paciente
-    cama_relacionada: [Cama]
-}
 
 
 input AutenticarInput{
@@ -227,6 +240,7 @@ input UsuarioInput {
 }
 
 input PacienteInput {
+    servicio_tratante: ServicioTratante
     expediente: String
     pac_apellido_paterno: String
     pac_apellido_materno: String
@@ -239,20 +253,19 @@ input PacienteInput {
     diagnostico: String
     caracteristicas_especiales: [CaracteristicasEspeciales]
     pac_codigo_uveh: [CodigoPaciente]
+    hospitalizado: Boolean
     fecha_ingreso: Date
     fecha_prealta: Date
     fecha_egreso: Date
-    hospitalizado: Boolean
-    cama_relacionada: ID
-    microorganismo_relacionado:ID
-    antibiotico_relacionado: ID
-    admision_relacionada: ID
+    cama_relacionada: ID  # Agrega el ID de la cama aquí
 }
+
 
 input CamaInput {
     cama_numero: Int
     cama_compartida: Boolean
     cama_lado: LadoCama
+    cama_ubicacion: CamaUbicacion
     cama_prioridad: PrioridadCama
     cama_disponible: Boolean
     cama_ocupada: Boolean
@@ -262,8 +275,7 @@ input CamaInput {
     cama_aislamiento: Boolean
     cama_dan: Boolean
     cama_codigo_uveh: CodigoCama
-    paciente_relacionado: ID
-    microorganismo_relacionado:ID
+    admision_relacionada: ID
 }
 
 input MicroorganismoInput {
@@ -273,9 +285,7 @@ input MicroorganismoInput {
     microorganismo_nombre: String
     susceptibilidad: Susceptibilidad!
     comentario_uveh: String
-    paciente_relacionado: ID
-    cama_relacionada: ID
-    antibiotico_relacionado: ID 
+    admision_relacionada: ID
 }
 
 input AntibioticoInput {
@@ -283,18 +293,18 @@ input AntibioticoInput {
     antibiotico_comentario: String
     antibiotico_inicio: Date
     antibiotico_fin: Date
-    paciente_relacionado: ID
     microorganismo_relacionado:ID
 }
 
 input AdmisionInput {
-    procedencia_admision: ProcedenciaAdmision
-    motivo_egreso: MotivoEgreso
     fecha_ingreso: Date
     fecha_prealta: Date
     fecha_egreso: Date
+    hospitalizado: Boolean
+    servicio_tratante: ServicioTratante
     paciente_relacionado: ID
     cama_relacionada: ID
+    microorganismo_relacionado: ID
 }
 
 type Query {
@@ -302,6 +312,11 @@ type Query {
     #Usuarios
     # obtenerUsuario(token: String!): Usuario
     obtenerUsuario: Usuario
+
+    #Admisiones 
+    obtenerAdmisiones: [Admision]
+    obtenerAdmisionesActivas: [Admision]
+    obtenerAdmisionesInactivas: [Admision]
 
     #Pacientes
     obtenerPaciente(id: ID!): Paciente
@@ -315,6 +330,8 @@ type Query {
     # Camas
     obtenerCama(id: ID!) : Cama!
     obtenerCamas: [Cama!]
+    obtenerCamasUrgencias: [Cama!]
+    obtenerCamas1: [Cama!]
     obtenerCamasOcupadas: [Cama!]
     obtenerCamasDisponibles: [Cama!]
     obtenerCamasDisponiblesMujer: [Cama!]
@@ -360,6 +377,27 @@ type Mutation {
     actualizarPaciente(id: ID!, input: PacienteInput): Paciente
     eliminarPaciente(id: ID!) : String
     modificarEstadoHospitalizado(id: ID!):String
+    
+}
+
+type Subscription {
+
+     #Camas
+    actualizarCama: Cama
+"""
+    #Microorganismos
+    nuevoMicroorganismo(input: MicroorganismoInput) : Microorganismo
+    actualizarMicroorganismo( id: ID!, input : MicroorganismoInput) : Microorganismo
+    eliminarMicroorganismo( id: ID! ) : String
+
+    #Antibioticos
+    nuevoAntibiotico(input: AntibioticoInput) : Antibiotico
+    actualizarAntibiotico( id: ID!, input : AntibioticoInput) : Antibiotico
+    eliminarAntibiotico( id: ID! ) : String """
+
+    # Pacientes
+    nuevoPaciente: Paciente
+    actualizarPaciente: Paciente
     
 }
 `;

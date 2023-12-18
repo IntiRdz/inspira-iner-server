@@ -8,15 +8,40 @@ const schema  = new mongoose.Schema({
         trim: true,
         unique: true
     },
+    cama_ubicacion:{
+        type: String,
+        enum: [
+            'Urgencias',
+            'Clinico1',
+            'Clinico2',
+            'Clinico3', 
+            'Clinico4', 
+            'UTIM',
+            'Neumopediatria',
+            'ORL',
+            'UCI',
+            'UCPQ'
+        ],
+    },
     cama_compartida: {
         type: Boolean,
         required: true
+    },
+    cama_lado:{
+        type: String,
+        enum: [
+            'Arriba',
+            'Medio',
+            'Bajo',
+            'Ninguno'
+        ],
     },
     cama_prioridad:{
         type: String,
         enum: [
             'SinPrioridad',
             'COVID',
+            'Influenza',
             'VirusRespiratorios', 
             'B24', 
             'TuberculosisSensible',
@@ -45,8 +70,8 @@ const schema  = new mongoose.Schema({
     cama_dispositivo_o2: {
         type: String,
         enum: [
-            'VM', 
-            'No_VM'
+            'PN',
+            'VM' 
         ],
         required: true,
     },
@@ -78,18 +103,14 @@ const schema  = new mongoose.Schema({
         type: Date,
         default: Date.now() 
     },
-    admision_relacionada:[ 
-        {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Admision',
-        }
-      ],
-    paciente_relacionado: [
-        {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Paciente',
-        }
-    ], 
+    historial_ocupacion: [{ // Nuevo campo para historial de ocupación
+        paciente: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Paciente'
+        },
+        fecha_entrada: Date,
+        fecha_salida: Date
+    }],
     microorganismo_relacionado: [
         {
         type: mongoose.Schema.Types.ObjectId,

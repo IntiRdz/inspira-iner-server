@@ -1,6 +1,13 @@
 //ejecutar en  cmd, colocarse en la carpenta mongoexport del proyecto pacientes10
-mongoexport --db=agua --collection=camas --out=./Camas.json
-mongoimport --db=agua --collection=camas --file=./Camas.json
+mongoexport --db=segunda --collection=camas --out=./Camas.json
+mongoexport --db=segunda --collection=pacientes --out=./Pacientes.json
+mongoexport --db=segunda --collection=admisions --out=./Admisions.json
+
+
+
+mongoimport --db=segunda --collection=pacientes --file=./Pacientes.json
+mongoimport --db=segunda --collection=camas --file=./Camas.json
+mongoimport --db=segunda --collection=admisions --file=./Admisions.json
 
 mongoexport --uri="mongodb+srv://incorpIner:incorpIner@cluster0.ouiva.mongodb.net/inspirA_inCorp-INER" --collection=camas --out=Camas.json
 mongoimport --uri="mongodb+srv://incorpIner:incorpIner@cluster0.ouiva.mongodb.net/inspirA_inCorp-INER" --collection=camas --file=./Camas.json

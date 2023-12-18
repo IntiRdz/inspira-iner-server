@@ -1,0 +1,2 @@
+{"_id":{"$oid":"655053a92d9dd496e4d2eebc"},"nombre":"Inti","apellido":"Rodríguez López","email":"inti@mail.com","password":"$2a$10$qdIL7kQhGBhfj67oTnPPDO/5gBJ96oyVA3V8gkfKXzm/uYQhgyZRC","creado":{"$date":"2023-11-12T03:59:31.131Z"},"__v":0}
+{"_id":{"$oid":"65669f54104881b6ee0e293e"},"nombre":"Dr.","apellido":"INER","email":"pruebas@mail.com","password":"$2a$10$ZO0ZaG24sc3u2CPFzVUU9ur5dCGljQK/3KYwnyoNyhA/lAd0cGlFK","creado":{"$date":"2023-11-29T02:11:22.541Z"},"__v":0}

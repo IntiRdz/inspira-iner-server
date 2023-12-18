@@ -1,0 +1,29 @@
+{
+    "_id":{"$oid":"65655cd7b3dad78bfcf700d7"},
+    "expediente":"EXP10001",
+    "pac_apellido_paterno":"01","pac_apellido_materno":"01","pac_nombre":"01",
+    "pac_genero":"Hombre",
+    "pac_FN":{"$date":"1991-01-01T00:00:00Z"},
+    "pac_dispositivo_o2":"PN","pac_hemodialisis":false,
+    "diagnostico":"Diagnóstico ejemplo","diagnostico1":["TuberculosisSensible"],"caracteristicas_especiales":["Embarazo"],"pac_codigo_uveh":["Sin_Aislamientos"],"creado":{"$date":"2023-11-28T03:21:38.21Z"},
+    "admision_relacionada":[{"$oid":"65655cd7b3dad78bfcf700d9"}],"__v":0
+}
+{
+    "_id":{"$oid":"6565534e3a69a23c2e51635d"},
+    "expediente":"EXP10002",
+    "pac_apellido_paterno":"02","pac_apellido_materno":"02","pac_nombre":"02",
+    "pac_genero":"Mujer",
+    "pac_FN":{"$date":"1995-05-05T00:00:00Z"},
+    "pac_dispositivo_o2":"AA","pac_hemodialisis":false,
+    "diagnostico":"Diagnóstico ejemplo","diagnostico1":["COVID"],"caracteristicas_especiales":["Embarazo"],"pac_codigo_uveh":["Sin_Aislamientos"],"creado":{"$date":"2023-11-28T03:21:38.21Z"},
+    "admision_relacionada":[{"$oid":"65655cd7b3dad78bfcf700d9"}],"__v":0
+}
+{
+    "_id":{"$oid":"65655cd7b3dad78bfcf700d8"},
+    "expediente":"EXP10003",
+    "pac_apellido_paterno":"03","pac_apellido_materno":"03","pac_nombre":"03",
+    "pac_genero":"Hombre","pac_FN":{"$date":"2000-10-10T00:00:00Z"},
+    "pac_dispositivo_o2":"VM","pac_hemodialisis":true,
+    "diagnostico":"Diagnóstico ejemplo","diagnostico1":["CodigoViaAerea"],"caracteristicas_especiales":["Embarazo"],"pac_codigo_uveh":["Sin_Aislamientos"],"creado":{"$date":"2023-11-28T03:21:38.21Z"},
+    "admision_relacionada":[{"$oid":"65655cd7b3dad78bfcf700d9"}],"__v":0
+}

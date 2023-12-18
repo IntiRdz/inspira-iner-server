@@ -59,25 +59,10 @@ const wsServer = new WebSocketServer({
     path: '/graphql'
 });
 
-const wsServerCleanup = useServer({
-  schema,
-  onError: (ctx, msg, errors) => {
-    console.error('Error en WebSocket:', errors);
-},
-}, wsServer);
+const wsServerCleanup = useServer({schema}, wsServer);
 
 const apolloServer = new ApolloServer({
     schema,
-    formatError: (error) => {
-      // Muestra más detalles sobre los errores
-      console.error(error);
-      return {
-          message: error.message,
-          locations: error.locations,
-          path: error.path,
-          ...error.extensions, // Proporciona detalles adicionales si están disponibles
-      };
-  },
     plugins: [
        // Proper shutdown for the HTTP server.
        ApolloServerPluginDrainHttpServer({ httpServer }),
@@ -96,28 +81,6 @@ const apolloServer = new ApolloServer({
 });
 
 await apolloServer.start();
-
-app.use('/graphql', (req, res, next) => {
-  console.log('Solicitud GraphQL:', req.body);
-  // Puedes añadir más lógica aquí si es necesario
-
-  // Función para capturar la respuesta antes de ser enviada
-  const oldWrite = res.write;
-  const oldEnd = res.end;
-  const chunks = [];
-  res.write = function (chunk) {
-      chunks.push(chunk);
-      return oldWrite.apply(res, arguments);
-  };
-  res.end = function (chunk) {
-      if (chunk) chunks.push(chunk);
-      const responseBody = Buffer.concat(chunks).toString('utf8');
-      console.log('Respuesta GraphQL:', responseBody);
-      oldEnd.apply(res, arguments);
-  };
-
-  next();
-});
 
 app.use('/graphql', bodyParser.json(), expressMiddleware(apolloServer));
 

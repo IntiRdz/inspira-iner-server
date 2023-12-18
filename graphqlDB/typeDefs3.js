@@ -14,24 +14,6 @@ type Usuario {
     creado: Date
     activo:Boolean
 }
-
-enum ProcedenciaAdmision {
-    Urgencias
-    UCI
-    UCPQ
-    UTIM
-    ServicioClinico
-    ConsultaExterna
-}
-
-enum MotivoEgreso {
-    TrasladoInterno
-    TrasladoExterno
-    Mejoria
-    AltaVoluntaria
-    Defuncion
-}
-
 enum Genero {
     Hombre
     Mujer
@@ -39,33 +21,35 @@ enum Genero {
 }
 enum DispositivoO2 {
     AA
-    PN
+    PN_TiendaTraqueal
     PNAF
+    VMNI_Intermitente
     VMNI
     VM
 }
 enum Diagnostico1 {
-  CodigoHemoptisis
-  CodigoViaAerea
-  CodigoInfarto
-  COVID
-  Influenza
-  Parainfluenza
-  Adenovirus
-  VirusSincialRespiratorio
-  TuberculosisSensible
-  TuberculosisResistente
-  B24
-  SIRA
-  NeumoniaBacteriana
-  EPOC
-  Asma
-  TromboembiaPulmonar
-  DerramePleural
-  Neumotorax
-  NeumoniaIntersticialDifusa
-  InsuficienciaCaridiaca
-  CaPulmonarOSospecha
+    CodigoHemoptisis
+    CodigoViaAerea
+    CodigoInfarto
+    COVID
+    Influenza
+    Parainfluenza
+    Adenovirus
+    VirusSincialRespiratorio
+    Metaneumovirus
+    TuberculosisSensible
+    TuberculosisResistente
+    B24
+    SIRA
+    NeumoniaBacteriana
+    EPOC
+    Asma
+    TromboembiaPulmonar
+    DerramePleural
+    Neumotorax
+    NeumoniaIntersticialDifusa
+    InsuficienciaCaridiaca
+    CaPulmonarOSospecha
 }
 enum CaracteristicasEspeciales {
     TrasladoDeHospital
@@ -73,25 +57,42 @@ enum CaracteristicasEspeciales {
     Embarazo
     Inmunosupresion
 }
-
 enum CodigoPaciente {
-    SinDefinir
-    SinAislamientos
+    Sin_Definir
+    Sin_Aislamientos
     Acinetobacter
-    ColonizacionAcinetobacter
-    ContactoAcinetobacter
-    HisopadoRectal
-    ClostridiumDifficile
+    Colonizacion_Acinetobacter
+    Contacto_Acinetobacter
+    Hisopado_Rectal
+    Clostridium_Difficile
     Enterobacterias_XDR_MDR
     Pseudomonas_XDR_MDR
     SAMR
-    TuberculosisisOSospecha
+    Tuberculosisis_o_Sospecha
     SAMS
 }
-
+enum UbicacionCama{
+    Urgencias
+    Clinico1
+    Clinico2
+    Clinico3
+    Clinico4
+    UTIM
+    Neumopediatria
+    ORL
+    UCI
+    UCPQ
+}
+enum LadoCama{
+    Arriba
+    Medio
+    Bajo
+    Ninguno
+}
 enum PrioridadCama{
     SinPrioridad
     COVID
+    Influenza
     VirusRespiratorios
     B24
     TuberculosisSensible
@@ -99,8 +100,8 @@ enum PrioridadCama{
 }
 
 enum DispositivoO2cama {
+    PN
     VM
-    No_VM
 }
 enum CodigoCama{
     Sin_Definir
@@ -127,16 +128,39 @@ enum Susceptibilidad {
     XDR
     Sensible
 }
-type Admision {
-    id: ID!
-    procedencia_admision: ProcedenciaAdmision
-    motivo_egreso: MotivoEgreso
-    fecha_ingreso: Date
-    fecha_prealta: Date
-    fecha_egreso: Date
-    paciente_relacionado: [Paciente]
-    cama_relacionada: [Cama]
+
+
+
+
+enum ProcedenciaAdmision {
+    Domicilio
+    Otro_Hospital
 }
+
+enum LugarIngreso {
+    Urgencias
+    UCI
+    UCPQ
+    UTIM
+    ServicioClinico
+    ConsultaExterna
+}
+
+enum EstadoPaciente {
+    Critico
+    Delicado
+    Estable
+    Mejoria
+}
+
+
+enum MotivoEgreso {
+    Mejoria
+    Traslado
+    AltaVoluntaria
+    Defuncion
+}
+
 
 type Paciente {
     id: ID!
@@ -152,18 +176,26 @@ type Paciente {
     diagnostico1: [Diagnostico1]
     caracteristicas_especiales: [CaracteristicasEspeciales]
     pac_codigo_uveh: [CodigoPaciente]
-    hospitalizado: Boolean
     creado: String
     user: ID
-    admision_relacionada: [Admision]
     microorganismo_relacionado:[Microorganismo]
     antibiotico_relacionado: [Antibiotico]
-    cama_relacionada: [Cama]
+    admision_relacionada: [Admision]
 }
-type Cama {
+
+type HistorialOcupacion {
     id: ID!
+    paciente: ID
+    fecha_entrada: String
+    fecha_salida: String
+}
+
+type Cama {
+    id: ID
     cama_numero: Int
+    cama_ubicacion: UbicacionCama
     cama_compartida: Boolean
+    cama_lado: LadoCama
     cama_prioridad: PrioridadCama
     cama_disponible: Boolean
     cama_ocupada:Boolean
@@ -174,10 +206,47 @@ type Cama {
     cama_dan: Boolean
     cama_codigo_uveh: CodigoCama
     creado: Date
-    admision_relacionada: [Admision]
-    paciente_relacionado: [Paciente]
+    historial_ocupacion: [HistorialOcupacion]
     microorganismo_relacionado: [Microorganismo]
 }
+
+type Admision {
+    id: ID
+    procedencia_admision: ProcedenciaAdmision
+    fecha_ingreso: Date
+    lugar_ingreso: LugarIngreso
+    paciente_relacionado: Paciente
+}
+
+
+type CamaEstancia {
+    id: ID
+    paciente_relacionado: Paciente
+    cama_relacionada: [Cama]
+    fecha_Entrada: Date
+    fecha_Salida: Date
+    estado_paciente: EstadoPaciente
+}
+
+type Estancia {
+    id: ID
+    paciente_relacionado: Paciente
+    admision_relacionada: [Admision]
+    camas: [CamaEstancia]
+    transferencias: [Transferencia]
+    dias_estancia: Int
+    fecha_prealta: Date
+    fecha_egreso: Date
+    motivo_egreso: MotivoEgreso
+}
+
+type Transferencia {
+    id: ID
+    paciente_relacionado: Paciente
+    fecha_transferencia: Date
+}
+
+
 type Microorganismo {
     id: ID!
     fecha_deteccion: Date
@@ -190,6 +259,9 @@ type Microorganismo {
     cama_relacionada: [Cama]
     antibiotico_relacionado:[Antibiotico]
 }
+
+
+
 type Antibiotico {
     id: ID!
     antibiotico_nombre: String
@@ -201,20 +273,13 @@ type Antibiotico {
 }
 
 
+
+
 input AutenticarInput{
     email: String!
     password: String!
 }
-input AdmisionInput {
-    procedencia_admision: ProcedenciaAdmision
-    fecha_ingreso: Date
-    fecha_prealta: Date
-    fecha_egreso: Date
-    motivo_egreso: MotivoEgreso
-    cama_relacionada: ID
-    paciente_relacionado: ID
 
-}
 input UsuarioInput {
     nombre: String!
     apellido: String!
@@ -235,17 +300,21 @@ input PacienteInput {
     diagnostico: String
     caracteristicas_especiales: [CaracteristicasEspeciales]
     pac_codigo_uveh: [CodigoPaciente]
+    fecha_ingreso: Date
+    fecha_prealta: Date
+    fecha_egreso: Date
     hospitalizado: Boolean
-    admision_relacionada: ID
+    cama_relacionada: ID
     microorganismo_relacionado:ID
     antibiotico_relacionado: ID
-    cama_relacionada: ID
-
+    admision_relacionada: ID
 }
 
 input CamaInput {
     cama_numero: Int
+    cama_ubicacion: UbicacionCama
     cama_compartida: Boolean
+    cama_lado: LadoCama
     cama_prioridad: PrioridadCama
     cama_disponible: Boolean
     cama_ocupada: Boolean
@@ -280,16 +349,36 @@ input AntibioticoInput {
     microorganismo_relacionado:ID
 }
 
+input AdmisionInput {
+    procedencia_admision: ProcedenciaAdmision
+    motivo_egreso: MotivoEgreso
+    fecha_ingreso: Date
+    fecha_prealta: Date
+    fecha_egreso: Date
+    paciente_relacionado: ID
+    cama_relacionada: ID
+}
+
+input TransferenciaInput {
+    paciente_relacionado: ID!
+    fecha_transferencia: Date!
+    lugar_origen: UbicacionCama!
+    lugar_destino: UbicacionCama!
+    motivo_transferencia: String
+}
+
+
 type Query {
 
     #Usuarios
-    # obtenerUsuario(token: String!): Usuario
+    #obtenerUsuario(token: String!): Usuario
     obtenerUsuario: Usuario
 
     #Pacientes
     obtenerPaciente(id: ID!): Paciente
     obtenerPacientes: [Paciente]
     obtenerPacientesUser: [Paciente]
+    obtenerPacientesUrgencias: [Paciente]
     obtenerPacientesHospitalizados: [Paciente]
     obtenerPacientesNoHospitalizados: [Paciente]
     obtenerPacientesHospitalizadosSinCama: [Paciente]
@@ -314,6 +403,11 @@ type Query {
 
     # Busquedas Avanzadas
     buscarCama(texto: String!) : [Cama]
+    obtenerEstanciaPaciente(id: ID!): Estancia
+    obtenerTransferenciasPaciente(id: ID!): [Transferencia]
+    obtenerDiasEstanciaPaciente(id: ID!): Int
+
+
 }
 
 type Mutation {
@@ -342,6 +436,12 @@ type Mutation {
     actualizarPaciente(id: ID!, input: PacienteInput): Paciente
     eliminarPaciente(id: ID!) : String
     modificarEstadoHospitalizado(id: ID!):String
+
+    registrarAdmisionPaciente(input: AdmisionInput): Admision
+    asignarCamaPaciente(idCama: ID!, idPaciente: ID!): Cama
+    registrarTransferenciaPaciente(input: TransferenciaInput): Transferencia
+    actualizarEgresoPaciente(idPaciente: ID!, motivoEgreso: MotivoEgreso): Paciente
+
     
 }
 `;

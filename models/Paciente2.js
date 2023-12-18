@@ -35,7 +35,8 @@ const schema  = new mongoose.Schema({
             'AA',
             'PN', 
             'PNAF', 
-            'VMNI', 
+            'VMNI',
+            'VMNI_Intermitente', 
             'VM'
         ],
     },
@@ -59,6 +60,7 @@ const schema  = new mongoose.Schema({
             'Parainfluenza',
             'Adenovirus',
             'VirusSincialRespiratorio',
+            'Metaneumovirus',
             'TuberculosisSensible',
             'TuberculosisResistente',
             'B24',
@@ -105,19 +107,6 @@ const schema  = new mongoose.Schema({
             ]
         }
         ],
-    fecha_ingreso: {
-        type: Date,
-    },
-    fecha_prealta: {
-        type: Date,
-    },
-    fecha_egreso: {
-        type: Date,
-    },
-    hospitalizado: {
-        type: Boolean,
-        default: true
-    },
     creado: {
         type: Date,
         default: Date.now() 
@@ -126,19 +115,7 @@ const schema  = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Usuario'
     },
-    admsion_relacionada:[ 
-        {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Admision',
-        }
-      ],
         // Agregar una referencia a la cama actual del paciente
-    cama_relacionada:[ 
-        {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Cama',
-        }
-    ],
     // Agregar una referencia al último microorganismo detectado
     microorganismo_relacionado:[ 
         {
@@ -152,7 +129,25 @@ const schema  = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Antibiotico',
         }
-    ]    
+    ],
+    admision_relacionada:[ 
+        {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Admision',
+        }
+      ], 
+    estancias: [
+        { 
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'Estancia' 
+        }
+    ],
+    camasEstancia: [
+        { 
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'CamaEstancia' 
+        }
+    ],
 })
 
 export default mongoose.model('Paciente', schema)

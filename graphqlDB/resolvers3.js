@@ -5,6 +5,11 @@ import Paciente from '../models/Paciente.js';
 import Cama from '../models/Cama.js';
 import Microorganismo from '../models/Microorganismo.js';
 import Admision from '../models/Admision.js';
+import Antibiotico from '../models/Antibiotico.js';
+import CamaEstancia from '../models/CamaEstancia.js';
+import Estancia from '../models/Estancia.js';
+import Transferencia from '../models/Transferencia.js';
+
 
 import bcryptjs from 'bcryptjs';
 
@@ -41,6 +46,26 @@ Date: new GraphQLScalarType({
 }),
 
 Query: {
+    obtenerEstanciaPaciente: async (_, { id }) => {
+        return await Estancia.findById(id)
+            .populate('paciente_relacionado')
+            .populate({
+                path: 'camas',
+                populate: { path: 'cama_relacionada' }
+            })
+            .populate('transferencias');
+    },
+    obtenerTransferenciasPaciente: async (_, { id }) => {
+        return await Transferencia.find({ paciente_relacionado: id });
+    },
+    obtenerDiasEstanciaPaciente: async (_, { id }) => {
+        const estancia = await Estancia.findById(id);
+        const fechaIngreso = new Date(estancia.fecha_ingreso);
+        const fechaEgreso = new Date(estancia.fecha_egreso);
+        const diferencia = fechaEgreso - fechaIngreso;
+        return Math.ceil(diferencia / (1000 * 3600 * 24));
+    },
+        
     obtenerUsuario: async (_, {}, contextValue) => {
         //console.log("Se llama al resolver obtenerUsuario")
         if(!contextValue){
@@ -48,98 +73,47 @@ Query: {
         }
         return contextValue.usuario;
     }, 
-    obtenerPaciente: async (_, { id },) => {
-        //console.log("Se llama al resolver obtenerPaciente")
-        // Revisar si el paciente existe o no
+    obtenerPaciente: async (_, { id }) => {
         const paciente = await Paciente.findById(id);
-        //console.log("Paciente encontrado:",paciente)
-        if(!paciente) {
+        if (!paciente) {
             throw new Error('Paciente no encontrado');
         }
         return paciente;
-    }, 
-
-/*     obtenerPacientes: async () => {
-        //console.log("Se llama al resolver obtenerPacientes")
-        try {
-            const pacientes = await Paciente.find({});
-    
-            return pacientes;
-        } catch (error) {
-            console.log(error);
-        }
-    }, 
- */
+    },
     obtenerPacientes: async () => {
         try {
-            return await Paciente.find().populate('cama_relacionada');
+            return await Paciente.find();
+            // Elimina la llamada a populate para cama_relacionada
         } catch (error) {
             throw new Error(error);
         }
     },
     
-    obtenerPacientesUser: async (_, {}, contextValue ) => {
+    obtenerPacientesUser: async (_, {}, contextValue) => {
         try {
-            if(!contextValue){
-                throw new Error('No se recibió Contex por lo que no se puede obtener Usuario');
+            if (!contextValue) {
+                throw new Error('No se recibió Context por lo que no se puede obtener Usuario');
             }
-            const pacientes = await Paciente.find({ user: contextValue.usuario.id.toString() });
-            return pacientes;
+            return await Paciente.find({ user: contextValue.usuario.id.toString() });
         } catch (error) {
             console.log(error);
         }
-    }, 
-    obtenerPacientesUrgencias : async () => {
+    },
+    obtenerPacientesUrgencias: async () => {
         try {
-            // Obtener los IDs de las camas que están en el rango de 1 a 14
-            const camasEnRango = await Cama.find({
-                cama_numero: { $gte: 1, $lte: 14 }
-            }).select('_id');
-            
-            // Extraer solo los IDs de las camas
+            const camasEnRango = await Cama.find({ cama_numero: { $gte: 1, $lte: 14 } }).select('_id');
             const camasIds = camasEnRango.map(cama => cama._id);
-    
-            // Obtener todos los pacientes hospitalizados
-            let pacientesHospitalizados = await Paciente.find({
-                hospitalizado: true
-            }).populate('cama_relacionada');
-    
-            // Filtrar aquellos cuya última cama relacionada esté en el rango deseado
+            let pacientesHospitalizados = await Paciente.find({ hospitalizado: true }).populate('cama_relacionada');
             let pacientesUrgencias = pacientesHospitalizados.filter(paciente => {
                 const ultimaCamaRelacionada = paciente.cama_relacionada[paciente.cama_relacionada.length - 1];
                 return camasIds.includes(ultimaCamaRelacionada?._id);
             });
-    
             return pacientesUrgencias;
         } catch (error) {
             console.log(error);
-            throw error; 
+            throw error;
         }
     },
-    
-    
-/*     obtenerPacientesUrgencias: async () => {
-        try {
-            // Obtener los IDs de las camas que están en el rango de 1 a 14
-            const camasEnRango = await Cama.find({
-                cama_numero: { $gte: 1, $lte: 14 }
-            }).select('_id');
-    
-            // Extraer solo los IDs de las camas
-            const camasIds = camasEnRango.map(cama => cama._id);
-    
-            // Ahora, encontrar los pacientes hospitalizados que están relacionados con esas camas
-            const pacientesUrgencias = await Paciente.find({
-                hospitalizado: true,
-                cama_relacionada: { $in: camasIds }
-            });
-    
-            return pacientesUrgencias;
-        } catch (error) {
-            console.log(error);
-            throw error; 
-        }
-    },   */  
     obtenerPacientesHospitalizados: async () => {
         try {
             const pacientesHospitalizados = await Paciente.find({ 
@@ -292,23 +266,20 @@ Query: {
         }
       },
       obtenerAntibiotico: async (_, { id }) => {
-        // revisar si el producto existe o no
         const antibiotico = await Antibiotico.findById(id);
-
-        if(!antibiotico) {
+        if (!antibiotico) {
             throw new Error('Antibiotico no encontrado');
         }
-
-        return producto;
+        return antibiotico;
     },
     obtenerAntibioticos: async () => {
         try {
-            const antibioticos = await Antibiotico.find({});
-            return antibioticos;
+            return await Antibiotico.find({});
         } catch (error) {
             console.log(error);
         }
-    }, 
+    },
+    
     buscarCama: async(_, { texto }) => {
         const camas = await Cama.find({ $text: { $search: texto } }).limit(10)
 
@@ -316,61 +287,37 @@ Query: {
     }
 },
 Paciente: {
-    cama_relacionada: async (paciente) => {
-        await paciente.populate({
-            path: 'cama_relacionada',
-            match: { paciente_relacionado: paciente._id }
-        });
-        return paciente.cama_relacionada;
-    },
+    // Eliminar o modificar esta función
+    // cama_relacionada: async (paciente) => {
+    //     return await Cama.findById(paciente.cama_relacionada);
+    // },
     microorganismo_relacionado: async (paciente) => {
-        const microorganismos = await Microorganismo.find({ paciente_relacionado: paciente.id });
-        return microorganismos;
-    },   
+        return await Microorganismo.find({ paciente_relacionado: paciente.id });
+    },
 },
 Cama: {
     microorganismo_relacionado: async (cama) => {
-
-        const microorganismos = await Microorganismo.find({ cama_relacionada: cama.id });
-        return microorganismos;
-
+        return await Microorganismo.find({ cama_relacionada: cama.id });
     },
-    paciente_relacionado: async (cama) => {
 
-        const pacientes = await Paciente.find({ cama_relacionada: cama.id });
-        return pacientes;
-
-    },
 },
 Microorganismo: {
-    cama_relacionada: async ( microorganismo ) => {
-
-        const camas = await Cama.find({ microorganismo_relacionado: microorganismo.id });
-        return camas;
-
+    cama_relacionada: async (microorganismo) => {
+        return await Cama.find({ microorganismo_relacionado: microorganismo.id });
     },
     paciente_relacionado: async (microorganismo) => {
-
-        const pacientes = await Paciente.find({ microorganismo_relacionado: microorganismo.id });
-        return pacientes;
-
+        return await Paciente.find({ microorganismo_relacionado: microorganismo.id });
     },
 },
 Antibiotico: {
-    microorganismo_relacionado: async (antibiotico ) => {
-
-        const microorganismos = await Microorganismo.find({ antibiotico_relacionado: antibiotico.id });
-        return microorganismos;
-
+    microorganismo_relacionado: async (antibiotico) => {
+        return await Microorganismo.find({ antibiotico_relacionado: antibiotico.id });
     },
     paciente_relacionado: async (antibiotico) => {
-
-        const pacientes = await Paciente.find({ antibiotico_relacionado: antibiotico.id });
-        return pacientes;
+        return await Paciente.findById(antibiotico.paciente_relacionado);
     },
-
-
 },
+
 Mutation: {
     nuevoUsuario: async (_, { input } ) => {
 
@@ -418,47 +365,29 @@ Mutation: {
         
     },
     nuevoPaciente: async (_, { input }, contextValue) => {
-        console.log("Se llama al resolver nuevoPaciente")
-        console.log("input recibido",input)
-        const { expediente } = input
-        // Verificar si el paciente ya esta registrado
+        const { expediente } = input;
         const paciente = await Paciente.findOne({ expediente });
-        if(paciente) {
-            throw new Error('Ese paciente ya esta registrado');
+        if (paciente) {
+            throw new Error('Ese paciente ya está registrado');
         }
-
-        try {
-
-            const nuevoPaciente = new Paciente(input);
-
-            // asignar el user
-            nuevoPaciente.user = contextValue.usuario.id;
-            //console.log("Paciente creado",nuevoPaciente)
-
-            let cama = await Cama.findById(input.cama_relacionada);
-            //console.log("cama",cama)
     
+        const nuevoPaciente = new Paciente(input);
+        /* nuevoPaciente.user = contextValue.usuario.id; */
+    
+        if (input.cama_relacionada) {
+            let cama = await Cama.findById(input.cama_relacionada);
             if (!cama) {
                 throw new Error('La cama relacionada no existe');
             }
     
-
-            // Agregar al cama al paciente
             cama.paciente_relacionado.push(nuevoPaciente.id);
-            cama.cama_ocupada = !cama.cama_ocupada;
-            await cama.save()
-
-
-            // guardarlo en la base de datos
-            const resultado = await nuevoPaciente.save();
-            //console.log("Paciente creado",resultado)
-            return resultado;
-
-        } catch (error) {
-            console.log(error);
+            cama.cama_ocupada = true;
+            await cama.save();
         }
+    
+        return await nuevoPaciente.save();
     },
-
+    
     actualizarCama: async (_, {id, input}) => {
         // revisar si el cama existe o no
         let cama = await Cama.findById(id);
@@ -478,181 +407,38 @@ Mutation: {
         return cama;
     }, 
     actualizarPaciente: async (_, { id, input }) => {
-        console.log("Se llama a la funcion Actualizar Paciente")
-        console.log("se recibe el ID del paciente", id)
-        console.log("Input recibido", input)
-        
-        try {
-            let paciente = await Paciente.findById(id);
-            
-            if (!paciente) {
-                throw new Error('Ese paciente no existe');
-            }
-    
-            console.log("Paciente encontrado", paciente);
-            const ultimaCamaRelacionada = paciente.cama_relacionada[paciente.cama_relacionada.length - 1];
-    
-            const { cama_relacionada, ...restoDelInput } = input;
-            paciente = await Paciente.findOneAndUpdate(
-                { _id: id },
-                { $set: restoDelInput },
-                { new: true }
-            );
-    
-            if (cama_relacionada) {
-                let camaAntigua;
-                if (ultimaCamaRelacionada) {
-                    camaAntigua = await Cama.findById(ultimaCamaRelacionada);
-                    if (camaAntigua) {
-                        camaAntigua.cama_ocupada = false;
-                        await camaAntigua.save();
-                    }
-                }
-    
-                let cama = await Cama.findById(cama_relacionada);
-                if (!cama) {
-                    throw new Error('La cama relacionada no existe');
-                }
-    
-                if (!cama.paciente_relacionado.includes(paciente.id)) {
-                    cama.paciente_relacionado.push(paciente.id);
-                }
-                cama.cama_ocupada = true;
-    
-                await cama.save();
-
-                paciente.cama_relacionada.push(cama.id);
-                await paciente.save();
-            }
-    
-            return paciente;
-        } catch (error) {
-            console.error("Error al actualizar paciente:", error);
-            throw error;
+        let paciente = await Paciente.findById(id);
+        if (!paciente) {
+            throw new Error('Ese paciente no existe');
         }
-    },
     
-/*     actualizarPaciente: async (_, { id, input }) => {
-        console.log("Se llama a la funcion Actualizar Paciente")
-        console.log("se recibe el ID del paciente", id)
-        console.log("Input recibido", input)
-        
-        try {
-            // Verificar si el paciente existe
-            let paciente = await Paciente.findById(id);
-            
-            if (!paciente) {
-                throw new Error('Ese paciente no existe');
-            }
-            
-            console.log("Paciente encontrado",paciente);
-            busqueda = paciente.cama_relacionada
-
-            // Actualizar solo los campos proporcionados, excluyendo cama_relacionada
-            const { cama_relacionada, ...restoDelInput } = input;
-            paciente = await Paciente.findOneAndUpdate(
-                { _id: id },
-                { $set: restoDelInput },
-                { new: true }
-            );
-    
-            // Manejar la cama solo si cama_relacionada está presente
-            if (cama_relacionada) {
-
-
-                let camaAntigua = await Cama.findById(busqueda)
-                camaAntigua.cama_ocupada = !cama.cama_ocupada;
-
-                let cama = await Cama.findById(cama_relacionada);
-    
-                if (!cama) {
-                    throw new Error('La cama relacionada no existe');
-                }
-    
-                // Actualizar la relación de cama y paciente
-                cama.paciente_relacionado.push(paciente.id);
-                cama.cama_ocupada = !cama.cama_ocupada;
-    
-                // Guardar los cambios en la cama
-                await camaAntigua.save();
-                await cama.save();
-            }
-    
-            // Guardar los cambios en el paciente
-            await paciente.save();
-    
-            return paciente;
-        } catch (error) {
-            console.error("Error al actualizar paciente:", error);
-            throw error;
-        }
-    }, */
-    
-/*     actualizarPaciente: async (_, { id, input }) => {
-        console.log("Se llama a la funcion Actualizar Paciente")
-        console.log("se recibe el ID del paciente", id)
-        console.log("Input recibido", input)
-        
-        try {
-            // Verificar si el paciente existe
-            let paciente = await Paciente.findById(id);
-        
-            if (!paciente) {
-                throw new Error('Ese paciente no existe');
-            }
-
-            paciente = await Paciente.findOneAndUpdate(
-                { _id: id }, // Usar _id en lugar de id
-                { $set: input }, // Usar $set para actualizar campos individuales
-                { new: true } // Devolver el documento actualizado
-            );
-
-            // Agregar al paciente, la cama relacionada
-            //paciente.cama_relacionada.push(cama.id);
-    
-            // Obtener el documento de la cama relacionada por su ID
+        if (input.cama_relacionada) {
             let cama = await Cama.findById(input.cama_relacionada);
-            //console.log("cama",cama)
-    
             if (!cama) {
                 throw new Error('La cama relacionada no existe');
             }
     
-
-            // Agregar al cama al paciente
-            cama.paciente_relacionado.push(paciente.id);
-            cama.cama_ocupada = !cama.cama_ocupada;
+            cama.paciente_relacionado.push(id);
+            cama.cama_ocupada = true;
+            await cama.save();
     
-            // Guardar los cambios en el paciente
-            await paciente.save();
-            // Guardar los cambios en la cama
-            await cama.save()
-    
-            //console.log("Paciente actualizado", paciente);
-            //console.log("Cama actualizada", cama);
-            return paciente;
-        } catch (error) {
-            console.error("Error al actualizar paciente:", error);
-            throw error;
+            paciente.cama_relacionada = cama.id;
         }
-    }, */
-    eliminarPaciente : async (_, {id}, contextValue) => {
-        // Verificar si existe o no
-        let paciente = await Paciente.findById(id);
+    
+        return await Paciente.findByIdAndUpdate(id, input, { new: true });
+    },
+    
 
-        if(!paciente) {
+    eliminarPaciente: async (_, { id }) => {
+        let paciente = await Paciente.findById(id);
+        if (!paciente) {
             throw new Error('Ese paciente no existe');
         }
-
-        // Verificar si el user es quien edita
-        if(paciente.user.toString() !== contextValue.usuario.id ) {
-            throw new Error('No tienes las credenciales');
-        }
-
-        // Eliminar Paciente
-        await Paciente.findOneAndDelete({id : id});
-        return "Paciente Eliminado"
+    
+        await Paciente.findByIdAndDelete(id);
+        return "Paciente Eliminado";
     },
+    
     nuevaCama: async (_, { input }) => {
         //console.log("Se llama al resolver nuevaCama")
         console.log("input recibido",input)
@@ -811,31 +597,31 @@ Mutation: {
 
         return "Microorganismo Eliminado";
     },
-    nuevoAntibiotico: async (_, {input}) => {
-        try {
-            const antibiotico = new Antibiotico(input);
-
-            // almacenar en la bd
-            const resultado = await antibiotico.save();
-
-            return resultado;
-        } catch (error) {
-            console.log(error);
-        }
-    }, 
-    actualizarAntibiotico: async (_, {id, input}) => {
-        // revisar si el producto existe o no
-        let antibiotico = await Antibiotico.findById(id);
-
-        if(!antibiotico) {
-            throw new Error('Antibiotico no encontrado');
-        }
-
-        // guardarlo en la base de datos
-        antibiotico = await Antibiotico.findOneAndUpdate({ id : id }, input, { new: true } );
-
-        return antibiotico;
-    }, 
+    nuevoAntibiotico: async (_, { input }) => {
+        const antibiotico = new Antibiotico(input);
+        return await antibiotico.save();
+    },
+    
+    actualizarAntibiotico: async (_, { id, input }) => {
+        return await Antibiotico.findByIdAndUpdate(id, input, { new: true });
+    },
+     
+    registrarAdmisionPaciente: async (_, { input }) => {
+        const nuevaAdmision = new Admision(input);
+        return await nuevaAdmision.save();
+    },
+    asignarCamaPaciente: async (_, { idCama, idPaciente }) => {
+        await Cama.findByIdAndUpdate(idCama, { cama_ocupada: true, paciente_relacionado: idPaciente });
+        return await Paciente.findByIdAndUpdate(idPaciente, { cama_relacionada: idCama });
+    },
+    registrarTransferenciaPaciente: async (_, { input }) => {
+        const nuevaTransferencia = new Transferencia(input);
+        return await nuevaTransferencia.save();
+    },
+    actualizarEgresoPaciente: async (_, { idPaciente, motivoEgreso }) => {
+        return await Paciente.findByIdAndUpdate(idPaciente, { motivo_egreso: motivoEgreso }, { new: true });
+    },
+                
  
   },
 

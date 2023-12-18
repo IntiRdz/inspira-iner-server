@@ -24,7 +24,8 @@ const schema  = new mongoose.Schema({
         enum: [
             'Hombre', 
             'Mujer', 
-            'Indeterminado'],
+            'Indeterminado'
+        ],
     },
     pac_FN: {
         type: Date,
@@ -33,10 +34,11 @@ const schema  = new mongoose.Schema({
         type: String,
         enum: [
             'AA',
-            'PN', 
+            'PN',
+            'Tienda_Traqueal', 
             'PNAF', 
-            'VMNI',
             'VMNI_Intermitente', 
+            'VMNI',
             'VM'
         ],
     },
@@ -85,6 +87,7 @@ const schema  = new mongoose.Schema({
             'InfeccionReciente',
             'Embarazo',
             'Inmunosupresion',
+            'ComunidadLG'
             ]
         }
       ],
@@ -92,63 +95,29 @@ const schema  = new mongoose.Schema({
         {
         type: String,
         enum: [
-            'SinDefinir',
-            'SinAislamientos',
+            'Sin_Definir',
+            'Sin_Aislamientos',
             'Acinetobacter',
-            'ColonizaciónAcinetobacter',
-            'ContactoAcinetobacter',
-            'HisopadoRectal',
-            'ClostridiumDifficile',
+            'Colonización_Acinetobacter',
+            'Contacto_Acinetobacter',
+            'Hisopado_Rectal',
+            'Clostridium_Difficile',
             'Enterobacterias_XDR_MDR',
             'Pseudomonas_XDR_MDR',
             'SAMR',
-            'TuberculosisisOSospecha',
+            'Tuberculosisis_o_Sospecha',
             'SAMS'
             ]
         }
-        ],
-    fecha_ingreso: {
-        type: Date,
-    },
-    fecha_prealta: {
-        type: Date,
-    },
-    fecha_egreso: {
-        type: Date,
-    },
-    hospitalizado: {
-        type: Boolean,
-        default: true
+    ],
+    user: {
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Usuario'
     },
     creado: {
         type: Date,
         default: Date.now() 
     },
-    user: {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Usuario'
-    },
-        // Agregar una referencia a la cama actual del paciente
-    cama_relacionada:[ 
-        {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Cama',
-        }
-    ],
-    // Agregar una referencia al último microorganismo detectado
-    microorganismo_relacionado:[ 
-        {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Microorganismo',
-        }
-    ],
-    // Agregar una referencia al último antibiótico administrado
-    antibiotico_relacionado: [
-        {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Antibiotico',
-        }
-    ],
     admision_relacionada:[ 
         {
         type: mongoose.Schema.Types.ObjectId,
