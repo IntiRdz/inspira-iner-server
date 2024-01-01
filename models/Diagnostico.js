@@ -1,21 +1,33 @@
 import mongoose from 'mongoose'
 
-const diagnosticoSchema = new mongoose.Schema({
-  id_paciente: {
-    type: Number,
-    required: true
-  },
-  id_admision_hospitalaria: {
-    type: Number,
-    required: true
-  },
+const schema  = new mongoose.Schema({
 
-  codigo_icd: {
-    type: Float,
-    required: true
+    fecha_diagnostico: {
+      type: Date
+    },
+    fecha_resolucion: {
+        type: Date
+    },
+    diagnostico_nombre: {
+        type: String,
+        trim: true
+    },
+    diagnostico_tipo: {
+      type: String,
+      enum: [
+          'Previo',
+          'Ingreso',
+          'Hospitalizacion',
+          'Egreso'
+      ],
   },
-});
+    diagnostico_activo: {
+        type: Boolean
+    },
+    admision_relacionada:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Admision',
+    },
+})
 
-const Diagnostico = mongoose.model('Diagnostico', diagnosticoSchema);
-
-module.exports = Diagnostico;
+export default mongoose.model('Diagnostico', schema)

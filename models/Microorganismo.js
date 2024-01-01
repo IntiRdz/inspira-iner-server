@@ -43,13 +43,11 @@ const schema  = new mongoose.Schema({
         default: null,
         trim: true
     },
-    // Agregar una referencia a la admision  en el que se detectó el microorganismo
-    admision_relacionada: [
+    camahistorial: 
         {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Admision',
-        }
-    ],
+        ref: 'CamaHistorial',
+        }  
     
 })
 

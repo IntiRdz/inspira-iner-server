@@ -158,6 +158,61 @@ enum MotivoEgreso {
     Defuncion
 }
 
+enum DiagnosticoTipoEnum {
+    Previo
+    Ingreso
+    Hospitalizacion
+    Egreso
+}
+
+type Cama {
+    id: ID!
+    cama_numero: Int
+    cama_ubicacion: CamaUbicacion
+    cama_compartida: Boolean
+    cama_lado: LadoCama
+    cama_prioridad: PrioridadCama
+    cama_disponible: Boolean
+    cama_ocupada:Boolean
+    cama_genero: Genero
+    cama_dispositivo_o2: DispositivoO2cama
+    cama_hemodialisis: Boolean
+    cama_aislamiento: Boolean
+    cama_dan: Boolean
+    cama_codigo_uveh: CodigoCama
+    creado: Date
+    camahistorial: [CamaHistorial]
+}
+
+type Microorganismo {
+    id: ID!
+    fecha_deteccion: Date
+    metodo_deteccion: MetodoDeteccion
+    microorganismo_tipo: MicroorganismoTipo
+    microorganismo_nombre: String
+    susceptibilidad: Susceptibilidad
+    comentario_uveh: String
+    antibiotico_relacionado:[Antibiotico]
+    camahistorial: CamaHistorial
+}
+
+type Diagnostico {
+    id: ID!
+    fecha_diagnostico: Date
+    fecha_resolucion: Date
+    diagnostico_nombre: String
+    diagnostico_tipo: DiagnosticoTipoEnum
+    diagnostico_activo: Boolean
+    admision_relacionada: Admision
+}
+
+type CamaHistorial {
+    id: ID!
+    fecha_traslado: Date
+    cama: Cama
+    admision_relacionada: Admision
+    microorganismo_relacionado: [Microorganismo]
+}
 type Admision {
     id: ID!
     fecha_ingreso: Date
@@ -166,8 +221,8 @@ type Admision {
     hospitalizado: Boolean
     servicio_tratante: ServicioTratante
     paciente_relacionado: Paciente
-    cama_relacionada: [Cama]
-    microorganismo_relacionado: [Microorganismo]
+    cama_relacionada: [CamaHistorial]
+    diagnostico: [Diagnostico]
 }
 
 type Paciente {
@@ -187,35 +242,9 @@ type Paciente {
     creado: Date
     admision_relacionada: [Admision]
 }
-type Cama {
-    id: ID!
-    cama_numero: Int
-    cama_compartida: Boolean
-    cama_lado: LadoCama
-    cama_ubicacion: CamaUbicacion
-    cama_prioridad: PrioridadCama
-    cama_disponible: Boolean
-    cama_ocupada:Boolean
-    cama_genero: Genero
-    cama_dispositivo_o2: DispositivoO2cama
-    cama_hemodialisis: Boolean
-    cama_aislamiento: Boolean
-    cama_dan: Boolean
-    cama_codigo_uveh: CodigoCama
-    creado: Date
-    admision_relacionada: [Admision]
-}
-type Microorganismo {
-    id: ID!
-    fecha_deteccion: Date
-    metodo_deteccion: MetodoDeteccion
-    microorganismo_tipo: MicroorganismoTipo
-    microorganismo_nombre: String
-    susceptibilidad: Susceptibilidad
-    comentario_uveh: String
-    admision_relacionada: Admision
-    antibiotico_relacionado:[Antibiotico]
-}
+
+
+
 type Antibiotico {
     id: ID!
     antibiotico_nombre: String
@@ -257,9 +286,17 @@ input PacienteInput {
     fecha_ingreso: Date
     fecha_prealta: Date
     fecha_egreso: Date
-    cama_relacionada: ID  # Agrega el ID de la cama aquí
+    cama_relacionada: ID
 }
 
+input DiagnosticosInput {
+    fecha_diagnostico: Date
+    fecha_resolucion: Date
+    diagnostico_nombre: String
+    diagnostico_tipo: DiagnosticoTipoEnum
+    diagnostico_activo: Boolean
+    admision_relacionada: ID
+}
 
 input CamaInput {
     cama_numero: Int
@@ -285,7 +322,7 @@ input MicroorganismoInput {
     microorganismo_nombre: String
     susceptibilidad: Susceptibilidad!
     comentario_uveh: String
-    admision_relacionada: ID
+    camahistorial: ID
 }
 
 input AntibioticoInput {
@@ -304,7 +341,6 @@ input AdmisionInput {
     servicio_tratante: ServicioTratante
     paciente_relacionado: ID
     cama_relacionada: ID
-    microorganismo_relacionado: ID
 }
 
 type Query {
@@ -315,8 +351,11 @@ type Query {
 
     #Admisiones 
     obtenerAdmisiones: [Admision]
+    obtenerUltimaAdmisionPaciente(id: ID!): Admision
     obtenerAdmisionesActivas: [Admision]
     obtenerAdmisionesInactivas: [Admision]
+
+    obtenerCamaHistorialAdmision(idAdmision: ID!): [CamaHistorial]
 
     #Pacientes
     obtenerPaciente(id: ID!): Paciente
@@ -329,6 +368,9 @@ type Query {
 
     # Camas
     obtenerCama(id: ID!) : Cama!
+    obtenerHistorialCama: [CamaHistorial!]
+    obtenerTrasladosHoy: [CamaHistorial!]
+    obtenerTrasladosDias(diasAtras: Int): [CamaHistorial]
     obtenerCamas: [Cama!]
     obtenerCamasUrgencias: [Cama!]
     obtenerCamas1: [Cama!]
@@ -341,6 +383,8 @@ type Query {
     obtenerMicroorganismo(id: ID!) : Microorganismo
     obtenerMicroorganismos: [Microorganismo]
     obtenerMicroorganismosPatient(id: ID!): [Microorganismo]
+    obtenerMicroorganismosAdmision(idAdmision: ID!): [Microorganismo]
+
 
     # Antibioticos
     obtenerAntibiotico(id: ID!) : Antibiotico
@@ -377,6 +421,9 @@ type Mutation {
     actualizarPaciente(id: ID!, input: PacienteInput): Paciente
     eliminarPaciente(id: ID!) : String
     modificarEstadoHospitalizado(id: ID!):String
+
+    # Diagnostico
+    nuevoDiagnostico(input: DiagnosticosInput): Diagnostico
     
 }
 

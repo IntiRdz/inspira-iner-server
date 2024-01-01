@@ -1,4 +1,5 @@
 import Microorganismo from '../../../models/Microorganismo.js';
+import CamaHistorial from '../../../models/CamaHistorial.js';
 
 const microorganismQueries = {
 
@@ -32,6 +33,35 @@ const microorganismQueries = {
         } catch (error) {
           console.error("Error al buscar microorganismos:", error);
           throw error;
+        }
+      },
+      obtenerMicroorganismosAdmision: async (_, { idAdmision }) => {
+        try {
+          // Paso 1: Obtener todos los CamaHistorial relacionados con la Admisión
+          const camasHistorial = await CamaHistorial.find({ admision_relacionada: idAdmision });
+  
+          // Paso 2: Para cada CamaHistorial, obtener los Microorganismos relacionados
+          let microorganismosRelacionados = [];
+          for (const camaHistorial of camasHistorial) {
+            const microorganismos = await Microorganismo.find({ cama_relacionada: camaHistorial.id });
+            microorganismosRelacionados = microorganismosRelacionados.concat(microorganismos);
+          }
+  
+          // Paso 3: Devolver los Microorganismos encontrados
+          return microorganismosRelacionados;
+        } catch (error) {
+          console.error(error);
+          throw new Error('Error al obtener los microorganismos');
+        }
+      },
+      obtenerCamaHistorialAdmision: async (_, { idAdmision }) => {
+        try {
+          const camasHistorials = await CamaHistorial.find({ admision_relacionada: idAdmision });
+  
+          return camasHistorials;
+        } catch (error) {
+          console.error(error);
+          throw new Error('Error al obtener los microorganismos');
         }
       },
 

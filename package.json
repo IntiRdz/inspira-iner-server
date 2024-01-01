@@ -3,32 +3,28 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon ."
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon ."
+  },
   "dependencies": {
-    "@apollo/server": "^4.9.4",
+    "@apollo/server": "^4.9.5",
     "@graphql-tools/schema": "^10.0.2",
     "bcryptjs": "^2.4.3",
-    "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",
     "dotenv": "^16.3.1",
-    "express": "^4.18.2",
     "graphql": "^16.8.1",
+    "graphql-mongodb-subscriptions": "^1.0.0",
+    "graphql-redis-subscriptions": "^2.6.0",
     "graphql-subscriptions": "^2.0.0",
-    "graphql-ws": "^5.14.2",
+    "graphql-ws": "^5.14.3",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^7.6.0",
-    "ws": "^8.14.2"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.1"
+    "mongoose": "^8.0.3",
+    "ws": "^8.15.1"
   }
 }

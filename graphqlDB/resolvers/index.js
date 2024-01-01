@@ -12,6 +12,7 @@ import bedMutations from './mutations/bedMutations.js';
 import microorganismMutations from './mutations/microorganismMutations.js';
 import patientMutations from './mutations/patientMutations.js';
 import userMutations from './mutations/userMutations.js';
+import diagnosticMutations from './mutations/diagnosticMutations.js';
 
 import patientSubscriptions from './subscriptions/patientSubscriptions.js';
 import bedSubscriptions from './subscriptions/bedSubscriptions.js';
@@ -64,10 +65,38 @@ const resolvers = {
         ...microorganismMutations,
         ...patientMutations,
         ...userMutations,
+        ...diagnosticMutations,
     },
     Subscription: {
         ...patientSubscriptions,
         ...bedSubscriptions,
+    },
+    Cama: {
+        camahistorial: async (cama) => {
+            await cama.populate('camahistorial');
+            return cama.camahistorial;
+        },
+    },
+    Microorganismo: {
+        camahistorial: async (microorganismo) => {
+            await microorganismo.populate('camahistorial'); // Poblar directamente sin match
+            return microorganismo.camahistorial;
+        },
+    },
+    CamaHistorial: {
+        cama: async (camahistorial) => {
+            await camahistorial.populate('cama'); // Poblar directamente sin match
+            return camahistorial.cama;
+        },
+        microorganismo_relacionado: async (camahistorial) => {
+            await camahistorial.populate('microorganismo_relacionado');
+            return camahistorial.microorganismo_relacionado;
+        },
+        admision_relacionada: async (camahistorial) => {
+            await camahistorial.populate('admision_relacionada');
+            return camahistorial.admision_relacionada;
+        },
+
     },
     Admision: {
         paciente_relacionado: async (admision) => {
@@ -78,9 +107,9 @@ const resolvers = {
             await admision.populate('cama_relacionada'); // Poblar directamente sin match
             return admision.cama_relacionada;
         },
-        microorganismo_relacionado: async (admision) => {
-            await admision.populate('microorganismo_relacionado');
-            return admision.microorganismo_relacionado;
+        diagnostico: async (admision) => {
+            await admision.populate('diagnostico'); // Poblar directamente sin match
+            return admision.diagnostico;
         },
     },
     Paciente: {
@@ -89,22 +118,9 @@ const resolvers = {
             return paciente.admision_relacionada;
         },
     },
-    Cama: {
-        admision_relacionada: async (cama) => {
-            const admisions = await Admision.find({ cama_relacionada: cama.id });
-            return admisions;
-        },
-    },
+
     
-    Microorganismo: {
-        admision_relacionada: async (microorganismo) => {
-            await microorganismo.populate({
-                path: 'admision_relacionada',
-                match: { admision_relacionada: microorganismo._id }
-            });
-            return microorganismo.admision_relacionada;
-        }, 
-    },
+
     
     Antibiotico: {
         microorganismo_relacionado: async (antibiotico) => {

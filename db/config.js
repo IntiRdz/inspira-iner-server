@@ -5,8 +5,6 @@ dotenv.config({ path: 'variables.env' })
 
 // Conecta a MongoDB utilizando Mongoose
 mongoose.connect(process.env.DB_MONGO, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
 })
   .then(() => {
     console.log('Conexión a MongoDB exitosa');

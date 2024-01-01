@@ -1,31 +1,33 @@
 import Microorganismo from '../../../models/Microorganismo.js';
+import CamaHistorial from '../../../models/CamaHistorial.js';
 
 const microorganismMutations = {
 
     nuevoMicroorganismo: async (_, { input }) => {
         try {
+            console.log("Se va a crear un microorganismo");
+            console.log("input: ", input);
+    
             // Crear una instancia de Microorganismo a partir del input
             const microorganismo = new Microorganismo(input);
     
             // Guardar el Microorganismo en la base de datos
             const microorganismoGuardado = await microorganismo.save();
     
-            // Si hay una admisión relacionada especificada, actualizar esa admisión
-            if (input.admision_relacionada) {
-                // Buscar y actualizar las admisiones relacionadas
-                await Admision.updateMany(
-                    { _id: { $in: input.admision_relacionada } },
-                    { $push: { microorganismo_relacionado: microorganismoGuardado._id } }
-                );
-            }
+            // Obtener el ID de camahistorial del input
+            const { camahistorial } = input;
+    
+            // Buscar el objeto camahistorial y actualizarlo con el ID del microorganismo
+            await CamaHistorial.findByIdAndUpdate(camahistorial, { 
+                $push: { microorganismo_relacionado: microorganismoGuardado._id } 
+            });
     
             return microorganismoGuardado;
         } catch (error) {
             console.error(error);
-            throw new Error('Error al crear el microorganismo');
+            throw new Error('Error al crear el microorganismo y actualizar camahistorial');
         }
     },
-        
     actualizarMicroorganismo: async (_, {id, input}) => {
         // revisar si el producto existe o no
         let microorganismo = await Microorganismo.findById(id);

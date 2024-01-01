@@ -1,39 +1,35 @@
 import Cama from '../../../models/Cama.js';
+import Diagnostico from '../../../models/Diagnostico.js';
+import Admision from '../../../models/Admision.js';
 import pubSub from '../pubSub.js';
 
-const bedMutations = {
+const diagnosticMutations = {
 
 
 
 
-    nuevaCama: async (_, { input }) => {
-        //console.log("Se llama al resolver nuevaCama")
+    nuevoDiagnostico: async (_, { input }) => {
+        try {
+        console.log("Se llama al resolver nuevoDiagnostico")
         console.log("input recibido",input)
 
-        const { cama_numero } = input
-        // Verificar si el paciente ya esta registrado
-        const cama = await Cama.findOne({ cama_numero });
-        if(cama) {
-            throw new Error('Esta cama ya esta registrada');
-        }
-        try {
+        const diagnostico = new Diagnostico(input);
 
-        // Crear una nueva instancia de Cama sin valores
-        const cama = new Cama(input);
-        //console.log("Cama vacia creada",cama)
-    
-        // Asignar los valores del input a la instancia
-        //Object.assign(cama, input);
-        //console.log("Cama llenada con input",cama)
-    
-        // Almacenar en la base de datos
-        const resultado = await cama.save();
-    
-        return resultado;
-        } catch (error) {
-        console.log(error);
-        }
-    },
+        const diagnosticoGuardado = await diagnostico.save();
+        const { admision_relacionada } = input;
+        console.log("admision", admision_relacionada)
+        console.log("nuevo diagnostico",diagnosticoGuardado)
+
+        await Admision.findByIdAndUpdate(admision_relacionada, { 
+            $push: { diagnostico: diagnosticoGuardado._id } 
+        });
+
+        return diagnosticoGuardado;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Error al crear el microorganismo y actualizar camahistorial');
+    }
+},
     actualizarCama: async (_, {id, input}) => {
         // revisar si el cama existe o no
         let cama = await Cama.findById(id);
@@ -98,4 +94,4 @@ const bedMutations = {
 
 };
 
-export default bedMutations;
+export default diagnosticMutations;

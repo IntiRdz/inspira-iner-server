@@ -1,4 +1,5 @@
 import Cama from '../../../models/Cama.js';
+import CamaHistorial from '../../../models/CamaHistorial.js';
 
 const bedQueries = {
 
@@ -15,6 +16,49 @@ const bedQueries = {
         //console.log("Cama encotrada",cama)
         return cama;
     },
+    obtenerHistorialCama: async () => {
+        //console.log("Se llama al resolver obtenerHistorialesCama")
+        try {
+            const camas = await CamaHistorial.find({});
+            //console.log(camas)
+            return camas;
+        } catch (error) {
+            throw new Error("Error al obtener los historiales de las camas: " + error.message);
+        }
+    },
+    obtenerTrasladosHoy: async () => {
+        //console.log("Se llama al resolver obtenerHistorialesCama")
+        try {
+            const camas = await CamaHistorial.find({
+                fecha_traslado: { $gte: new Date().setHours(0o0,0o0,0o0), $lt: new Date().setHours(23,59,59) }
+            });
+            //console.log(camas)
+            return camas;
+        } catch (error) {
+            throw new Error("Error al obtener los historiales de las camas: " + error.message);
+        }
+    },
+    obtenerTrasladosDias: async (_, { diasAtras = 0 }) => {
+        try {
+            const hoy = new Date();
+            const fechaInicio = new Date();
+            fechaInicio.setDate(hoy.getDate() - diasAtras);
+            fechaInicio.setHours(0, 0, 0, 0);
+    
+            const fechaFin = new Date(fechaInicio);
+            fechaFin.setDate(fechaInicio.getDate() + 1);
+            fechaFin.setMilliseconds(-1);
+    
+            const camas = await CamaHistorial.find({
+                fecha_traslado: { $gte: fechaInicio, $lt: fechaFin }
+            });
+    
+            return camas;
+        } catch (error) {
+            throw new Error("Error al obtener los historiales de las camas: " + error.message);
+        }
+    },
+    
     obtenerCamas: async () => {
         console.log("Se llama al resolver obtenerCamas")
         try {
@@ -26,6 +70,22 @@ const bedQueries = {
         }
     }, 
     obtenerCamasUrgencias: async () => {
+        console.log("Se llama al resolver obtenerCamas")
+        try {
+            // Utilizar 'populate' con 'slice' para obtener solo el último elemento de 'camahistorial'
+            const camas = await Cama.find({
+                cama_ubicacion: "Urgencias"
+            }).populate({
+                path: 'camahistorial',
+                options: { sort: { 'fecha_traslado': -1 }, limit: 1 } // Ordenar por fecha_traslado y limitar a 1
+            });
+    
+            return camas;
+        } catch (error) {
+            throw new Error("Error al obtener las camas: " + error.message);
+        }
+    },
+/*     obtenerCamasUrgencias: async () => {
         console.log("Se llama al resolver obtenerCamasUrgencias")
         try {
             const camas = await Cama.find({
@@ -36,7 +96,7 @@ const bedQueries = {
         } catch (error) {
             throw new Error("Error al obtener las camas: " + error.message);
         }
-    }, 
+    },  */
     obtenerCamas1: async () => {
         console.log("Se llama al resolver obtenerCamas1")
         try {

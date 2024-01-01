@@ -103,10 +103,10 @@ const schema  = new mongoose.Schema({
         type: Date,
         default: Date.now() 
     },
-    admision_relacionada: [
+    camahistorial: [
         {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Admision',
+        ref: 'CamaHistorial',
         }
     ],    
 })

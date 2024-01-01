@@ -31,12 +31,16 @@ const schema  = new mongoose.Schema({
   cama_relacionada: [
     {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Cama',
+    ref: 'CamaHistorial',
     }
   ],
   microorganismo_relacionado: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Microorganismo'
+  }],
+  diagnostico: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Diagnostico'
   }],
 })
 
