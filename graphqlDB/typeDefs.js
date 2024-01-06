@@ -375,6 +375,7 @@ type Query {
     obtenerCamasUrgencias: [Cama!]
     obtenerCamas1: [Cama!]
     obtenerCamas2: [Cama!]
+<<<<<<< HEAD
     obtenerCamas3: [Cama!]
     obtenerCamas4: [Cama!]
     obtenerCamas5: [Cama!]
@@ -382,6 +383,8 @@ type Query {
     obtenerCamas8: [Cama!]
     obtenerCamas9: [Cama!]
     obtenerCamas10: [Cama!]
+=======
+>>>>>>> dfc7700e4a085c9f219bd9285b823dd42b509f79
     obtenerCamasOcupadas: [Cama!]
     obtenerCamasDisponibles: [Cama!]
     obtenerCamasDisponiblesMujer: [Cama!]
