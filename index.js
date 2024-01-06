@@ -82,7 +82,7 @@ const server = new ApolloServer({
 // Ensure we wait for our server to start
 await server.start();
 app.use('/graphql', (cors({
-  origin: 'http://tu-dominio-frontend.com', // Reemplaza con el dominio de tu cliente
+  origin: 'https://inspira-iner-server-a98ddf825333.herokuapp.com/graphql', // Reemplaza con el dominio de tu cliente
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true, // Permite cookies
 })), bodyParser.json(), expressMiddleware(server));
