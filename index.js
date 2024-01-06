@@ -81,11 +81,28 @@ const server = new ApolloServer({
   });
 // Ensure we wait for our server to start
 await server.start();
-app.use('/graphql', (cors({
-  origin: 'https://inspira-iner-server-a98ddf825333.herokuapp.com/graphql', // Reemplaza con el dominio de tu cliente
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, // Permite cookies
-})), bodyParser.json(), expressMiddleware(server));
+
+const allowedOrigins = [
+  'https://inspira-iner-server-a98ddf825333.herokuapp.com',
+  'http://localhost:3000',
+  'https://inspira-iner-client.vercel.app' // Añade este origen
+];
+
+app.use('/graphql', 
+    cors({
+        origin: function (origin, callback) {
+            if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+                callback(null, true);
+            } else {
+                var msg = 'El CORS policy para este sitio no permite el acceso desde el origen especificado.';
+                return callback(new Error(msg), false);
+            }
+        },
+        credentials: true
+    }), 
+    bodyParser.json(), 
+    expressMiddleware(server)
+);
 
 const PORT = process.env.PORT || 4000; // Puerto por defecto 4000 si no se define en las variables de entorno
 
