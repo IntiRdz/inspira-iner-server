@@ -81,7 +81,11 @@ const server = new ApolloServer({
   });
 // Ensure we wait for our server to start
 await server.start();
-app.use('/graphql', cors(), bodyParser.json(), expressMiddleware(server));
+app.use('/graphql', (cors({
+  origin: 'http://tu-dominio-frontend.com', // Reemplaza con el dominio de tu cliente
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, // Permite cookies
+})), bodyParser.json(), expressMiddleware(server));
 
 const PORT = process.env.PORT || 4000; // Puerto por defecto 4000 si no se define en las variables de entorno
 
