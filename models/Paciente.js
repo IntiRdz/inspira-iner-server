@@ -57,25 +57,25 @@ const schema  = new mongoose.Schema({
             'CodigoHemoptisis',
             'CodigoViaAerea',
             'CodigoInfarto',
+            'SIRA',
+            'NeumoniaViral',
             'COVID',
             'Influenza',
             'Parainfluenza',
-            'Adenovirus',
             'VirusSincialRespiratorio',
             'Metaneumovirus',
+            'NeumoniaBacteriana',
             'TuberculosisSensible',
             'TuberculosisResistente',
             'B24',
-            'SIRA',
-            'NeumoniaBacteriana',
             'EPOC',
             'Asma',
             'TromboembiaPulmonar',
             'DerramePleural',
             'Neumotorax',
             'NeumoniaIntersticialDifusa',
-            'InsuficienciaCaridiaca',
-            'CaPulmonarOSospecha'
+            'InsuficienciaCardiaca',
+            'CaPulmonarOSospecha',
             ]
         }
       ],
@@ -85,7 +85,7 @@ const schema  = new mongoose.Schema({
           enum: [
             'TrasladoDeHospital',
             'InfeccionReciente',
-            'Embarazo',
+            'Obstetrico',
             'Inmunosupresion',
             'ComunidadLG'
             ]

@@ -10,7 +10,7 @@ const schema  = new mongoose.Schema({
         type: String,
         enum: [
             'PCR', 
-            'Panel', 
+            'Panel_Neumonia', 
             'Cultivo'
         ],
         required: true
@@ -32,10 +32,11 @@ const schema  = new mongoose.Schema({
     susceptibilidad: {
         type: String,
         enum: [
+            'No_Aplica',
+            'Sensible',
             'BLEE', 
             'MDR', 
-            'XDR', 
-            'Sensible'
+            'XDR'
         ],
     },
     comentario_uveh: {

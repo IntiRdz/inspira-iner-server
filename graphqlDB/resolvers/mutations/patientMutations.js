@@ -24,7 +24,7 @@ async function crearAdmision(input, pacienteId, camaId) {
 
     // Luego, crear y guardar el CamaHistorial con el ID de la admisión guardada
     const nuevoCamaHistorial = new CamaHistorial({
-        fecha_traslado: new Date(), // Fecha actual
+        /* fecha_traslado: new Date(), // Fecha actual */
         cama: camaId,
         admision_relacionada: admisionGuardada.id
     });

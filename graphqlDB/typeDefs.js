@@ -32,30 +32,30 @@ enum Diagnostico1 {
     CodigoHemoptisis
     CodigoViaAerea
     CodigoInfarto
+    SIRA
+    NeumoniaViral
     COVID
     Influenza
     Parainfluenza
-    Adenovirus
     VirusSincialRespiratorio
     Metaneumovirus
+    NeumoniaBacteriana
     TuberculosisSensible
     TuberculosisResistente
     B24
-    SIRA
-    NeumoniaBacteriana
     EPOC
     Asma
     TromboembiaPulmonar
     DerramePleural
     Neumotorax
     NeumoniaIntersticialDifusa
-    InsuficienciaCaridiaca
+    InsuficienciaCardiaca
     CaPulmonarOSospecha
 }
 enum CaracteristicasEspeciales {
     TrasladoDeHospital
     InfeccionReciente
-    Embarazo
+    Obstetrico
     Inmunosupresion
     ComunidadLG
 }
@@ -123,7 +123,7 @@ enum CodigoCama{
 }
 enum MetodoDeteccion {
     PCR
-    Panel
+    Panel_Neumonia
     Cultivo
 }
 enum MicroorganismoTipo {
@@ -133,10 +133,11 @@ enum MicroorganismoTipo {
     Hongo
 }
 enum Susceptibilidad {
+    No_Aplica
+    Sensible
     BLEE
     MDR
     XDR
-    Sensible
 }
 
 
