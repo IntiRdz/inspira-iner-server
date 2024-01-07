@@ -85,6 +85,7 @@ await server.start();
 const allowedOrigins = [
   'https://inspira-iner-server-a98ddf825333.herokuapp.com',
   'http://localhost:3000',
+  'http://localhost:4000',
   'https://inspira-iner-client.vercel.app' // Añade este origen
 ];
 

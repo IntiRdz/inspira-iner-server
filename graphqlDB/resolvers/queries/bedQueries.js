@@ -162,11 +162,11 @@ const bedQueries = {
         }
     },
     obtenerCamas5: async () => {
-        console.log("Se llama al resolver obtenerCamas5")
+        console.log("Se llama al resolver obtenerCamas")
         try {
             // Utilizar 'populate' con 'slice' para obtener solo el último elemento de 'camahistorial'
             const camas = await Cama.find({
-                cama_ubicacion: "Clinico5"
+                cama_ubicacion: "UTIM"
             }).populate({
                 path: 'camahistorial',
                 options: { sort: { 'fecha_traslado': -1 }, limit: 1 } // Ordenar por fecha_traslado y limitar a 1
@@ -182,7 +182,7 @@ const bedQueries = {
         try {
             // Utilizar 'populate' con 'slice' para obtener solo el último elemento de 'camahistorial'
             const camas = await Cama.find({
-                cama_ubicacion: "Clinico7"
+                cama_ubicacion: "Neumopedia"
             }).populate({
                 path: 'camahistorial',
                 options: { sort: { 'fecha_traslado': -1 }, limit: 1 } // Ordenar por fecha_traslado y limitar a 1
@@ -198,7 +198,7 @@ const bedQueries = {
         try {
             // Utilizar 'populate' con 'slice' para obtener solo el último elemento de 'camahistorial'
             const camas = await Cama.find({
-                cama_ubicacion: "Clinico8"
+                cama_ubicacion: "ORL"
             }).populate({
                 path: 'camahistorial',
                 options: { sort: { 'fecha_traslado': -1 }, limit: 1 } // Ordenar por fecha_traslado y limitar a 1
@@ -214,7 +214,7 @@ const bedQueries = {
         try {
             // Utilizar 'populate' con 'slice' para obtener solo el último elemento de 'camahistorial'
             const camas = await Cama.find({
-                cama_ubicacion: "Clinico9"
+                cama_ubicacion: "UCI"
             }).populate({
                 path: 'camahistorial',
                 options: { sort: { 'fecha_traslado': -1 }, limit: 1 } // Ordenar por fecha_traslado y limitar a 1
@@ -230,7 +230,7 @@ const bedQueries = {
         try {
             // Utilizar 'populate' con 'slice' para obtener solo el último elemento de 'camahistorial'
             const camas = await Cama.find({
-                cama_ubicacion: "Clinico10"
+                cama_ubicacion: "UCPQ"
             }).populate({
                 path: 'camahistorial',
                 options: { sort: { 'fecha_traslado': -1 }, limit: 1 } // Ordenar por fecha_traslado y limitar a 1
