@@ -10,7 +10,7 @@ const bedQueries = {
         const cama = await Cama.findById(id);
 
         if(!cama) {
-            throw new Error('Cana no encontrada');
+            throw new Error('Cama no encontrada');
         }
 
         //console.log("Cama encotrada",cama)
@@ -37,28 +37,7 @@ const bedQueries = {
         } catch (error) {
             throw new Error("Error al obtener los historiales de las camas: " + error.message);
         }
-    },
-    obtenerTrasladosDias: async (_, { diasAtras = 0 }) => {
-        try {
-            const hoy = new Date();
-            const fechaInicio = new Date();
-            fechaInicio.setDate(hoy.getDate() - diasAtras);
-            fechaInicio.setHours(0, 0, 0, 0);
-    
-            const fechaFin = new Date(fechaInicio);
-            fechaFin.setDate(fechaInicio.getDate() + 1);
-            fechaFin.setMilliseconds(-1);
-    
-            const camas = await CamaHistorial.find({
-                fecha_traslado: { $gte: fechaInicio, $lt: fechaFin }
-            });
-    
-            return camas;
-        } catch (error) {
-            throw new Error("Error al obtener los historiales de las camas: " + error.message);
-        }
-    },
-    
+    },  
     obtenerCamas: async () => {
         console.log("Se llama al resolver obtenerCamas")
         try {
@@ -70,7 +49,7 @@ const bedQueries = {
         }
     }, 
     obtenerCamasUrgencias: async () => {
-        console.log("Se llama al resolver obtenerCamas")
+        console.log("Se llama al resolver obtenerCamasUrgencias")
         try {
             // Utilizar 'populate' con 'slice' para obtener solo el último elemento de 'camahistorial'
             const camas = await Cama.find({
@@ -85,20 +64,8 @@ const bedQueries = {
             throw new Error("Error al obtener las camas: " + error.message);
         }
     },
-/*     obtenerCamasUrgencias: async () => {
-        console.log("Se llama al resolver obtenerCamasUrgencias")
-        try {
-            const camas = await Cama.find({
-                cama_ubicacion: "Urgencias"
-            });
-            //console.log(camas)
-            return camas;
-        } catch (error) {
-            throw new Error("Error al obtener las camas: " + error.message);
-        }
-    },  */
     obtenerCamas1: async () => {
-        console.log("Se llama al resolver obtenerCamas")
+        console.log("Se llama al resolver obtenerCamas1")
         try {
             // Utilizar 'populate' con 'slice' para obtener solo el último elemento de 'camahistorial'
             const camas = await Cama.find({
@@ -128,9 +95,11 @@ const bedQueries = {
         } catch (error) {
             throw new Error("Error al obtener las camas: " + error.message);
         }
-    },
+    },    
+    
+    
     obtenerCamas3: async () => {
-        console.log("Se llama al resolver obtenerCamas2")
+        console.log("Se llama al resolver obtenerCamas3")
         try {
             // Utilizar 'populate' con 'slice' para obtener solo el último elemento de 'camahistorial'
             const camas = await Cama.find({
@@ -305,7 +274,27 @@ const bedQueries = {
         const camas = await Cama.find({ $text: { $search: texto } }).limit(10)
 
         return camas;
-    }
+    },
+    obtenerTrasladosDias: async (_, { diasAtras = 0 }) => {
+        try {
+            const hoy = new Date();
+            const fechaInicio = new Date();
+            fechaInicio.setDate(hoy.getDate() - diasAtras);
+            fechaInicio.setHours(0, 0, 0, 0);
+    
+            const fechaFin = new Date(fechaInicio);
+            fechaFin.setDate(fechaInicio.getDate() + 1);
+            fechaFin.setMilliseconds(-1);
+    
+            const camas = await CamaHistorial.find({
+                fecha_traslado: { $gte: fechaInicio, $lt: fechaFin }
+            });
+    
+            return camas;
+        } catch (error) {
+            throw new Error("Error al obtener los historiales de las camas: " + error.message);
+        }
+    },
 };
     
 export default bedQueries;
