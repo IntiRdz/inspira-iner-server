@@ -38,7 +38,7 @@ const bedQueries = {
             throw new Error("Error al obtener los historiales de las camas: " + error.message);
         }
     },  
-    obtenerCamas: async () => {
+     obtenerCamas: async () => {
         console.log("Se llama al resolver obtenerCamas")
         try {
             const camas = await Cama.find({});
@@ -47,18 +47,15 @@ const bedQueries = {
         } catch (error) {
             throw new Error("Error al obtener las camas: " + error.message);
         }
-    }, 
+    },
+
     obtenerCamasUrgencias: async () => {
         console.log("Se llama al resolver obtenerCamasUrgencias")
         try {
-            // Utilizar 'populate' con 'slice' para obtener solo el último elemento de 'camahistorial'
             const camas = await Cama.find({
                 cama_ubicacion: "Urgencias"
-            }).populate({
-                path: 'camahistorial',
-                options: { sort: { 'fecha_traslado': -1 }, limit: 1 } // Ordenar por fecha_traslado y limitar a 1
             });
-    
+            //console.log(camas)
             return camas;
         } catch (error) {
             throw new Error("Error al obtener las camas: " + error.message);
@@ -83,133 +80,99 @@ const bedQueries = {
     obtenerCamas2: async () => {
         console.log("Se llama al resolver obtenerCamas2")
         try {
-            // Utilizar 'populate' con 'slice' para obtener solo el último elemento de 'camahistorial'
             const camas = await Cama.find({
                 cama_ubicacion: "Clinico2"
-            }).populate({
-                path: 'camahistorial',
-                options: { sort: { 'fecha_traslado': -1 }, limit: 1 } // Ordenar por fecha_traslado y limitar a 1
             });
-    
+            //console.log(camas)
             return camas;
         } catch (error) {
             throw new Error("Error al obtener las camas: " + error.message);
         }
     },    
-    
-    
     obtenerCamas3: async () => {
         console.log("Se llama al resolver obtenerCamas3")
         try {
-            // Utilizar 'populate' con 'slice' para obtener solo el último elemento de 'camahistorial'
             const camas = await Cama.find({
                 cama_ubicacion: "Clinico3"
-            }).populate({
-                path: 'camahistorial',
-                options: { sort: { 'fecha_traslado': -1 }, limit: 1 } // Ordenar por fecha_traslado y limitar a 1
             });
-    
+            //console.log(camas)
             return camas;
         } catch (error) {
             throw new Error("Error al obtener las camas: " + error.message);
         }
-    },
+    },   
     obtenerCamas4: async () => {
         console.log("Se llama al resolver obtenerCamas4")
         try {
-            // Utilizar 'populate' con 'slice' para obtener solo el último elemento de 'camahistorial'
             const camas = await Cama.find({
                 cama_ubicacion: "Clinico4"
-            }).populate({
-                path: 'camahistorial',
-                options: { sort: { 'fecha_traslado': -1 }, limit: 1 } // Ordenar por fecha_traslado y limitar a 1
             });
-    
+            //console.log(camas)
             return camas;
         } catch (error) {
             throw new Error("Error al obtener las camas: " + error.message);
         }
-    },
+    },   
     obtenerCamas5: async () => {
-        console.log("Se llama al resolver obtenerCamas")
+        console.log("Se llama al resolver obtenerCamas5")
         try {
-            // Utilizar 'populate' con 'slice' para obtener solo el último elemento de 'camahistorial'
             const camas = await Cama.find({
                 cama_ubicacion: "UTIM"
-            }).populate({
-                path: 'camahistorial',
-                options: { sort: { 'fecha_traslado': -1 }, limit: 1 } // Ordenar por fecha_traslado y limitar a 1
             });
-    
+            //console.log(camas)
             return camas;
         } catch (error) {
             throw new Error("Error al obtener las camas: " + error.message);
         }
-    },
+    },   
     obtenerCamas7: async () => {
         console.log("Se llama al resolver obtenerCamas7")
         try {
-            // Utilizar 'populate' con 'slice' para obtener solo el último elemento de 'camahistorial'
             const camas = await Cama.find({
                 cama_ubicacion: "Neumopedia"
-            }).populate({
-                path: 'camahistorial',
-                options: { sort: { 'fecha_traslado': -1 }, limit: 1 } // Ordenar por fecha_traslado y limitar a 1
             });
-    
+            //console.log(camas)
             return camas;
         } catch (error) {
             throw new Error("Error al obtener las camas: " + error.message);
         }
-    },
+    },   
     obtenerCamas8: async () => {
         console.log("Se llama al resolver obtenerCamas8")
         try {
-            // Utilizar 'populate' con 'slice' para obtener solo el último elemento de 'camahistorial'
             const camas = await Cama.find({
                 cama_ubicacion: "ORL"
-            }).populate({
-                path: 'camahistorial',
-                options: { sort: { 'fecha_traslado': -1 }, limit: 1 } // Ordenar por fecha_traslado y limitar a 1
             });
-    
+            //console.log(camas)
             return camas;
         } catch (error) {
             throw new Error("Error al obtener las camas: " + error.message);
         }
-    },
+    },   
     obtenerCamas9: async () => {
         console.log("Se llama al resolver obtenerCamas9")
         try {
-            // Utilizar 'populate' con 'slice' para obtener solo el último elemento de 'camahistorial'
             const camas = await Cama.find({
                 cama_ubicacion: "UCI"
-            }).populate({
-                path: 'camahistorial',
-                options: { sort: { 'fecha_traslado': -1 }, limit: 1 } // Ordenar por fecha_traslado y limitar a 1
             });
-    
+            //console.log(camas)
             return camas;
         } catch (error) {
             throw new Error("Error al obtener las camas: " + error.message);
         }
-    },
+    },   
     obtenerCamas10: async () => {
         console.log("Se llama al resolver obtenerCamas10")
         try {
-            // Utilizar 'populate' con 'slice' para obtener solo el último elemento de 'camahistorial'
             const camas = await Cama.find({
                 cama_ubicacion: "UCPQ"
-            }).populate({
-                path: 'camahistorial',
-                options: { sort: { 'fecha_traslado': -1 }, limit: 1 } // Ordenar por fecha_traslado y limitar a 1
             });
-    
+            //console.log(camas)
             return camas;
         } catch (error) {
             throw new Error("Error al obtener las camas: " + error.message);
         }
-    },
+    },   
     obtenerCamasOcupadas: async () => {
         //console.log("Se llama al resolver 'obtenerCamasOcupadas")
         try {

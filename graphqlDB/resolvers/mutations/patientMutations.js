@@ -5,6 +5,7 @@ import CamaHistorial from '../../../models/CamaHistorial.js';
 import pubSub from '../pubSub.js';
 
 
+
 // Función auxiliar para crear una admisión
 async function crearAdmision(input, pacienteId, camaId) {
     const { fecha_ingreso, fecha_prealta, fecha_egreso, servicio_tratante } = input;
@@ -128,6 +129,137 @@ async function gestionarCambioDeCama(paciente, camaNuevaId) {
 }
 
 
+
+
+
+
+
+
+// Función auxiliar para crear una admisión
+async function crearAdmision1(input, pacienteId, camaId) {
+    const { fecha_ingreso, fecha_prealta, fecha_egreso, servicio_tratante } = input;
+
+    // Primero, crear y guardar la nueva Admision
+    const nuevaAdmision = new Admision({
+        paciente_relacionado: pacienteId,
+        cama_relacionada: [], // Inicializar como arreglo vacío, se actualizará luego
+        fecha_ingreso: fecha_ingreso || new Date(),
+        servicio_tratante,
+        fecha_prealta,
+        fecha_egreso,
+        hospitalizado: true
+    });
+
+    const admisionGuardada = await nuevaAdmision.save();
+
+    // Luego, crear y guardar el CamaHistorial con el ID de la admisión guardada
+    const nuevoCamaHistorial = new CamaHistorial({
+        cama: camaId,
+        admision_relacionada: admisionGuardada.id
+    });
+
+    const camaHistorialGuardado = await nuevoCamaHistorial.save();
+
+    // Actualizar la admisión con el nuevo CamaHistorial
+    admisionGuardada.cama_relacionada.push(camaHistorialGuardado.id);
+    await admisionGuardada.save();
+
+    // Obtener la cama por ID y agregar el CamaHistorial a su arreglo
+    const cama = await Cama.findById(camaId);
+    if (!cama) {
+        throw new Error('La cama relacionada no existe');
+    }
+    cama.camahistorial.push(camaHistorialGuardado.id);
+    await cama.save();
+    return admisionGuardada;
+}
+
+
+async function actualizarUltimaAdmision1(paciente, input) {
+    const { fecha_ingreso, fecha_prealta, fecha_egreso, hospitalizado } = input;
+
+    const ultimaAdmision = await Admision.findOne({ paciente_relacionado: paciente.id }).sort({ fecha_ingreso: -1 });
+
+    if (ultimaAdmision) {
+        ultimaAdmision.fecha_ingreso = fecha_ingreso || ultimaAdmision.fecha_ingreso;
+        ultimaAdmision.fecha_prealta = fecha_prealta || ultimaAdmision.fecha_prealta;
+        ultimaAdmision.fecha_egreso = fecha_egreso || ultimaAdmision.fecha_egreso;
+        ultimaAdmision.hospitalizado = hospitalizado !== undefined ? hospitalizado : ultimaAdmision.hospitalizado;
+
+        if (fecha_egreso) {
+            ultimaAdmision.hospitalizado = false;
+            // Obteniendo el ID del último CamaHistorial de la admisión
+            const idUltimoCamaHistorial = ultimaAdmision.cama_relacionada[ultimaAdmision.cama_relacionada.length - 1];
+
+            if (idUltimoCamaHistorial) {
+                // Obteniendo el último CamaHistorial
+                const ultimoCamaHistorial = await CamaHistorial.findById(idUltimoCamaHistorial);
+                if (ultimoCamaHistorial && ultimoCamaHistorial.cama) {
+                    // Obteniendo la cama asociada con el último CamaHistorial
+                    const camaUltimaAdmision = await Cama.findById(ultimoCamaHistorial.cama);
+                    if (camaUltimaAdmision) {
+                        camaUltimaAdmision.cama_ocupada = false;
+                        await camaUltimaAdmision.save();
+                    }
+                }
+            }
+        }
+
+        await ultimaAdmision.save();
+    } else {
+        // Manejar la situación donde no hay una admisión previa
+    }
+}
+
+
+async function gestionarCambioDeCama1(paciente, camaNuevaId) {
+    const ultimaAdmision = await Admision.findOne({ paciente_relacionado: paciente.id }).sort({ fecha_ingreso: -1 });
+
+    if (ultimaAdmision && ultimaAdmision.cama_relacionada.length > 0) {
+        const camaHistorialId = ultimaAdmision.cama_relacionada[ultimaAdmision.cama_relacionada.length - 1]; // Último CamaHistorial
+        const camaAntiguaHistorial = await CamaHistorial.findById(camaHistorialId);
+
+        if (camaAntiguaHistorial) {
+            const camaAntigua = await Cama.findById(camaAntiguaHistorial.cama);
+            if (camaAntigua) {
+                camaAntigua.cama_ocupada = false;
+                camaAntigua.cama_genero = "Indeterminado";
+                await camaAntigua.save();
+            }
+        }
+
+        const camaNueva = await Cama.findById(camaNuevaId);
+        if (!camaNueva) {
+            throw new Error('La cama relacionada no existe');
+        }
+
+        camaNueva.cama_ocupada = true;
+        camaNueva.cama_genero = paciente.pac_genero;
+        //await camaNueva.save();
+
+        // Crear un nuevo CamaHistorial para la cama nueva
+        const nuevoCamaHistorial = new CamaHistorial({
+            fecha_traslado: new Date(),
+            cama: camaNueva.id,
+            admision_relacionada: ultimaAdmision.id
+        });
+        const camaHistorialGuardado = await nuevoCamaHistorial.save();
+
+        // Actualizar la admisión con el nuevo CamaHistorial
+        ultimaAdmision.cama_relacionada.push(camaHistorialGuardado.id);
+        await ultimaAdmision.save();
+
+        // Agregar el nuevo CamaHistorial al arreglo camahistorial de la nueva cama
+        camaNueva.camahistorial.push(camaHistorialGuardado.id);
+        await camaNueva.save();
+
+    } else {
+        throw new Error('El paciente no tiene admisión relacionada');
+    }
+}
+
+
+
 const patientMutations = {
 
     nuevoPaciente: async (_, { input }, contextValue) => {
@@ -166,7 +298,7 @@ const patientMutations = {
 
             //console.log("Servicio tratante: ", input.servicio_tratante);
 
-            const admisionGuardada = await crearAdmision(input, paciente.id, cama.id);
+            const admisionGuardada = await crearAdmision1(input, paciente.id, cama.id);
 
             paciente.admision_relacionada.push(admisionGuardada.id);
             await paciente.save();
