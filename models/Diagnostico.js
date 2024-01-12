@@ -6,7 +6,8 @@ const schema  = new mongoose.Schema({
       type: Date
     },
     fecha_resolucion: {
-        type: Date
+        type: Date,
+        required: false
     },
     diagnostico_nombre: {
         type: String,

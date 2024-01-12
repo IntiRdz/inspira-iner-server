@@ -5,9 +5,6 @@ import pubSub from '../pubSub.js';
 
 const diagnosticMutations = {
 
-
-
-
     nuevoDiagnostico: async (_, { input }) => {
         try {
         console.log("Se llama al resolver nuevoDiagnostico")
@@ -27,7 +24,7 @@ const diagnosticMutations = {
         return diagnosticoGuardado;
     } catch (error) {
         console.error(error);
-        throw new Error('Error al crear el microorganismo y actualizar camahistorial');
+        throw new Error('Error al agregar el diagnóstico');
     }
 },
     actualizarCama: async (_, {id, input}) => {

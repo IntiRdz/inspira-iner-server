@@ -290,7 +290,7 @@ input PacienteInput {
     cama_relacionada: ID
 }
 
-input DiagnosticosInput {
+input DiagnosticoInput {
     fecha_diagnostico: Date
     fecha_resolucion: Date
     diagnostico_nombre: String
@@ -432,7 +432,7 @@ type Mutation {
     modificarEstadoHospitalizado(id: ID!):String
 
     # Diagnostico
-    nuevoDiagnostico(input: DiagnosticosInput): Diagnostico
+    nuevoDiagnostico(input: DiagnosticoInput): Diagnostico
     
 }
 
