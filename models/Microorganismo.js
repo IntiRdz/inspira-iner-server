@@ -39,6 +39,20 @@ const schema  = new mongoose.Schema({
             'XDR'
         ],
     },
+    microorganismo_muestra_tipo: {
+        type: String,
+    },
+    microorganismo_muestra_resultado: {
+        type: String,
+        enum: [
+            'Pendiente',
+            'Preliminar',
+            'Definitivo', 
+        ],
+    },
+    fecha_ultima_revision: {
+        type: Date,
+    },
     comentario_uveh: {
         type: String,
         default: null,

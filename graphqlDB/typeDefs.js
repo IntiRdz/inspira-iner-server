@@ -140,6 +140,12 @@ enum Susceptibilidad {
     XDR
 }
 
+enum MuestraResultadoEnum {
+    Pendiente
+    Preliminar
+    Definitivo
+}
+
 
 enum ProcedenciaAdmision {
     Urgencias
@@ -192,6 +198,9 @@ type Microorganismo {
     microorganismo_tipo: MicroorganismoTipo
     microorganismo_nombre: String
     susceptibilidad: Susceptibilidad
+    microorganismo_muestra_tipo: String
+    microorganismo_muestra_resultado: MuestraResultadoEnum
+    fecha_ultima_revision: Date
     comentario_uveh: String
     antibiotico_relacionado:[Antibiotico]
     camahistorial: CamaHistorial
@@ -321,7 +330,10 @@ input MicroorganismoInput {
     metodo_deteccion: MetodoDeteccion
     microorganismo_tipo: MicroorganismoTipo
     microorganismo_nombre: String
-    susceptibilidad: Susceptibilidad!
+    susceptibilidad: Susceptibilidad
+    microorganismo_muestra_tipo: String
+    microorganismo_muestra_resultado: MuestraResultadoEnum
+    fecha_ultima_revision: Date
     comentario_uveh: String
     camahistorial: ID
 }
