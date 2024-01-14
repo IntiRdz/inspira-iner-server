@@ -1,6 +1,9 @@
 import Cama from '../../../models/Cama.js';
 import CamaHistorial from '../../../models/CamaHistorial.js';
 
+import { startOfDay, endOfDay } from 'date-fns';
+import { utcToZonedTime } from 'date-fns-tz'; 
+
 const bedQueries = {
 
     obtenerCama: async (_, { id }) => {
@@ -26,20 +29,26 @@ const bedQueries = {
             throw new Error("Error al obtener los historiales de las camas: " + error.message);
         }
     },
-/*     obtenerTrasladosHoy: async () => {
-        //console.log("Se llama al resolver obtenerHistorialesCama")
+    obtenerTrasladosHoy: async () => {
         try {
+
+        const timeZone = 'America/Mexico_City';
+        const inicioDelDia = utcToZonedTime(startOfDay(new Date()), timeZone);
+        const finDelDia = utcToZonedTime(endOfDay(new Date()), timeZone);
+
+        //console.log("Se llama al resolver obtenerHistorialesCama")
+
             const camas = await CamaHistorial.find({
-                fecha_traslado: { $gte: new Date().setHours(0o0,0o0,0o0), $lt: new Date().setHours(23,59,59) }
+                fecha_traslado: { $gte: inicioDelDia, $lt: finDelDia }
             });
             //console.log(camas)
             return camas;
         } catch (error) {
             throw new Error("Error al obtener los historiales de las camas: " + error.message);
         }
-    },   */
+    },   
 
-    obtenerTrasladosHoy: async (_, { diasAtras = 2 }) => {
+/*     obtenerTrasladosHoy: async (_, { diasAtras = 2 }) => {
         try {
             const hoy = new Date();
             const fechaInicio = new Date();
@@ -58,7 +67,7 @@ const bedQueries = {
         } catch (error) {
             throw new Error("Error al obtener los historiales de las camas: " + error.message);
         }
-    },
+    }, */
      obtenerCamas: async () => {
         console.log("Se llama al resolver obtenerCamas")
         try {
