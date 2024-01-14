@@ -249,6 +249,7 @@ type Paciente {
     diagnostico1: [Diagnostico1]
     caracteristicas_especiales: [CaracteristicasEspeciales]
     pac_codigo_uveh: [CodigoPaciente]
+    pac_aislamiento: Boolean
     creado: Date
     admision_relacionada: [Admision]
 }
@@ -292,6 +293,7 @@ input PacienteInput {
     diagnostico: String
     caracteristicas_especiales: [CaracteristicasEspeciales]
     pac_codigo_uveh: [CodigoPaciente]
+    pac_aislamiento: Boolean
     hospitalizado: Boolean
     fecha_ingreso: Date
     fecha_prealta: Date

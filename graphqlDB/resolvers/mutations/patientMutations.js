@@ -71,6 +71,7 @@ async function actualizarUltimaAdmision(paciente, input) {
                     const camaUltimaAdmision = await Cama.findById(ultimoCamaHistorial.cama);
                     if (camaUltimaAdmision) {
                         camaUltimaAdmision.cama_ocupada = false;
+                        camaUltimaAdmision.cama_genero = "Indeterminado";
                         await camaUltimaAdmision.save();
                     }
                 }
@@ -175,88 +176,8 @@ async function crearAdmision1(input, pacienteId, camaId) {
 }
 
 
-async function actualizarUltimaAdmision1(paciente, input) {
-    const { fecha_ingreso, fecha_prealta, fecha_egreso, hospitalizado } = input;
-
-    const ultimaAdmision = await Admision.findOne({ paciente_relacionado: paciente.id }).sort({ fecha_ingreso: -1 });
-
-    if (ultimaAdmision) {
-        ultimaAdmision.fecha_ingreso = fecha_ingreso || ultimaAdmision.fecha_ingreso;
-        ultimaAdmision.fecha_prealta = fecha_prealta || ultimaAdmision.fecha_prealta;
-        ultimaAdmision.fecha_egreso = fecha_egreso || ultimaAdmision.fecha_egreso;
-        ultimaAdmision.hospitalizado = hospitalizado !== undefined ? hospitalizado : ultimaAdmision.hospitalizado;
-
-        if (fecha_egreso) {
-            ultimaAdmision.hospitalizado = false;
-            // Obteniendo el ID del último CamaHistorial de la admisión
-            const idUltimoCamaHistorial = ultimaAdmision.cama_relacionada[ultimaAdmision.cama_relacionada.length - 1];
-
-            if (idUltimoCamaHistorial) {
-                // Obteniendo el último CamaHistorial
-                const ultimoCamaHistorial = await CamaHistorial.findById(idUltimoCamaHistorial);
-                if (ultimoCamaHistorial && ultimoCamaHistorial.cama) {
-                    // Obteniendo la cama asociada con el último CamaHistorial
-                    const camaUltimaAdmision = await Cama.findById(ultimoCamaHistorial.cama);
-                    if (camaUltimaAdmision) {
-                        camaUltimaAdmision.cama_ocupada = false;
-                        await camaUltimaAdmision.save();
-                    }
-                }
-            }
-        }
-
-        await ultimaAdmision.save();
-    } else {
-        // Manejar la situación donde no hay una admisión previa
-    }
-}
 
 
-async function gestionarCambioDeCama1(paciente, camaNuevaId) {
-    const ultimaAdmision = await Admision.findOne({ paciente_relacionado: paciente.id }).sort({ fecha_ingreso: -1 });
-
-    if (ultimaAdmision && ultimaAdmision.cama_relacionada.length > 0) {
-        const camaHistorialId = ultimaAdmision.cama_relacionada[ultimaAdmision.cama_relacionada.length - 1]; // Último CamaHistorial
-        const camaAntiguaHistorial = await CamaHistorial.findById(camaHistorialId);
-
-        if (camaAntiguaHistorial) {
-            const camaAntigua = await Cama.findById(camaAntiguaHistorial.cama);
-            if (camaAntigua) {
-                camaAntigua.cama_ocupada = false;
-                camaAntigua.cama_genero = "Indeterminado";
-                await camaAntigua.save();
-            }
-        }
-
-        const camaNueva = await Cama.findById(camaNuevaId);
-        if (!camaNueva) {
-            throw new Error('La cama relacionada no existe');
-        }
-
-        camaNueva.cama_ocupada = true;
-        camaNueva.cama_genero = paciente.pac_genero;
-        //await camaNueva.save();
-
-        // Crear un nuevo CamaHistorial para la cama nueva
-        const nuevoCamaHistorial = new CamaHistorial({
-            fecha_traslado: new Date(),
-            cama: camaNueva.id,
-            admision_relacionada: ultimaAdmision.id
-        });
-        const camaHistorialGuardado = await nuevoCamaHistorial.save();
-
-        // Actualizar la admisión con el nuevo CamaHistorial
-        ultimaAdmision.cama_relacionada.push(camaHistorialGuardado.id);
-        await ultimaAdmision.save();
-
-        // Agregar el nuevo CamaHistorial al arreglo camahistorial de la nueva cama
-        camaNueva.camahistorial.push(camaHistorialGuardado.id);
-        await camaNueva.save();
-
-    } else {
-        throw new Error('El paciente no tiene admisión relacionada');
-    }
-}
 
 
 
@@ -313,7 +234,10 @@ const patientMutations = {
     
     actualizarPaciente: async (_, { id, input }) => {
         try {
-            const paciente = await Paciente.findByIdAndUpdate(id, { $set: input }, { new: true });
+            const paciente = await Paciente.findByIdAndUpdate(
+                id, 
+                { $set: input }, 
+                { new: true });
             if (!paciente) {
                 throw new Error('Ese paciente no existe');
             }
@@ -341,9 +265,9 @@ const patientMutations = {
         }
 
         // Verificar si el user es quien edita
-        if(paciente.user.toString() !== contextValue.usuario.id ) {
+/*         if(paciente.user.toString() !== contextValue.usuario.id ) {
             throw new Error('No tienes las credenciales');
-        }
+        } */
 
         // Eliminar Paciente
         await Paciente.findOneAndDelete({id : id});

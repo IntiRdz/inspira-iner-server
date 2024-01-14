@@ -110,6 +110,9 @@ const schema  = new mongoose.Schema({
             ]
         }
     ],
+    pac_aislamiento: {
+        type: Boolean,
+    },
     user: {
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Usuario'
