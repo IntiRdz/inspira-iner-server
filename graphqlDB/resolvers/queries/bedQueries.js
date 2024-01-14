@@ -26,7 +26,7 @@ const bedQueries = {
             throw new Error("Error al obtener los historiales de las camas: " + error.message);
         }
     },
-    obtenerTrasladosHoy: async () => {
+/*     obtenerTrasladosHoy: async () => {
         //console.log("Se llama al resolver obtenerHistorialesCama")
         try {
             const camas = await CamaHistorial.find({
@@ -37,7 +37,28 @@ const bedQueries = {
         } catch (error) {
             throw new Error("Error al obtener los historiales de las camas: " + error.message);
         }
-    },  
+    },   */
+
+    obtenerTrasladosHoy: async (_, { diasAtras = 2 }) => {
+        try {
+            const hoy = new Date();
+            const fechaInicio = new Date();
+            fechaInicio.setDate(hoy.getDate() - diasAtras);
+            fechaInicio.setHours(0, 0, 0, 0);
+    
+            const fechaFin = new Date(fechaInicio);
+            fechaFin.setDate(fechaInicio.getDate() + 1);
+            fechaFin.setMilliseconds(-1);
+    
+            const camas = await CamaHistorial.find({
+                fecha_traslado: { $gte: fechaInicio, $lt: fechaFin }
+            });
+    
+            return camas;
+        } catch (error) {
+            throw new Error("Error al obtener los historiales de las camas: " + error.message);
+        }
+    },
      obtenerCamas: async () => {
         console.log("Se llama al resolver obtenerCamas")
         try {
@@ -238,7 +259,7 @@ const bedQueries = {
 
         return camas;
     },
-    obtenerTrasladosDias: async (_, { diasAtras = 0 }) => {
+/*     obtenerTrasladosDias: async (_, { diasAtras = 0 }) => {
         try {
             const hoy = new Date();
             const fechaInicio = new Date();
@@ -257,7 +278,7 @@ const bedQueries = {
         } catch (error) {
             throw new Error("Error al obtener los historiales de las camas: " + error.message);
         }
-    },
+    }, */
 };
     
 export default bedQueries;
