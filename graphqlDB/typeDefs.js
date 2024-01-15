@@ -83,6 +83,7 @@ enum ServicioTratante{
 }
 enum CamaUbicacion{
     Urgencias
+    UP
     Clinico1
     Clinico2
     Clinico3
@@ -174,7 +175,8 @@ enum DiagnosticoTipoEnum {
 
 type Cama {
     id: ID!
-    cama_numero: Int
+    cama_numero: String
+    cama_orden: Int
     cama_ubicacion: CamaUbicacion
     cama_compartida: Boolean
     cama_lado: LadoCama
@@ -311,7 +313,7 @@ input DiagnosticoInput {
 }
 
 input CamaInput {
-    cama_numero: Int
+    cama_numero: String
     cama_compartida: Boolean
     cama_lado: LadoCama
     cama_ubicacion: CamaUbicacion

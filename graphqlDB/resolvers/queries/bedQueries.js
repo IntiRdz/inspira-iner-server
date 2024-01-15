@@ -30,6 +30,7 @@ const bedQueries = {
         }
     },
     obtenerTrasladosHoy: async () => {
+        console.log("Se llama al resolver obtenerTrasladosHoy")
         try {
 
         const timeZone = 'America/Mexico_City';
@@ -83,7 +84,7 @@ const bedQueries = {
         console.log("Se llama al resolver obtenerCamasUrgencias")
         try {
             const camas = await Cama.find({
-                cama_ubicacion: "Urgencias"
+                cama_ubicacion: "Urgencias",
             });
             //console.log(camas)
             return camas;

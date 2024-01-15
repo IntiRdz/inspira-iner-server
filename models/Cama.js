@@ -3,10 +3,13 @@ import mongoose from 'mongoose'
 const schema  = new mongoose.Schema({
 
     cama_numero: {
-        type: Number,
+        type: String,
         required: true,
         trim: true,
         unique: true
+    },
+    cama_orden: {
+        type: Number,
     },
     cama_ubicacion:{
         type: String,
