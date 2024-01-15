@@ -27,24 +27,31 @@ const diagnosticMutations = {
         throw new Error('Error al agregar el diagnóstico');
     }
 },
-    actualizarCama: async (_, {id, input}) => {
-        // revisar si el cama existe o no
-        let cama = await Cama.findById(id);
+    actualizarDiagnostico: async (_, {id, input}) => {
+        try {
+            console.log("ID recibido", id);
+            console.log("input recibido", input);
 
-        if(!cama) {
-            throw new Error('Cama no encontrada');
+            let diagnostico = await Diagnostico.findById(id);
+
+            if(!diagnostico) {
+                throw new Error('Cama no encontrada');
+            }
+            console.log("Diagnostico encontrado", diagnostico);
+            // guardarlo en la base de datos
+            diagnostico = await Diagnostico.findOneAndUpdate(
+                { _id: id }, 
+                input, 
+                { new: true, upsert: false } 
+            );
+
+            console.log("Diagnostico actualizado", diagnostico);
+            return diagnostico;
+        } catch (error) {
+            console.error("Error al actualizar el diagnostico", error);
+            throw error;
         }
-        //console.log("input recibido",input)
-
-        // guardarlo en la base de datos
-        cama = await Cama.findOneAndUpdate(
-            { _id: id }, // Usar _id en lugar de id
-            { $set: input }, // Usar $set para actualizar campos individuales
-            { new: true } // Devolver el documento actualizado
-        );
-
-        return cama;
-    }, 
+    },
     desocuparCama: async (_, { id }) => {
         //console.log(`Resolver desocuparCama recibió el ID: ${id}`);
         try {
@@ -69,23 +76,17 @@ const diagnosticMutations = {
             throw new Error("Error al desocupar la cama: " + error.message);
         }
     },
-    eliminarCama: async(_, {id}) => {
-        //console.log(`Resolver modificarEstadoCama recibió el ID: ${id}`);
-        // Revisar si la cama existe o no
-        let cama = await Cama.findById(id);
+    eliminarDiagnostico: async(_, {id}) => {
+        // revisar si el producto existe o no
+        let diagnostico = await Diagnostico.findById(id);
 
-        if (!cama) {
-            throw new Error('Cama no encontrada');
+        if(!diagnostico) {
+            throw new Error('Diagnostico no encontrado');
         }
 
-        // Cambiar el valor de "cama_ocupada" a false
-        //cama.cama_ocupada = false;
-        cama.cama_ocupada = !cama.cama_ocupada;
+        await Diagnostico.findOneAndDelete({ _id : id });
 
-        // Guardar los cambios en la base de datos
-        await cama.save();
-
-        return "Estado de cama modificado correctamente";
+        return "Diagnostico eliminado";
     },
 
 

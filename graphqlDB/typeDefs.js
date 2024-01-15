@@ -449,7 +449,8 @@ type Mutation {
 
     # Diagnostico
     nuevoDiagnostico(input: DiagnosticoInput): Diagnostico
-    
+    actualizarDiagnostico(id: ID!, input: DiagnosticoInput): Diagnostico
+    eliminarDiagnostico( id: ID! ) : String
 }
 
 type Subscription {

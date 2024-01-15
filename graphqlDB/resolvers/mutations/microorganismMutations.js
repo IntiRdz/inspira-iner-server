@@ -29,31 +29,31 @@ const microorganismMutations = {
         }
     },
     actualizarMicroorganismo: async (_, { id, input }) => {
-        console.log("ID recibido", id);
-        console.log("input recibido", input);
-    
-        let microorganismo = await Microorganismo.findById(id);
-    
-        if(!microorganismo) {
-            throw new Error('Producto no encontrado');
-        }
-        console.log("Microorganismo encontrado", microorganismo);
-    
         try {
+            console.log("ID recibido", id);
+            console.log("input recibido", input);
+    
+            let microorganismo = await Microorganismo.findById(id);
+        
+            if(!microorganismo) {
+                throw new Error('Producto no encontrado');
+            }
+            console.log("Microorganismo encontrado", microorganismo);
+        
             microorganismo = await Microorganismo.findOneAndUpdate(
                 { _id: id }, 
                 input, 
                 { new: true, upsert: false } 
             );
+
             console.log("Microorganismo actualizado", microorganismo);
+
+            return microorganismo;
         } catch (error) {
             console.error("Error al actualizar el microorganismo", error);
             throw error;
         }
-    
-        return microorganismo;
     },
-    
     eliminarMicroorganismo: async(_, {id}) => {
         // revisar si el producto existe o no
         let microorganismo = await Microorganismo.findById(id);
