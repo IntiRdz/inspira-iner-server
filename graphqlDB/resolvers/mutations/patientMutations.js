@@ -2,6 +2,7 @@ import Paciente from '../../../models/Paciente.js';
 import Admision from '../../../models/Admision.js';
 import Cama from '../../../models/Cama.js';
 import CamaHistorial from '../../../models/CamaHistorial.js';
+import ProgramaIntegral from '../../../models/ProgramaIntegral.js';
 import pubSub from '../pubSub.js';
 
 
@@ -23,9 +24,21 @@ async function crearAdmision(input, pacienteId, camaId) {
 
     const admisionGuardada = await nuevaAdmision.save();
 
+
+    const nuevoProgramaIntegral = new ProgramaIntegral({
+        admision_relacionada: admisionGuardada.id
+    });
+
+    const programaIntegralGuardado = await nuevoProgramaIntegral.save();
+    //console.log("programa integral guardado",programaIntegralGuardado)
+
+    // Actualizar la admisión con el nuevo ProgramaIntegral
+    admisionGuardada.programaintegral = programaIntegralGuardado.id;
+    await admisionGuardada.save();
+    //console.log("programa integral guardado en admision",admisionGuardada)
+
     // Luego, crear y guardar el CamaHistorial con el ID de la admisión guardada
     const nuevoCamaHistorial = new CamaHistorial({
-        fecha_traslado: new Date(), // Fecha actual
         cama: camaId,
         admision_relacionada: admisionGuardada.id
     });
@@ -44,6 +57,7 @@ async function crearAdmision(input, pacienteId, camaId) {
     cama.camahistorial.push(camaHistorialGuardado.id);
     await cama.save();
     return admisionGuardada;
+
 }
 
 
@@ -130,57 +144,6 @@ async function gestionarCambioDeCama(paciente, camaNuevaId) {
 }
 
 
-
-
-
-
-
-
-// Función auxiliar para crear una admisión
-async function crearAdmision1(input, pacienteId, camaId) {
-    const { fecha_ingreso, fecha_prealta, fecha_egreso, servicio_tratante } = input;
-
-    // Primero, crear y guardar la nueva Admision
-    const nuevaAdmision = new Admision({
-        paciente_relacionado: pacienteId,
-        cama_relacionada: [], // Inicializar como arreglo vacío, se actualizará luego
-        fecha_ingreso: fecha_ingreso || new Date(),
-        servicio_tratante,
-        fecha_prealta,
-        fecha_egreso,
-        hospitalizado: true
-    });
-
-    const admisionGuardada = await nuevaAdmision.save();
-
-    // Luego, crear y guardar el CamaHistorial con el ID de la admisión guardada
-    const nuevoCamaHistorial = new CamaHistorial({
-        cama: camaId,
-        admision_relacionada: admisionGuardada.id
-    });
-
-    const camaHistorialGuardado = await nuevoCamaHistorial.save();
-
-    // Actualizar la admisión con el nuevo CamaHistorial
-    admisionGuardada.cama_relacionada.push(camaHistorialGuardado.id);
-    await admisionGuardada.save();
-
-    // Obtener la cama por ID y agregar el CamaHistorial a su arreglo
-    const cama = await Cama.findById(camaId);
-    if (!cama) {
-        throw new Error('La cama relacionada no existe');
-    }
-    cama.camahistorial.push(camaHistorialGuardado.id);
-    await cama.save();
-    return admisionGuardada;
-}
-
-
-
-
-
-
-
 const patientMutations = {
 
     nuevoPaciente: async (_, { input }, contextValue) => {
@@ -207,7 +170,7 @@ const patientMutations = {
             //nuevoPaciente.user = contextValue.usuario.id;
 
 
-            console.log("Genero del Paciente",nuevoPaciente.pac_genero)
+            //console.log("Genero del Paciente",nuevoPaciente.pac_genero)
 
             nuevoPaciente.expediente = expediente;
             nuevoPaciente.creado= new Date();
@@ -219,7 +182,7 @@ const patientMutations = {
 
             //console.log("Servicio tratante: ", input.servicio_tratante);
 
-            const admisionGuardada = await crearAdmision1(input, paciente.id, cama.id);
+            const admisionGuardada = await crearAdmision(input, paciente.id, cama.id);
 
             paciente.admision_relacionada.push(admisionGuardada.id);
             await paciente.save();

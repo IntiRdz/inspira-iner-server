@@ -14,6 +14,17 @@ const admisionQueries = {
             console.log("Error al buscar Admisiones",error);
         }
     }, 
+    obtenerAdmision: async (_, { id },)=> {
+        console.log("Se llama al resolver obtenerAdmision")
+        console.log("ID recibido", id)
+        try {
+            const admision = await Admision.findById(id);
+    
+            return admision;
+        } catch (error) {
+            console.log("Error al buscar la Admision",error);
+        }
+    }, 
     obtenerUltimaAdmisionPaciente: async (_, { id },)=> {
         try {
             console.log("Se llama al resolver obtenerAdmision");

@@ -235,6 +235,7 @@ type Admision {
     paciente_relacionado: Paciente
     cama_relacionada: [CamaHistorial]
     diagnostico: [Diagnostico]
+    programaintegral: ProgramaIntegral
 }
 
 type Paciente {
@@ -267,7 +268,44 @@ type Antibiotico {
     microorganismo_relacionado: Microorganismo
 }
 
+type ProgramaIntegral {
+    id: ID!
+    programa_discapacidad_hipoacusia: Boolean
+    programa_discapacidad_disminucion_visual: Boolean
+    programa_discapacidad_perdida_barthel: String
+    programa_discapacidad_disminucion_cognitiva: String
+    programa_discapacidad_gds_fast: Int
+    programa_discapacidad_nu_desc: Int
+    programa_paliativos_sorpresa: Boolean
+    programa_paliativos_perdida_funcionalidad: Boolean
+    programa_paliativos_perdida_nutricional: Boolean
+    programa_paliativos_multimorbilidad: Boolean
+    programa_paliativos_recursosOingresos: Boolean
+    programa_paliativos_otraEnfermedaAvanzada: Boolean
+    programa_paliativos_total: Int
+    programa_paliativos_ecog: Int
+    preguntas_contestadas: Int
+    admision_relacionada: Admision
+}
 
+input ProgramaIntegralInput {
+    programa_discapacidad_hipoacusia: Boolean
+    programa_discapacidad_disminucion_visual: Boolean
+    programa_discapacidad_perdida_barthel: String
+    programa_discapacidad_disminucion_cognitiva: String
+    programa_discapacidad_gds_fast: Int
+    programa_discapacidad_nu_desc: Int
+    preguntas_contestadas: Int
+    programa_paliativos_sorpresa: Boolean
+    programa_paliativos_perdida_funcionalidad: Boolean
+    programa_paliativos_perdida_nutricional: Boolean
+    programa_paliativos_multimorbilidad: Boolean
+    programa_paliativos_recursosOingresos: Boolean
+    programa_paliativos_otraEnfermedaAvanzada: Boolean
+    programa_paliativos_total: Int
+    programa_paliativos_ecog: Int
+    admision_relacionada: ID
+}
 
 input AutenticarInput{
     email: String!
@@ -367,6 +405,7 @@ type Query {
     obtenerUsuario: Usuario
 
     #Admisiones 
+    obtenerAdmision(id: ID!): Admision
     obtenerAdmisiones: [Admision]
     obtenerUltimaAdmisionPaciente(id: ID!): Admision
     obtenerAdmisionesActivas: [Admision]
@@ -451,6 +490,10 @@ type Mutation {
     nuevoDiagnostico(input: DiagnosticoInput): Diagnostico
     actualizarDiagnostico(id: ID!, input: DiagnosticoInput): Diagnostico
     eliminarDiagnostico( id: ID! ) : String
+
+    # ProgramaIntegral
+    nuevoProgramaIntegral(input: ProgramaIntegralInput): ProgramaIntegral
+    actualizarProgramaIntegral(id: ID!, input: ProgramaIntegralInput): ProgramaIntegral
 }
 
 type Subscription {

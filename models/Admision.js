@@ -42,6 +42,10 @@ const schema  = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Diagnostico'
   }],
+  programaintegral: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'ProgramaIntegral'
+  },
 })
 
 export default mongoose.model('Admision', schema)

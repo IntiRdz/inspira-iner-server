@@ -13,6 +13,7 @@ import microorganismMutations from './mutations/microorganismMutations.js';
 import patientMutations from './mutations/patientMutations.js';
 import userMutations from './mutations/userMutations.js';
 import diagnosticMutations from './mutations/diagnosticMutations.js';
+import programMutations from './mutations/programMutations.js';
 
 import patientSubscriptions from './subscriptions/patientSubscriptions.js';
 import bedSubscriptions from './subscriptions/bedSubscriptions.js';
@@ -27,8 +28,6 @@ import { format, utcToZonedTime } from 'date-fns-tz';
 
 
 const resolvers = {
-
-
     Date: new GraphQLScalarType({
         name: 'Date',
         description: 'Date custom scalar type',
@@ -66,6 +65,7 @@ const resolvers = {
         ...patientMutations,
         ...userMutations,
         ...diagnosticMutations,
+        ...programMutations,
     },
     Subscription: {
         ...patientSubscriptions,
@@ -111,6 +111,10 @@ const resolvers = {
             await admision.populate('diagnostico'); // Poblar directamente sin match
             return admision.diagnostico;
         },
+        programaintegral: async (admision) => {
+            await admision.populate('programaintegral'); // Poblar directamente sin match
+            return admision.programaintegral;
+        },
     },
     Paciente: {
         admision_relacionada: async (paciente) => {
@@ -118,20 +122,12 @@ const resolvers = {
             return paciente.admision_relacionada;
         },
     },
-
-    
-
-    
     Antibiotico: {
         microorganismo_relacionado: async (antibiotico) => {
             const microorganismos = await Microorganismo.find({ antibiotico_relacionado: antibiotico.id });
             return microorganismos;
         },
     },
-
-
-
-
 };
 
 export default resolvers;
