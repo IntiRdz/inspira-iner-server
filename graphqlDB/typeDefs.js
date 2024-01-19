@@ -276,6 +276,7 @@ type ProgramaIntegral {
     programa_discapacidad_disminucion_cognitiva: String
     programa_discapacidad_gds_fast: Int
     programa_discapacidad_nu_desc: Int
+    
     programa_paliativos_sorpresa: Boolean
     programa_paliativos_perdida_funcionalidad: Boolean
     programa_paliativos_perdida_nutricional: Boolean
@@ -284,6 +285,61 @@ type ProgramaIntegral {
     programa_paliativos_otraEnfermedaAvanzada: Boolean
     programa_paliativos_total: Int
     programa_paliativos_ecog: Int
+    
+    programa_suenio_imc: Boolean
+    programa_suenio_hipoventilacion: Boolean
+    programa_suenio_restriccionTorax: Boolean
+    programa_suenio_neuromuscular: Boolean
+    
+    programa_nutricion_puntuacion: Int
+    programa_nutricion_grupoRiesgo: String
+    programa_nutricion_via: String
+    
+    programa_social_grupo_etario: String
+    programa_social_genero: String
+    programa_social_orientacion_sexual: String
+    programa_social_municipio: String
+    programa_social_estado: String
+    programa_social_pais: String
+    programa_social_zona_marginada: String
+    programa_social_condicion_social: String
+    programa_social_deficit_economico: Boolean
+    programa_social_migrante: String
+    programa_social_abandono_social: Boolean
+    programa_social_situacion_calle: Boolean
+    programa_social_red_apoyo: String
+    programa_social_tipo_familia: String
+    programa_social_idioma: String
+    programa_social_lengua_indigena: String
+    programa_social_discapacidad_cdpd: String
+    programa_social_escolaridad: String
+    programa_social_ocupacion: String
+    programa_social_derechohabiencia: String
+    programa_social_religion: String
+    programa_social_limitada: String
+    programa_social_violencia: Boolean
+    programa_social_caso_medicolegal: String
+    programa_social_mater: Boolean
+    programa_social_riesgos_vivienda: String
+    programa_social_vivienda_tipo: String
+    programa_social_vivienda_material: String
+    programa_social_vivienda_servicios: String
+    programa_social_vivienda_cuartos: Int
+    programa_social_vivienda_personas: Int
+    programa_social_vivienda_hacinamiento: Boolean
+    programa_social_vivienda_atencion_alarma: String
+    programa_social_dispositivo_medicos: String
+    programa_social_animales: Boolean
+    programa_social_animales_tipo: String
+    programa_social_lenia: Boolean
+    programa_social_trabajo_riesgos: String
+    programa_social_barreras_aprendizaje: String
+    programa_social_exposicion_sustancias: String
+    programa_social_exposicion_sustancias_anios: String
+    programa_social_exposicion_sustancias_horas: String
+
+
+
     preguntas_contestadas: Int
     admision_relacionada: Admision
 }
@@ -295,7 +351,7 @@ input ProgramaIntegralInput {
     programa_discapacidad_disminucion_cognitiva: String
     programa_discapacidad_gds_fast: Int
     programa_discapacidad_nu_desc: Int
-    preguntas_contestadas: Int
+
     programa_paliativos_sorpresa: Boolean
     programa_paliativos_perdida_funcionalidad: Boolean
     programa_paliativos_perdida_nutricional: Boolean
@@ -304,6 +360,63 @@ input ProgramaIntegralInput {
     programa_paliativos_otraEnfermedaAvanzada: Boolean
     programa_paliativos_total: Int
     programa_paliativos_ecog: Int
+    
+    programa_suenio_imc: Boolean
+    programa_suenio_hipoventilacion: Boolean
+    programa_suenio_restriccionTorax: Boolean
+    programa_suenio_neuromuscular: Boolean
+
+    programa_nutricion_puntuacion: Int
+    programa_nutricion_grupoRiesgo: String
+    programa_nutricion_via: String
+
+    programa_social_grupo_etario: String
+    programa_social_genero: String
+    programa_social_orientacion_sexual: String
+    programa_social_municipio: String
+    programa_social_estado: String
+    programa_social_pais: String
+    programa_social_zona_marginada: String
+    programa_social_condicion_social: String
+    programa_social_deficit_economico: Boolean
+    programa_social_migrante: String
+    programa_social_abandono_social: Boolean
+    programa_social_situacion_calle: Boolean
+    programa_social_red_apoyo: String
+    programa_social_tipo_familia: String
+    programa_social_idioma: String
+    programa_social_lengua_indigena: String
+    programa_social_discapacidad_cdpd: String
+    programa_social_escolaridad: String
+    programa_social_ocupacion: String
+    programa_social_derechohabiencia: String
+    programa_social_religion: String
+    programa_social_limitada: String
+    programa_social_violencia: Boolean
+    programa_social_caso_medicolegal: String
+    programa_social_mater: Boolean
+    programa_social_riesgos_vivienda: String
+    programa_social_vivienda_tipo: String
+    programa_social_vivienda_material: String
+    programa_social_vivienda_servicios: String
+    programa_social_vivienda_cuartos: Int
+    programa_social_vivienda_personas: Int
+    programa_social_vivienda_hacinamiento: Boolean
+    programa_social_vivienda_atencion_alarma: String
+    programa_social_dispositivo_medicos: String
+    programa_social_animales: Boolean
+    programa_social_animales_tipo: String
+    programa_social_lenia: Boolean
+    programa_social_trabajo_riesgos: String
+    programa_social_barreras_aprendizaje: String
+    programa_social_exposicion_sustancias: String
+    programa_social_exposicion_sustancias_anios: String
+    programa_social_exposicion_sustancias_horas: String
+
+
+
+
+    preguntas_contestadas: Int
     admision_relacionada: ID
 }
 
