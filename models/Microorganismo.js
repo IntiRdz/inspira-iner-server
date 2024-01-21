@@ -18,6 +18,7 @@ const schema  = new mongoose.Schema({
     microorganismo_tipo: {
         type: String,
         enum: [
+            'NA',
             'Virus', 
             'Bacteria', 
             'Micobacteria', 

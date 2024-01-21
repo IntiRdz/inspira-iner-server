@@ -128,6 +128,7 @@ enum MetodoDeteccion {
     Cultivo
 }
 enum MicroorganismoTipo {
+    NA
     Virus
     Bacteria
     Micobacteria

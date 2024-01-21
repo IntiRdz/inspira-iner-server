@@ -19,7 +19,7 @@ const admisionQueries = {
         console.log("ID recibido", id)
         try {
             const admision = await Admision.findById(id);
-    
+            console.log("admsion encontrada",admision)
             return admision;
         } catch (error) {
             console.log("Error al buscar la Admision",error);
