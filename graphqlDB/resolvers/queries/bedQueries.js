@@ -92,6 +92,18 @@ const bedQueries = {
             throw new Error("Error al obtener las camas: " + error.message);
         }
     },
+    obtenerCamasNo0: async () => {
+        console.log("Se llama al resolver obtenerCamas No Urgencias")
+        try {
+            const camas = await Cama.find({
+                cama_ubicacion: { $ne: "Urgencias" }
+            });
+            //console.log(camas)
+            return camas;
+        } catch (error) {
+            throw new Error("Error al obtener las camas: " + error.message);
+        }
+    },    
     obtenerCamas1: async () => {
         console.log("Se llama al resolver obtenerCamasUrgencias")
         try {

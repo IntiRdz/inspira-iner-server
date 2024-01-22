@@ -544,6 +544,7 @@ type Query {
     obtenerTrasladosDias(diasAtras: Int): [CamaHistorial]
     obtenerCamas: [Cama!]
     obtenerCamasUrgencias: [Cama!]
+    obtenerCamasNo0: [Cama!]
     obtenerCamas1: [Cama!]
     obtenerCamas2: [Cama!]
     obtenerCamas3: [Cama!]
