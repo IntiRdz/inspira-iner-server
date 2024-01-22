@@ -466,6 +466,7 @@ input DiagnosticoInput {
 
 input CamaInput {
     cama_numero: String
+    cama_orden: Int
     cama_compartida: Boolean
     cama_lado: LadoCama
     cama_ubicacion: CamaUbicacion
