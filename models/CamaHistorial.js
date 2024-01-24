@@ -19,7 +19,11 @@ const schema  = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Microorganismo',
         }
-    ]
+    ],
+    fecha_creado: {
+      type: Date,
+      default: Date.now // Esto establece la fecha y hora actual como valor por defecto
+  }
 })
 
 export default mongoose.model('CamaHistorial', schema)

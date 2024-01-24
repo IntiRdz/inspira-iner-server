@@ -225,6 +225,7 @@ type CamaHistorial {
     cama: Cama
     admision_relacionada: Admision
     microorganismo_relacionado: [Microorganismo]
+    fecha_creado: Date
 }
 type Admision {
     id: ID!
