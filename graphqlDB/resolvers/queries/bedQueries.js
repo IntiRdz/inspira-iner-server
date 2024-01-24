@@ -91,7 +91,7 @@ const bedQueries = {
         } catch (error) {
             throw new Error("Error al obtener las camas: " + error.message);
         }
-    },
+    }, 
     obtenerCamasNo0: async () => {
         console.log("Se llama al resolver obtenerCamas No Urgencias")
         try {

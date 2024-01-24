@@ -71,12 +71,20 @@ const resolvers = {
         ...patientSubscriptions,
         ...bedSubscriptions,
     },
-    Cama: {
+     Cama: {
+        /*
         camahistorial: async (cama) => {
             await cama.populate('camahistorial');
             return cama.camahistorial;
         },
-    },
+        */
+        camahistorial: async (cama) => {
+            await cama.populate('camahistorial');
+            // Asumiendo que 'camahistorial' está ordenado cronológicamente
+            const historial = cama.camahistorial;
+            return historial.length > 0 ? [historial[historial.length - 1]] : [];
+        },
+    }, 
     Microorganismo: {
         camahistorial: async (microorganismo) => {
             await microorganismo.populate('camahistorial'); // Poblar directamente sin match
