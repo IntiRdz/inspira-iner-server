@@ -26,7 +26,7 @@ const programMutations = {
         throw new Error('Error al agregar el programa integral');
     }
 },
-    actualizarProgramaIntegral: async (_, {id, input}) => {
+/*     actualizarProgramaIntegral: async (_, {id, input}) => {
         try {
             console.log("ID recibido", id);
             console.log("input recibido", input);
@@ -50,7 +50,46 @@ const programMutations = {
             console.error("Error al actualizar el programa integral", error);
             throw error;
         }
+    }, */
+    actualizarProgramaIntegral: async (_, { id, input }) => {
+        try {
+            console.log("ID recibido", id);
+            console.log("input recibido", input);
+    
+            let programaintegral = await ProgramaIntegral.findById(id);
+    
+            if (!programaintegral) {
+                throw new Error('Programa no encontrada');
+            }
+            console.log("Programa encontrado", programaintegral);
+    
+            // Contar las preguntas contestadas
+            const preguntasContestadas = Object.values(input).reduce((contador, valor) => {
+                // Incrementar el contador si el valor es diferente de null y no es una cadena vacía
+                if (valor !== null && valor !== '') {
+                    return contador + 1;
+                }
+                return contador;
+            }, 0);
+    
+            // Agregar el conteo al input
+            input.preguntas_contestadas = preguntasContestadas;
+    
+            // Guardarlo en la base de datos
+            programaintegral = await ProgramaIntegral.findOneAndUpdate(
+                { _id: id },
+                input,
+                { new: true, upsert: false }
+            );
+    
+            console.log("Programa actualizado", programaintegral);
+            return programaintegral;
+        } catch (error) {
+            console.error("Error al actualizar el programa integral", error);
+            throw error;
+        }
     },
+    
 };
 
 export default programMutations;
